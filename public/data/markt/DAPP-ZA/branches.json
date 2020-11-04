@@ -1,0 +1,99 @@
+[
+    {
+        "brancheId": "bak",
+        "verplicht": true
+    },
+    {
+        "brancheId": "101-agf",
+        "verplicht": false,
+        "maximumPlaatsen": 14
+    },
+    {
+        "brancheId": "102-bio-health-fairtrade",
+        "verplicht": false
+    },    
+    {
+        "brancheId": "103-brood-banket",
+        "verplicht": false,
+        "maximumPlaatsen": 4
+    },
+    {    
+        "brancheId": "104-hummus-kruiden-olijven",
+        "verplicht": false,
+        "maximumPlaatsen": 2
+    },   
+    {    
+        "brancheId": "105-noten-zuidvruchten",
+        "verplicht": false,
+        "maximumPlaatsen": 2
+    },
+    {   
+        "brancheId": "107-vis-nat",
+        "verplicht": false,
+        "maximumPlaatsen": 4
+    },
+    {   
+        "brancheId": "108-vleeswaren",
+        "verplicht": false,
+        "maximumPlaatsen": 2
+    },
+    {
+        "brancheId": "109-zuivel-eieren",
+        "verplicht": false,
+        "maximumPlaatsen": 7
+    },
+    {
+        "brancheId": "110-poelier",
+        "verplicht": false,
+        "maximumPlaatsen": 3
+    },
+    {   
+        "brancheId": "111-exotische-groenten",
+        "verplicht": false,
+        "maximumPlaatsen": 2
+    },
+    {
+        "brancheId": "201-broodjes-belegd",
+        "verplicht": false,
+        "maximumPlaatsen": 2
+    },
+    {   
+        "brancheId": "204-koffie-versnaperingen",
+        "verplicht": false,
+        "maximumPlaatsen": 1
+    },
+    {   
+        "brancheId": "205-loempias",
+        "verplicht": false,
+        "maximumPlaatsen": 1
+    },
+    {   
+        "brancheId": "206-oudhollands-gebak",
+        "verplicht": false,
+        "maximumPlaatsen": 1
+    },    
+    {
+        "brancheId": "207-grill-frituur",
+        "verplicht": false,
+        "maximumPlaatsen": 3
+    },
+    {
+        "brancheId": "209-vis-gebakken",
+        "verplicht": false,
+        "maximumPlaatsen": 2
+    },
+    {   
+        "brancheId": "211-delicatessen-hapjes",
+        "verplicht": false,
+        "maximumPlaatsen": 1
+    },
+    {
+        "brancheId": "301-antiek-kunst",
+        "verplicht": false
+    },
+    {
+        "brancheId": "302-bloemen-planten",
+        "verplicht": false,
+        "maximumPlaatsen": 6
+    }
+]

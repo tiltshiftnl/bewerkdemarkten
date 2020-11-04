@@ -1,0 +1,172 @@
+{
+    "4045": {
+        "id": 1,
+        "name": "Plein '40-'45",
+        "phase": "activatie",
+        "events": {
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "AC": {
+        "id": 2,
+        "name": "Albert Cuyp",
+        "phase": "live",
+        "events": {
+            "MA": {},
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "ADK": {
+        "id": 3,
+        "name": "A. de Komplein",
+        "phase": "wenweken",
+        "events": {
+            "MA": {},
+            "DO": {},
+            "VR": {}
+        }
+    },
+    "AVELD": {
+        "name": "Amstelveld antiek en curiosa",
+        "events": {
+            "MA": {}
+        }
+    },
+    "BenL": {
+        "name": "Bos en Lommer",
+        "events": {
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "BKSL": {
+        "events": {
+            "B": {},
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "DAPP": {
+        "events": {
+            "MA": {},
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "EESB": {
+        "events": {
+            "WO": {}
+        }
+    },
+    "GH": {
+        "events": {
+            "ZA": {}
+        }
+    },
+    "HLM": {
+        "events": {
+            "WO": {}
+        }
+    },
+    "KR": {
+        "events": {
+            "DI": {}
+        }
+    },
+    "LBZ": {
+        "events": {
+            "MA": {}
+        }
+    },
+    "LIN": {
+        "events": {
+            "MA": {}
+        }
+    },
+    "NOM": {
+        "events": {
+            "MA": {},
+            "ZA": {}
+        }
+    },
+    "NOMBO": {
+        "events": {
+            "ZA": {}
+        }
+    },
+    "NW": {
+        "events": {
+            "ANT": {},
+            "MA": {},
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "NWBIO": {
+        "events": {
+            "ZA": {}
+        }
+    },
+    "PEKC": {
+        "events": {
+            "WO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "RBOS": {
+        "events": {
+            "WO": {}
+        }
+    },
+    "SPUI": {
+        "events": {
+            "VR": {}
+        }
+    },
+    "STAD": {
+        "events": {
+            "ZA": {}
+        }
+    },
+    "TK": {
+        "events": {
+            "MA": {},
+            "DI": {},
+            "WO": {},
+            "DO": {},
+            "VR": {},
+            "ZA": {}
+        }
+    },
+    "TM": {
+        "events": {
+            "DI": {}
+        }
+    },
+    "WST": {
+        "events": {
+            "MA": {}
+        }
+    }
+}

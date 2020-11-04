@@ -1,0 +1,9 @@
+{
+  "obstakels": [
+    {
+      "kraamA": "214",
+      "kraamB": "216",
+      "obstakel": ["bankje"]
+    }
+  ]
+}
