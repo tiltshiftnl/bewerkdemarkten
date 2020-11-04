@@ -1,3 +1,3 @@
 export default class Configuration {
-    API_BASE_URL = "http://localhost:3000/data"
+    API_BASE_URL = "/data"
 } 
