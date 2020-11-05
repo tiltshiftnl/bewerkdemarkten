@@ -170,7 +170,66 @@ td {
 }
 
 textarea {
-  width:100%;
+  width: 100%;
   height: auto;
   min-height: 100px
+}
+
+.wenweken {
+  color: #fa8c16 !important;
+  background: #fff7e6 !important;
+  border-color: #ffd591 !important;
+}
+
+.live {
+  color: #52c41a !important;
+  background: #f6ffed !important;
+  border-color: #b7eb8f !important;
+}
+
+.activatie {
+  color: #faad14 !important;
+  background: #fffbe6 !important;
+  border-color: #ffe58f !important;
+}
+
+.voorbereiding {
+  color: #f5222d !important;
+  background: #fff1f0 !important;
+  border-color: #ffa39e !important;
+}
+
+.stands-row {
+  display: flex;
+  justify-content: left;
+  padding: 12px 0 0;
+  display: block;
+}
+
+.stand {
+  border-radius: 2px;
+  margin: 6px;
+  display: inline-block;
+}
+
+.stand.occupied > span {
+  color: #f5222d !important;
+  background: #fff1f0 !important;
+  border-color: #ffa39e !important;
+}
+
+.page-block {
+  padding-top: 2em;
+  border-bottom: 1px dotted rgba(0,0,0,.85);
+}
+
+.stand > span {
+  width: 42px;
+  height: 42px;
+  color: rgba(0,0,0,.85);
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  text-align: center;
+  padding-top: 12px;
+  vertical-align: middle;
 }

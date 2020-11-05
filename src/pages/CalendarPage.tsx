@@ -1,6 +1,6 @@
 import FullCalendar from "@fullcalendar/react";
 import React, { Component } from "react";
-import DaysClosedService from "../services/service_daysclosed";
+import { DaysClosedService } from "../services/service_lookup";
 import nlLocale from '@fullcalendar/core/locales/nl'
 import dayGridPlugin from '@fullcalendar/daygrid'
 

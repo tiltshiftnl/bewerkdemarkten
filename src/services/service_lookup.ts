@@ -1,9 +1,9 @@
-import { AssignedBranche, Geography, Markets, Page, Rows, Stand } from '../models'
+import { Announcements, Branche } from '../models'
 import { Service } from './service'
 
-export default class MarketsService extends Service {
-    async retrieve(): Promise<Markets> {
-        return fetch(this.config.API_BASE_URL + "/markets.json")
+export class BrancheService extends Service {
+    async retrieve(): Promise<Branche[]> {
+        return fetch(this.config.API_BASE_URL + "/markt/branches.json")
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -20,9 +20,9 @@ export default class MarketsService extends Service {
     }
 }
 
-export class MarketService extends Service {
-    async retrieve(route: string): Promise<Rows> {
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/markt.json")
+export class DaysClosedService extends Service {
+    async retrieve(): Promise<string[]> {
+        return fetch(this.config.API_BASE_URL + "/markt/daysClosed.json")
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -39,9 +39,9 @@ export class MarketService extends Service {
     }
 }
 
-export class BranchesService extends Service {
-    async retrieve(route: string): Promise<AssignedBranche[]> {
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/branches.json")
+export class AnnouncementService extends Service {
+    async retrieve(): Promise<Announcements> {
+        return fetch(this.config.API_BASE_URL + "/markt/mededelingen.json")
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -58,9 +58,9 @@ export class BranchesService extends Service {
     }
 }
 
-export class GeographyService extends Service {
-    async retrieve(route: string): Promise<Geography> {
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/geografie.json")
+export class ObstacleTypeService extends Service {
+    async retrieve(): Promise<string[]> {
+        return fetch(this.config.API_BASE_URL + "/markt/obstakeltypes.json")
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -77,28 +77,9 @@ export class GeographyService extends Service {
     }
 }
 
-export class StandsService extends Service {
-    async retrieve(route: string): Promise<Stand[]> {
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/locaties.json")
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
-    }
-}
-
-export class PagesService extends Service {
-    async retrieve(route: string): Promise<Page[]> {
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/paginas.json")
+export class StandPropertyService extends Service {
+    async retrieve(): Promise<string[]> {
+        return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json")
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)

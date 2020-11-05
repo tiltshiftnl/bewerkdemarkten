@@ -1,29 +1,28 @@
-import { Heading, Link } from "@amsterdam/asc-ui"
+import { Heading } from "@amsterdam/asc-ui"
 import React from "react"
-import { Market, Page } from "../models"
-import { LocationsService, MarketService, PagesService } from "../services/service_markets"
+import MarketDetail from "../components/MarketDetail"
+import { Page, Rows, Stand } from "../models"
+import { StandsService, MarketService, PagesService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
 
 export default class MarketPage extends DynamicBase {
-    readonly state: { market: Market, locations: Location[], pages: Page[], name: string } = {
+    readonly state: { market: Rows, stands: Stand[], pages: Page[], name: string } = {
         market: {
-            id: 0,
-            name: "onbekend",
-            events: {}
+            rows: [[]]
         },
-        locations: [],
+        stands: [],
         pages: [],
         name: "Gegevens worden opgehaald..."
     }
 
     marketService: MarketService
-    locationsService: LocationsService
+    standsService: StandsService
     pagesService: PagesService
 
     constructor(props: any) {
         super(props)
         this.marketService = new MarketService()
-        this.locationsService = new LocationsService()
+        this.standsService = new StandsService()
         this.pagesService = new PagesService()
     }
 
@@ -35,9 +34,9 @@ export default class MarketPage extends DynamicBase {
                 name: this.id
             })
         })
-        this.locationsService.retrieve(this.id).then(result => {
+        this.standsService.retrieve(this.id).then(result => {
             this.setState({
-                locations: result
+                stands: result
             })
         })
         this.pagesService.retrieve(this.id).then(result => {
@@ -51,8 +50,8 @@ export default class MarketPage extends DynamicBase {
         this.setState({ market: event.target.value });
     }
 
-    locationsChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        this.setState({ locations: event.target.value });
+    standsChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({ stands: event.target.value });
     }
 
     pagesChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -62,14 +61,14 @@ export default class MarketPage extends DynamicBase {
     render() {
         return <>
             <Heading>{this.state.name}</Heading>
-            <Heading forwardedAs="h2">Basisgegevens</Heading>
-            <textarea id="markt" value={this.state.market && JSON.stringify(this.state.market)} onChange={this.marketChange} />
+            <MarketDetail base={this.state.market} stands={this.state.stands} pages={this.state.pages}/>
+            {/* <textarea id="markt" value={this.state.market && JSON.stringify(this.state.market)} onChange={this.marketChange} />
             <Heading forwardedAs="h2">Kramen</Heading>
-            <textarea id="locaties" value={this.state.locations && JSON.stringify(this.state.locations)} onChange={this.locationsChange} />
+            <textarea id="locaties" value={this.state.stands && JSON.stringify(this.state.stands)} onChange={this.standsChange} />
             <Heading forwardedAs="h2">Pagina's</Heading>
             <textarea id="paginas" value={this.state.pages && JSON.stringify(this.state.pages)} onChange={this.pagesChange} />
             <Heading forwardedAs="h2">Exporteren</Heading>
-            <Link href="/#">Download json files</Link>
+            <Link href="/#">Download json files</Link> */}
         </>
     }
 }

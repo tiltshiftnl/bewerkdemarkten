@@ -14,6 +14,10 @@ export interface Assignment {
     plaatsList: string[]
 }
 
+export interface Rows {
+    rows: string[][]
+}
+
 export interface Page {
     title: string
     indelingslijstGroup: Assignment[]
@@ -26,12 +30,13 @@ export interface Market {
     events: Events
 }
 
-export interface Location {
+export interface Stand {
     plaatsId: string
     branches?: string[]
     verkoopinrichting?: string[]
     properties?: string[]
 }
+
 export interface Obstacle {
     kraamA: string
     kraamB: string
@@ -42,7 +47,29 @@ export interface Geography {
     obstakels: Obstacle[]
 }
 
-export interface Branch {
+// Branches for the general Branches list
+export interface Branche {
+    brancheId: string
+    number?: number
+    description: string
+    color: string
+}
+
+export interface Announcement {
+    activatie: string
+    wenperiode: string
+    live: string
+}
+
+export interface Announcements {
+    marktDetail: Announcement
+    marktDetailPlaatsvoorkeuren: Announcement
+    aanwezigheid: Announcement
+    plaatsVoorkeuren: Announcement
+}
+
+// Branches assigned to Markets
+export interface AssignedBranche {
     brancheId: string
     verplicht: boolean
 }
