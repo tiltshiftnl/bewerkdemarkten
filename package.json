@@ -18,6 +18,7 @@
     "keycloak-js": "^11.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-edit-text": "^1.1.0",
     "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.9.53",
+    "@types/react-edit-text": "^1.1.0",
     "@types/react-router-dom": "^5.1.6"
   }
 }
