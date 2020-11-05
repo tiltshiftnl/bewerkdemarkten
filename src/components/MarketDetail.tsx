@@ -1,20 +1,35 @@
 import { Badge } from "antd"
 import React from "react"
 import { Component } from "react"
-import { Page, Rows, Stand } from "../models"
+import { Page, Rows, Lot } from "../models"
 
-export default class MarketDetail extends Component<{ base: Rows, stands: Stand[], pages: Page[] }> {
+export default class MarketDetail extends Component<{ base: Rows, lots: Lot[], pages: Page[] }> {
 
-    lookupBranches = (standId: string): string[] => {
-        const result = this.props.stands.find(c => c.plaatsId === standId)
+    lookupBranches = (lotId: string): string[] => {
+        const result = this.props.lots.find(c => c.plaatsId === lotId)
         return result?.branches || []
     }
 
-    getClassname = (standId: string) => {
-        if (this.lookupBranches(standId).length > 0) {
-            return "stand occupied"
+    lookupProperties = (lotId: string): string[] => {
+        const result = this.props.lots.find(c => c.plaatsId === lotId)
+        return result?.properties || []
+    }
+
+    lookupFacilities = (lotId: string): string[] => {
+        const result = this.props.lots.find(c => c.plaatsId === lotId)
+        return result?.verkoopinrichting || []
+    }
+
+    getClassname = (lotId: string) => {
+        if (this.lookupBranches(lotId).length > 0) {
+            return "lot occupied"
         }
-        return "stand"
+        return "lot"
+    }
+
+    openLotDetail = (lotId: string) => {
+        console.log(lotId)
+        return "foo"
     }
 
     render() {
@@ -27,17 +42,24 @@ export default class MarketDetail extends Component<{ base: Rows, stands: Stand[
                     if(indeling.class === "block-left"){
                     return <div key={i} className={`page-block ${indeling.class}`}>
                         <p>{`${page.title}, ${indeling.title}: ${indeling.landmarkTop} - ${indeling.landmarkBottom}`}</p>
-                        <div className="stands-row">
-                            {indeling.plaatsList.map((stand, i) => {
-                                return <div key={i} className={this.getClassname(stand)}><Badge count={this.lookupBranches(stand).length > 1 ? this.lookupBranches(stand).length : 0 }>{stand}</Badge></div>
+                        <div className="lot-row">
+                            {indeling.plaatsList.map((lot, i) => {
+                                return <div key={i} className={this.getClassname(lot)} onClick={() => {this.openLotDetail(lot)}}>
+                                    <Badge offset={[12, 22]} className="facility" count={this.lookupFacilities(lot).length} />
+                                    <Badge count={this.lookupBranches(lot).length > 1 ? this.lookupBranches(lot).length : 0 }>
+                                                {lot}
+                                    </Badge>
+                                    <Badge className="property" offset={[-12, 22]} count={this.lookupProperties(lot).length} />
+                                    
+                                </div>
                             })}
                         </div>
                     </div>
                     } else {
                         return <div key={i}>
-                            <div className="stands-row">
-                                {indeling.plaatsList.map(stand => {
-                                    return <div className={this.getClassname(stand)}><Badge count={this.lookupBranches(stand).length > 1 ? this.lookupBranches(stand).length : 0 }>{stand}</Badge></div>
+                            <div className="lot-row">
+                                {indeling.plaatsList.map(lot => {
+                                    return <div className={this.getClassname(lot)} onClick={() => {this.openLotDetail(lot)}}><Badge count={this.lookupBranches(lot).length > 1 ? this.lookupBranches(lot).length : 0 }>{lot}</Badge></div>
                                 })}
                             </div>
                         </div>
@@ -46,8 +68,8 @@ export default class MarketDetail extends Component<{ base: Rows, stands: Stand[
             </div>
         })}
             {/* {base.rows.map(row => {
-                return <div className="stands-row">{row.map(stand => {
-                    return <div className={this.getClassname(stand)}><Badge count={this.lookupBranches(stand).length > 1 ? this.lookupBranches(stand).length : 0 }>{stand}</Badge></div>
+                return <div className="lot-row">{row.map(lot => {
+                    return <div className={this.getClassname(lot)}><Badge count={this.lookupBranches(lot).length > 1 ? this.lookupBranches(lot).length : 0 }>{lot}</Badge></div>
                 })}</div>
             })
             } */}

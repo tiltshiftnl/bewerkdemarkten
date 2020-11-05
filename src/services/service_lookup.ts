@@ -77,7 +77,7 @@ export class ObstacleTypeService extends Service {
     }
 }
 
-export class StandPropertyService extends Service {
+export class LotPropertyService extends Service {
     async retrieve(): Promise<string[]> {
         return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json")
             .then(response => {

@@ -30,7 +30,7 @@ export interface Market {
     events: Events
 }
 
-export interface Stand {
+export interface Lot {
     plaatsId: string
     branches?: string[]
     verkoopinrichting?: string[]

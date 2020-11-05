@@ -1,4 +1,4 @@
-import { AssignedBranche, Geography, Markets, Page, Rows, Stand } from '../models'
+import { AssignedBranche, Geography, Markets, Page, Rows, Lot } from '../models'
 import { Service } from './service'
 
 export default class MarketsService extends Service {
@@ -77,8 +77,8 @@ export class GeographyService extends Service {
     }
 }
 
-export class StandsService extends Service {
-    async retrieve(route: string): Promise<Stand[]> {
+export class LotsService extends Service {
+    async retrieve(route: string): Promise<Lot[]> {
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/locaties.json")
             .then(response => {
                 if (!response.ok) {
