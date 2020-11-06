@@ -1,9 +1,10 @@
-import FullCalendar from "@fullcalendar/react";
-import React, { Component } from "react";
-import { DaysClosedService } from "../services/service_lookup";
+import FullCalendar from "@fullcalendar/react"
+import React, { Component } from "react"
+import { DaysClosedService } from "../services/service_lookup"
 import nlLocale from '@fullcalendar/core/locales/nl'
 import dayGridPlugin from '@fullcalendar/daygrid'
-
+import { Breadcrumb } from 'antd'
+import { HomeOutlined } from '@ant-design/icons'
 interface Event {
     title?: string
     date?: string
@@ -49,13 +50,23 @@ export default class CalendarPage extends Component {
         })
     }
     render() {
-        return <FullCalendar
-            height={"auto"}
-            aspectRatio={1}
-            locale={nlLocale}
-            plugins={[dayGridPlugin]}
-            events={this.state.daysClosed}
-            initialView="dayGridMonth"
-        />
+        return <>
+            <Breadcrumb>
+                <Breadcrumb.Item href="/">
+                    <HomeOutlined />
+                </Breadcrumb.Item>
+                <Breadcrumb.Item href="/calendar">
+                    <span>Kalender</span>
+                </Breadcrumb.Item>
+            </Breadcrumb>
+            <FullCalendar
+                height={"auto"}
+                aspectRatio={1}
+                locale={nlLocale}
+                plugins={[dayGridPlugin]}
+                events={this.state.daysClosed}
+                initialView="dayGridMonth"
+            />
+        </>
     }
 }

@@ -58,12 +58,10 @@ export default class MarketDetail extends Component<{ base: Rows, lots: Lot[], p
             <Tabs defaultActiveKey="10">
                 {pages.map((page, i) => {
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    console.log(page)
                     const pageKey = i + 1
                     return page.indelingslijstGroup.map((indeling, i) => {
                         // If a panel exists with exactly the same title, append. Else create new
                         const indelingKey = i + 1
-                        console.log(pageKey + "" + indelingKey)
                         //const panelHeader: string = `${indeling.title} ${indeling.landmarkTop} ${indeling.landmarkBottom}`
                         const myPanel = <TabPane tab={`${pageKey}-${indelingKey}`} key={`${pageKey}${indelingKey}`}>
                             <div className={indeling.class}>

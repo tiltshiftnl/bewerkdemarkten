@@ -1,9 +1,12 @@
-import { PlusSquareOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, Row, Space } from "antd"
 import React, { Component } from "react"
 import { Market, Markets } from "../models"
 import MarketsService from "../services/service_markets"
-import MarketListItem from '../components/MarketListItem';
+import MarketListItem from '../components/MarketListItem'
+import { Breadcrumb } from 'antd'
+import { HomeOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
 
 export default class MarketListPage extends Component {
 
@@ -29,10 +32,24 @@ export default class MarketListPage extends Component {
 
     render() {
         return <>
-            {Object.keys(this.state.markets).map((key: string, i: number) => {
-                const market: Market = this.state.markets[key]
-                return <MarketListItem marketId={key} market={market} />
-            })}
+            <Breadcrumb>
+                <Breadcrumb.Item>
+                    <Link to="/">
+                        <HomeOutlined />
+                    </Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>
+                    <Link to="/markets">
+                        <span>Markten</span>
+                    </Link>
+                </Breadcrumb.Item>
+            </Breadcrumb>
+            <ul>
+                {Object.keys(this.state.markets).map((key: string, i: number) => {
+                    const market: Market = this.state.markets[key]
+                    return <li key={key}><MarketListItem marketId={key} market={market} /></li>
+                })}
+            </ul>
             <Row>
                 <Space>
                     <Button title="Nieuwe leeg" type="primary" icon={<PlusSquareOutlined />}>Nieuwe leeg</Button>
