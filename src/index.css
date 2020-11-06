@@ -175,34 +175,62 @@ textarea {
   min-height: 100px
 }
 
-.wenweken {
+.wenweken > button:not(.ant-dropdown-trigger),
+.wenperiode > button:not(.ant-dropdown-trigger) {
   color: #fa8c16 !important;
   background: #fff7e6 !important;
   border-color: #ffd591 !important;
+  width: 110px;
 }
 
-.live {
+.block-left {
+  padding-top: 10px;
+  border-top: 40px solid #777;
+}
+
+.block-right {
+  padding-bottom: 10px;
+  border-bottom: 40px solid #777;
+}
+
+.onbekend {
+  font-style: italic !important;
+  color: #777 !important;
+}
+
+.onbekend > button:not(.ant-dropdown-trigger) {
+  font-style: inherit;
+  color: inherit;
+  background: #fff !important;
+  border-color: #ccc !important;
+  width: 110px;
+}
+
+.live > button:not(.ant-dropdown-trigger) {
   color: #52c41a !important;
   background: #f6ffed !important;
   border-color: #b7eb8f !important;
+  width: 110px;
 }
 
-.activatie {
+.activatie > button:not(.ant-dropdown-trigger) {
   color: #faad14 !important;
   background: #fffbe6 !important;
   border-color: #ffe58f !important;
+  width: 110px;
 }
 
-.voorbereiding {
+.voorbereiding > button:not(.ant-dropdown-trigger) {
   color: #f5222d !important;
   background: #fff1f0 !important;
   border-color: #ffa39e !important;
+  width: 110px;
 }
 
 .lot-row {
   display: flex;
   justify-content: left;
-  padding: 5px 0 0;
+  padding: 12px;
   display: block;
 }
 
@@ -219,6 +247,12 @@ textarea {
   border-color: #ffa39e !important;
 }
 
+.lot.selected > span:not(.ant-badge-not-a-wrapper) {
+  cursor: pointer;
+  background-color: #004699 !important;
+  border: 1px solid #fff !important;
+  color: #fff !important;
+}
 .lot:hover > span:not(.ant-badge-not-a-wrapper)  {
   cursor: pointer;
   border: 1px solid #004699 !important;

@@ -1,9 +1,19 @@
-import { Badge } from "antd"
+import { Tabs } from "antd"
 import React from "react"
 import { Component } from "react"
 import { Page, Rows, Lot } from "../models"
+import LayoutEditBlock from "./LayoutEditBlock"
+import LayoutEditLot from "./LayoutEditLot"
+import LayoutLotBlock from "./LayoutLotBlock"
 
+const { TabPane } = Tabs
 export default class MarketDetail extends Component<{ base: Rows, lots: Lot[], pages: Page[] }> {
+    readonly state: { selectedLot: string, selectedBranches: string[], selectedFacilities: [], selectedProperties: [] } = {
+        selectedLot: "0",
+        selectedBranches: [],
+        selectedFacilities: [],
+        selectedProperties: []
+    }
 
     lookupBranches = (lotId: string): string[] => {
         const result = this.props.lots.find(c => c.plaatsId === lotId)
@@ -21,59 +31,73 @@ export default class MarketDetail extends Component<{ base: Rows, lots: Lot[], p
     }
 
     getClassname = (lotId: string) => {
-        if (this.lookupBranches(lotId).length > 0) {
-            return "lot occupied"
+        let baseClass = ""
+        if (this.state.selectedLot === lotId) {
+            baseClass = "selected "
         }
-        return "lot"
+        if (this.lookupBranches(lotId).length > 0) {
+            return baseClass + "lot occupied"
+        }
+
+        return baseClass + "lot"
     }
 
     openLotDetail = (lotId: string) => {
-        console.log(lotId)
-        return "foo"
+
+        this.setState({
+            selectedLot: lotId,
+            selectedBranches: this.lookupBranches(lotId),
+            selectedFacilities: this.lookupFacilities(lotId),
+            selectedProperties: this.lookupProperties(lotId)
+        })
     }
 
     render() {
-
         const { pages } = this.props
         return <>
-        {pages.map((page, i) => {
-            return <div key={i}>
-                {page.indelingslijstGroup.map((indeling, i) => {
-                    if(indeling.class === "block-left"){
-                    return <div key={i} className={`page-block ${indeling.class}`}>
-                        <p>{`${page.title}, ${indeling.title}: ${indeling.landmarkTop} - ${indeling.landmarkBottom}`}</p>
-                        <div className="lot-row">
-                            {indeling.plaatsList.map((lot, i) => {
-                                return <div key={i} className={this.getClassname(lot)} onClick={() => {this.openLotDetail(lot)}}>
-                                    <Badge offset={[12, 22]} className="facility" count={this.lookupFacilities(lot).length} />
-                                    <Badge count={this.lookupBranches(lot).length > 1 ? this.lookupBranches(lot).length : 0 }>
-                                                {lot}
-                                    </Badge>
-                                    <Badge className="property" offset={[-12, 22]} count={this.lookupProperties(lot).length} />
-                                    
+            <Tabs defaultActiveKey="10">
+                {pages.map((page, i) => {
+                    // Need a way to group panel content by title for the upper and lower blocks.
+                    console.log(page)
+                    const pageKey = i + 1
+                    return page.indelingslijstGroup.map((indeling, i) => {
+                        // If a panel exists with exactly the same title, append. Else create new
+                        const indelingKey = i + 1
+                        console.log(pageKey + "" + indelingKey)
+                        //const panelHeader: string = `${indeling.title} ${indeling.landmarkTop} ${indeling.landmarkBottom}`
+                        const myPanel = <TabPane tab={`${pageKey}-${indelingKey}`} key={`${pageKey}${indelingKey}`}>
+                            <div className={indeling.class}>
+                                {indeling.class === 'block-left' &&
+                                    <LayoutEditBlock index={i} title={indeling.title} landmarkTop={indeling.landmarkTop} landmarkBottom={indeling.landmarkBottom} />}
+                                <div className="lot-row">
+                                    {indeling.plaatsList.map((lot, i) => {
+                                        return <LayoutLotBlock
+                                            index={i}
+                                            invert={indeling.class === 'block-right' ? true : false}
+                                            lot={lot}
+                                            lotClass={this.getClassname(lot)}
+                                            lotBranches={this.lookupBranches(lot)}
+                                            lotProperties={this.lookupProperties(lot)}
+                                            lotFacilities={this.lookupFacilities(lot)}
+                                            lotOnClick={(event: any) => { this.openLotDetail(lot) }} />
+
+
+                                    })}
                                 </div>
-                            })}
-                        </div>
-                    </div>
-                    } else {
-                        return <div key={i}>
-                            <div className="lot-row">
-                                {indeling.plaatsList.map(lot => {
-                                    return <div className={this.getClassname(lot)} onClick={() => {this.openLotDetail(lot)}}><Badge count={this.lookupBranches(lot).length > 1 ? this.lookupBranches(lot).length : 0 }>{lot}</Badge></div>
-                                })}
+                                {indeling.class === 'block-right' &&
+                                    <LayoutEditBlock index={i} title={indeling.title} landmarkTop={indeling.landmarkTop} landmarkBottom={indeling.landmarkBottom} />}
                             </div>
-                        </div>
-                    }
+                        </TabPane>
+                        return myPanel
+                    })
                 })}
-            </div>
-        })}
-            {/* {base.rows.map(row => {
-                return <div className="lot-row">{row.map(lot => {
-                    return <div className={this.getClassname(lot)}><Badge count={this.lookupBranches(lot).length > 1 ? this.lookupBranches(lot).length : 0 }>{lot}</Badge></div>
-                })}</div>
-            })
-            } */}
-            {/* <div>{JSON.stringify(pages)}</div> */}
+            </Tabs>
+            {this.state.selectedLot !== "0" &&
+                <LayoutEditLot
+                    lot={this.state.selectedLot}
+                    branches={this.state.selectedBranches}
+                    facilities={this.state.selectedFacilities}
+                    properties={this.state.selectedProperties} />}
         </>
     }
 }
