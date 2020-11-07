@@ -239,7 +239,18 @@ textarea {
   margin: 6px;
   display: inline-block;
 }
+.ant-breadcrumb {
+  margin-bottom: 2em !important;
+}
 
+.ant-layout-footer {
+  background: transparent !important;
+}
+.site-layout-content {
+  min-height: 280px;
+  padding: 2em;
+  background: #fff;
+}
 
 .lot.occupied > span:not(.ant-badge-not-a-wrapper)  {
   color: #f5222d !important;

@@ -1,5 +1,5 @@
 import { PlusSquareOutlined, EditOutlined } from '@ant-design/icons'
-import { Button, Row, Space } from "antd"
+import { Button, List, Row, Space } from "antd"
 import React, { Component } from "react"
 import { Market, Markets } from "../models"
 import MarketsService from "../services/service_markets"
@@ -44,12 +44,16 @@ export default class MarketListPage extends Component {
                     </Link>
                 </Breadcrumb.Item>
             </Breadcrumb>
-            <ul>
+            <List
+    itemLayout="horizontal">
+
                 {Object.keys(this.state.markets).map((key: string, i: number) => {
                     const market: Market = this.state.markets[key]
-                    return <li key={key}><MarketListItem marketId={key} market={market} /></li>
+                    return <List.Item key={key}>
+                        <MarketListItem marketId={key} market={market} />
+                    </List.Item>
                 })}
-            </ul>
+</List>
             <Row>
                 <Space>
                     <Button title="Nieuwe leeg" type="primary" icon={<PlusSquareOutlined />}>Nieuwe leeg</Button>

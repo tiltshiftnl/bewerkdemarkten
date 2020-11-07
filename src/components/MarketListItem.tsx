@@ -2,7 +2,8 @@ import React from "react"
 import { Component } from "react"
 import { Market } from "../models"
 import { Link } from "react-router-dom"
-
+import { List } from "antd"
+import { RightOutlined } from '@ant-design/icons'
 
 export default class MarketListItem extends Component<{ market: Market, marketId: string }> {
     readonly state: { market: Market } = {
@@ -21,11 +22,11 @@ export default class MarketListItem extends Component<{ market: Market, marketId
 
     render() {
         const { marketId } = this.props
-        return <>
-            <Link key={marketId} to={{
+        return <List.Item.Meta
+        avatar={<RightOutlined/>}
+            title={<Link key={marketId} to={{
                 pathname: `/market/${marketId}`
-            }}>{marketId} {this.state.market.name}
-            </Link>
-        </>
+            }}>{marketId}</Link>}
+        description={<>{this.state.market.name || "..."}<br/>Amsterdam</>}/>
     }
 }

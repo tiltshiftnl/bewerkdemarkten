@@ -46,14 +46,18 @@ export default class MarketDetailItem extends Component<{ market: Market, market
             </Menu>
         );
         return <Descriptions
-            key={marketId}
-            column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
-        >
+            key={marketId}>
             <Descriptions.Item label="ID"><b>{marketId}</b></Descriptions.Item>
             <Descriptions.Item label="Markt"><Input
                 className={`ant-input${this.state.market.name ? " " : " onbekend"}`}
                 id={`market_${marketId}_name`}
-                placeholder="klik hier om een naam in te vullen"
+                placeholder="Vul naam in"
+                onChange={(e: any)=>{
+                    this.setState((a: { market: Market }) => {
+                        a.market.name= e.target.value
+                        return a
+                    })
+                }}
                 value={this.state.market.name} />
             </Descriptions.Item>
             <Descriptions.Item label="Fase">

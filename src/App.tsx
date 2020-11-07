@@ -5,6 +5,9 @@ import CalendarPage from './pages/CalendarPage';
 import MarketDetailPage from './pages/MarketDetailPage';
 import MarketListPage from './pages/MarketListPage'
 import MarketPage from './pages/MarketPage'
+import { Layout } from 'antd'
+
+const {Footer } = Layout
 
 export default class App extends Component {
   render() {
@@ -18,7 +21,7 @@ export default class App extends Component {
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/markets">Markten</NavLink></li>
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/calendar">Kalender</NavLink></li>
             </ul>
-            <div style={{ padding: '2em' }}>
+            <div className="site-layout-content">
               <Switch>
                 <Route path="/markets" component={MarketListPage} />
                 <Route path="/calendar" component={CalendarPage} />
@@ -29,6 +32,7 @@ export default class App extends Component {
             </div>
           </BrowserRouter>
         </div>
+        <Footer/>
       </ThemeProvider>
     );
   }
