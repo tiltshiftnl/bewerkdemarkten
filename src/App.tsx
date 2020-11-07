@@ -24,7 +24,7 @@ export default class App extends Component {
                 <Route path="/calendar" component={CalendarPage} />
                 <Route path="/market/detail/:id" exact component={MarketDetailPage} />
                 <Route path="/market/:id" exact component={MarketPage} />
-                <Route path="/" component={MarketListPage} />
+                <Route path="/" exact component={MarketListPage} />
               </Switch>
             </div>
           </BrowserRouter>

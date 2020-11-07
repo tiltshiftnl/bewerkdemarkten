@@ -63,6 +63,9 @@ export default class MarketDetailItem extends Component<{ market: Market, market
 
                 {/* <Tag className={market.phase || "onbekend"}>{market.phase || "onbekend"}</Tag> */}
             </Descriptions.Item>
+            <Descriptions.Item>
+                <a href={`/data/pdf/kaart-${marketId}.pdf`} download>Download Plattegrond</a>
+            </Descriptions.Item>
             <Descriptions.Item label="Dagen">
 
                 {

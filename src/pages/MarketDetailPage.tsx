@@ -1,19 +1,20 @@
 import React from "react"
 import MarketDetail from "../components/MarketDetail"
 import { Page, Rows, Lot } from "../models"
-import { LotsService, MarketService, PagesService } from "../services/service_markets"
+import { BranchesService, LotsService, MarketService, PagesService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
 
 export default class MarketDetailPage extends DynamicBase {
-    readonly state: { market: Rows, lots: Lot[], pages: Page[], name: string } = {
+    readonly state: { market: Rows, lots: Lot[], pages: Page[], name: string, branches: string[] } = {
         market: {
             rows: [[]]
         },
         lots: [],
         pages: [],
+        branches: [],
         name: "Gegevens worden opgehaald..."
     }
 
@@ -21,9 +22,13 @@ export default class MarketDetailPage extends DynamicBase {
     lotsService: LotsService
     pagesService: PagesService
 
+    // Lookups
+    branchesService: BranchesService
+
     constructor(props: any) {
         super(props)
         this.marketService = new MarketService()
+        this.branchesService = new BranchesService()
         this.lotsService = new LotsService()
         this.pagesService = new PagesService()
     }
@@ -80,6 +85,9 @@ export default class MarketDetailPage extends DynamicBase {
                         <span>{this.state.name.split('-')[1]}</span>
                     </Breadcrumb.Item></>}
             </Breadcrumb>
+            <p style={{ margin: "1em" }}>
+                <a href={`/data/pdf/kaart-${this.state.name}.pdf`} download>Download Plattegrond</a>
+            </p>
             <MarketDetail base={this.state.market} lots={this.state.lots} pages={this.state.pages} />
         </>
     }
