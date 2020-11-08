@@ -1,5 +1,9 @@
+export interface Plan {
+    name: string
+    pages: number
+}
 export interface Event {
-
+    plan?: Plan
 }
 
 export interface Events {
@@ -27,6 +31,7 @@ export interface Market {
     id: number
     name: string
     phase?: string
+    plan?: Plan
     events: Events
 }
 

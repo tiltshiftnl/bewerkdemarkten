@@ -64,12 +64,11 @@ export default class MarketDetailItem extends Component<{ market: Market, market
                 <Dropdown.Button className={this.state.market.phase || "onbekend"} overlay={menu}>
                     {this.state.market.phase || "onbekend"}
                 </Dropdown.Button>
-
-                {/* <Tag className={market.phase || "onbekend"}>{market.phase || "onbekend"}</Tag> */}
             </Descriptions.Item>
+            {this.state.market.plan &&
             <Descriptions.Item>
-                <a href={`/data/pdf/kaart-${marketId}.pdf`} download>Download Plattegrond</a>
-            </Descriptions.Item>
+                <a href={`/data/pdf/${this.state.market.plan.name}.pdf`} download>Download Plattegrond</a>
+            </Descriptions.Item>}
             <Descriptions.Item label="Dagen">
 
                 {

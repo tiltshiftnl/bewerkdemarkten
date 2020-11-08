@@ -2,13 +2,42 @@
     "4045": {
         "id": 1,
         "name": "Plein '40-'45",
+        "plan": {
+            "name": "kaart-4045",
+            "pages": 1
+        },
         "phase": "activatie",
         "events": {
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "DI": {
+                "plan": {
+                    "name": "kaart-4045-DI",
+                    "pages": 2
+                }
+            },
+            "WO": {
+                "plan": {
+                    "name": "kaart-4045-WO",
+                    "pages": 2
+                }
+            },
+            "DO": {
+                "plan": {
+                    "name": "kaart-4045-DO",
+                    "pages": 2
+                }
+            },
+            "VR": {
+                "plan": {
+                    "name": "kaart-4045-VR",
+                    "pages": 2
+                }
+            },
+            "ZA": {
+                "plan": {
+                    "name": "kaart-4045-ZA",
+                    "pages": 2
+                }
+            }
         }
     },
     "AC": {
@@ -16,12 +45,42 @@
         "name": "Albert Cuyp",
         "phase": "live",
         "events": {
-            "MA": {},
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "MA": {
+                "plan": {
+                    "name": "kaart-AC-MA",
+                    "pages": 4
+                }
+            },
+            "DI": {
+                "plan": {
+                    "name": "kaart-AC-DI",
+                    "pages": 4
+                }
+            },
+            "WO": {
+                "plan": {
+                    "name": "kaart-AC-WO",
+                    "pages": 4
+                }
+            },
+            "DO": {
+                "plan": {
+                    "name": "kaart-AC-DO",
+                    "pages": 4
+                }
+            },
+            "VR": {
+                "plan": {
+                    "name": "kaart-AC-VR",
+                    "pages": 4
+                }
+            },
+            "ZA": {
+                "plan": {
+                    "name": "kaart-AC-ZA",
+                    "pages": 4
+                }
+            }
         }
     },
     "ADK": {
@@ -61,13 +120,47 @@
         }
     },
     "DAPP": {
+        "plan": {
+            "name": "kaart-DAPP",
+            "pages": 1
+        },
         "events": {
-            "MA": {},
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "MA": {
+                "plan": {
+                    "name": "kaart-DAPP-MA",
+                    "pages": 4
+                }
+            },
+            "DI": {
+                "plan": {
+                    "name": "kaart-DAPP-DI",
+                    "pages": 4
+                }
+            },
+            "WO": {
+                "plan": {
+                    "name": "kaart-DAPP-WO",
+                    "pages": 4
+                }
+            },
+            "DO": {
+                "plan": {
+                    "name": "kaart-DAPP-DO",
+                    "pages": 4
+                }
+            },
+            "VR": {
+                "plan": {
+                    "name": "kaart-DAPP-VR",
+                    "pages": 4
+                }
+            },
+            "ZA": {
+                "plan": {
+                    "name": "kaart-DAPP-ZA",
+                    "pages": 4
+                }
+            }
         }
     },
     "EESB": {
@@ -92,7 +185,12 @@
     },
     "LBZ": {
         "events": {
-            "MA": {}
+            "MA": {
+                "plan": {
+                    "name": "kaart-LBZ-MA",
+                    "pages": 2
+                }
+            }
         }
     },
     "LIN": {
@@ -129,9 +227,24 @@
     },
     "PEKC": {
         "events": {
-            "WO": {},
-            "VR": {},
-            "ZA": {}
+            "WO": {
+                "plan": {
+                    "name": "kaart-PEKC-WO",
+                    "pages": 2
+                }
+            },
+            "VR": {
+                "plan": {
+                    "name": "kaart-PEKC-VR",
+                    "pages": 2
+                }
+            },
+            "ZA": {
+                "plan": {
+                    "name": "kaart-PEKC-ZA",
+                    "pages": 2
+                }
+            }
         }
     },
     "RBOS": {
@@ -151,22 +264,66 @@
     },
     "TK": {
         "events": {
-            "MA": {},
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "MA": {
+                "plan": {
+                    "name": "kaart-TK-MA",
+                    "pages": 2
+                }
+            },
+            "DI": {
+                "plan": {
+                    "name": "kaart-TK-DI",
+                    "pages": 2
+                }
+            },
+            "WO": {
+                "plan": {
+                    "name": "kaart-TK-WO",
+                    "pages": 2
+                }
+            },
+            "DO": {
+                "plan": {
+                    "name": "kaart-TK-DO",
+                    "pages": 2
+                }
+            },
+            "VR": {
+                "plan": {
+                    "name": "kaart-TK-VR",
+                    "pages": 2
+                }
+            },
+            "ZA": {
+                "plan": {
+                    "name": "kaart-TK-ZA",
+                    "pages": 2
+                }
+            }
         }
     },
     "TM": {
         "events": {
-            "DI": {}
+            "DI": {
+                "plan": {
+                    "name": "kaart-TM-DI",
+                    "pages": 1
+                }
+            }
         }
     },
     "WST": {
+        "plan": {
+            "name": "kaart-WST",
+            "pages": 2
+        },
         "events": {
-            "MA": {}
+            "MA": {
+                "plan": {
+                    "name": "kaart-WST-MA",
+                    "pages": 2
+                }
+            }
         }
     }
 }

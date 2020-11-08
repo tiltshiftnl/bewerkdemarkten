@@ -12,7 +12,7 @@ export default class LayoutEditLot extends Component<{
             <div>{lot}</div>
             {branches.length > 0 && <>
                 Verkoopinformatie
-        <ul>
+                <ul>
                     {branches.map((name, i) => {
                         return <li>{name}</li>
                     }
@@ -21,7 +21,7 @@ export default class LayoutEditLot extends Component<{
             </>}
             {facilities.length > 0 && <>
                 Faciliteiten
-        <ul>
+                <ul>
                     {facilities.map((name, i) => {
                         return <li>{name}</li>
                     }
@@ -30,7 +30,7 @@ export default class LayoutEditLot extends Component<{
             </>}
             {properties.length > 0 && <>
                 Extra's
-        <ul>
+                <ul>
                     {properties.map((name, i) => {
                         return <li>{name}</li>
                     }
