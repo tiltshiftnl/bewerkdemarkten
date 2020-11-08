@@ -3,10 +3,12 @@ import MarketDetail from "../components/MarketDetail"
 import { Page, Rows, Lot, Event, Plan } from "../models"
 import MarketsService, { BranchesService, LotsService, MarketService, PagesService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
-import { Breadcrumb, Col, Row } from 'antd'
+import { Breadcrumb, Col, Row, Tabs } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
 import { ReactSVG } from "react-svg"
+
+const { TabPane } = Tabs
 
 export default class MarketDetailPage extends DynamicBase {
     readonly state: { market: Rows, lots: Lot[], pages: Page[], name: string, branches: string[], event?: Event } = {
@@ -77,9 +79,13 @@ export default class MarketDetailPage extends DynamicBase {
         this.setState({ pages: event.target.value });
     }
     renderSvgPages(plan: Plan) {
-        return Array.from(Array(plan.pages), (e, i) => {
-            return <ReactSVG key={i} useRequestCache={false} src={`/data/pdf/${plan.name}-${i+1}.svg`} />
-        })
+        return <Tabs defaultActiveKey="1">
+        {Array.from(Array(plan.pages), (e, i) => {
+            return <TabPane tab={`Plattegrond-${i+1}`} key={i+1}>
+            <ReactSVG key={i} useRequestCache={false} src={`/data/pdf/${plan.name}-${i + 1}.svg`} />
+            </TabPane>
+        })}
+        </Tabs>
     }
 
     render() {
@@ -104,17 +110,16 @@ export default class MarketDetailPage extends DynamicBase {
             </Breadcrumb>
             <Row>
                 <Col><MarketDetail base={this.state.market} lots={this.state.lots} pages={this.state.pages} /></Col>
-                <Col>
-                    {this.state.event && this.state.event.plan &&
-                        <><p style={{ margin: "1em" }}>
+
+                {this.state.event && this.state.event.plan &&
+                    <Col>
+                        {this.renderSvgPages(this.state.event.plan)}
+                        <p style={{ margin: "1em" }}>
                             <a href={`/data/pdf/${this.state.event.plan.name}.pdf`} download>Download Plattegrond</a>
                         </p>
-                            {this.renderSvgPages(this.state.event.plan)}
-                        </>
-                    }
-                </Col>
+                    </Col>
+                }
             </Row>
-
         </>
     }
 }
