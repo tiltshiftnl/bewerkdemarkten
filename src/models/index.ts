@@ -40,12 +40,14 @@ export interface Lot {
     branches?: string[]
     verkoopinrichting?: string[]
     properties?: string[]
+    type?: "lot" | "stand"
 }
 
 export interface Obstacle {
     kraamA: string
     kraamB: string
     obstakel: string[]
+    type?: "obstacle"
 }
 
 export interface Geography {
@@ -77,8 +79,23 @@ export interface Announcements {
 export interface AssignedBranche {
     brancheId: string
     verplicht: boolean
+    maximumPlaatsen?: number
 }
 
 export interface Markets {
     [key: string]: Market
+}
+
+export interface MarketEventDetails {
+    branches: AssignedBranche[]
+    pages: {
+        layout: {
+            class: string
+            landmarkTop: string
+            landmarkBottom: string
+            title: string
+            lots: (Lot | Obstacle)[]
+        }[]
+        title: string
+    }[]
 }

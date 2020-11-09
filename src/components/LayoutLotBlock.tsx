@@ -1,35 +1,18 @@
-import { Badge } from "antd"
 import React, { Component, MouseEvent } from "react"
+import SvgLot from "../graphics/SvgLot"
+import { Lot } from "../models"
 
 export default class LayoutLotBlock extends Component<{
     index: number
-    lot: string
+    lot: Lot
     invert: boolean
-    lotClass: string
-    lotBranches: string[]
-    lotFacilities: string[]
-    lotProperties: string[]
+    classDef: string
     lotOnClick: (event: MouseEvent) => void
 }> {
     render() {
-        const { index, lot, lotClass, lotBranches, lotFacilities, lotProperties, lotOnClick, invert } = this.props
-        if (invert) {
-            return <div key={index} className={lotClass} onClick={lotOnClick}>
-                <Badge offset={[12, -32]} className="facility" count={lotFacilities.length} />
-                <Badge offset={[0, 38]} count={lotBranches.length > 1 ? lotBranches.length : 0}>
-                    {lot}
-                </Badge>
-                <Badge className="property" offset={[-12, -32]} count={lotProperties.length} />
-
-            </div>
-        }
-        return <div key={index} className={lotClass} onClick={lotOnClick}>
-            <Badge offset={[12, 22]} className="facility" count={lotFacilities.length} />
-            <Badge count={lotBranches.length > 1 ? lotBranches.length : 0}>
-                {lot}
-            </Badge>
-            <Badge className="property" offset={[-12, 22]} count={lotProperties.length} />
-
+        const { index, lot, classDef, lotOnClick, invert } = this.props
+        return <div key={index} className={classDef} onClick={lotOnClick}>
+            <SvgLot lot={lot} invert={invert} classDef={classDef} />
         </div>
     }
 }

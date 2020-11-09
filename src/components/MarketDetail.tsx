@@ -1,101 +1,91 @@
 import { Tabs } from "antd"
 import React from "react"
 import { Component } from "react"
-import { Page, Rows, Lot } from "../models"
+import { Lot, MarketEventDetails, Obstacle } from "../models"
 import LayoutEditBlock from "./LayoutEditBlock"
 import LayoutEditLot from "./LayoutEditLot"
 import LayoutLotBlock from "./LayoutLotBlock"
+import LayoutObstacleBlock from "./LayoutObstacleBlock"
 
 const { TabPane } = Tabs
-export default class MarketDetail extends Component<{ base: Rows, lots: Lot[], pages: Page[] }> {
-    readonly state: { selectedLot: string, selectedBranches: string[], selectedFacilities: [], selectedProperties: [] } = {
-        selectedLot: "0",
-        selectedBranches: [],
-        selectedFacilities: [],
-        selectedProperties: []
+export default class MarketDetail extends Component<{ marketEvent: MarketEventDetails }> {
+    readonly state: { selectedLot?: Lot } = {
+        selectedLot: undefined
     }
 
-    lookupBranches = (lotId: string): string[] => {
-        const result = this.props.lots.find(c => c.plaatsId === lotId)
-        return result?.branches || []
-    }
-
-    lookupProperties = (lotId: string): string[] => {
-        const result = this.props.lots.find(c => c.plaatsId === lotId)
-        return result?.properties || []
-    }
-
-    lookupFacilities = (lotId: string): string[] => {
-        const result = this.props.lots.find(c => c.plaatsId === lotId)
-        return result?.verkoopinrichting || []
-    }
-
-    getClassname = (lotId: string) => {
+    getClassname = (lot: Lot) => {
         let baseClass = ""
-        if (this.state.selectedLot === lotId) {
+        if (this.state.selectedLot === lot) {
             baseClass = "selected "
         }
-        if (this.lookupBranches(lotId).length > 0) {
-            return baseClass + "lot occupied"
+        if (lot.branches) {
+            if (lot.branches.length > 0) {
+                return baseClass + "lot occupied"
+            }
         }
 
         return baseClass + "lot"
     }
 
-    openLotDetail = (lotId: string) => {
-
-        this.setState({
-            selectedLot: lotId,
-            selectedBranches: this.lookupBranches(lotId),
-            selectedFacilities: this.lookupFacilities(lotId),
-            selectedProperties: this.lookupProperties(lotId)
-        })
+    toggleSelectedLot = (lot: Lot) => {
+        if (lot === this.state.selectedLot) {
+            this.setState({
+                selectedLot: undefined
+            })
+        } else {
+            this.setState({
+                selectedLot: lot
+            })
+        }
     }
 
     render() {
-        const { pages } = this.props
+        const { marketEvent } = this.props
         return <>
             <Tabs defaultActiveKey="10">
-                {pages.map((page, i) => {
+                {marketEvent.pages.map((page, i) => {
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    const pageKey = i + 1
-                    return page.indelingslijstGroup.map((indeling, i) => {
-                        // If a panel exists with exactly the same title, append. Else create new
-                        const indelingKey = i + 1
-                        //const panelHeader: string = `${indeling.title} ${indeling.landmarkTop} ${indeling.landmarkBottom}`
-                        const myPanel = <TabPane tab={`${pageKey}-${indelingKey}`} key={`${pageKey}${indelingKey}`}>
-                            <div className={indeling.class}>
-                                {indeling.class === 'block-left' &&
-                                    <LayoutEditBlock index={i} title={indeling.title} landmarkTop={indeling.landmarkTop} landmarkBottom={indeling.landmarkBottom} />}
+                    return <TabPane tab={page.title} key={i}>
+                        <div className="block-wrapper">
+                        {page.layout.map((layout, i) => {
+                            return <div className={layout.class}>
+                                {layout.class === 'block-left' &&
+                                    <LayoutEditBlock index={i} title={layout.title} landmarkTop={layout.landmarkTop} landmarkBottom={layout.landmarkBottom} />
+                                }
                                 <div className="lot-row">
-                                    {indeling.plaatsList.map((lot, i) => {
-                                        return <LayoutLotBlock
-                                            index={i}
-                                            invert={indeling.class === 'block-right' ? true : false}
-                                            lot={lot}
-                                            lotClass={this.getClassname(lot)}
-                                            lotBranches={this.lookupBranches(lot)}
-                                            lotProperties={this.lookupProperties(lot)}
-                                            lotFacilities={this.lookupFacilities(lot)}
-                                            lotOnClick={(event: any) => { this.openLotDetail(lot) }} />
+                                    {layout.lots.map((lot, i) => {
+                                        if (lot.type === "stand") {
+                                            return <LayoutLotBlock
+                                                key={i}
+                                                index={i}
+                                                invert={layout.class === 'block-right' ? true : false}
+                                                lot={(lot as Lot)}
+                                                classDef={this.getClassname((lot as Lot))}
+                                                lotOnClick={(event: any) => { this.toggleSelectedLot(lot) }} />
 
+                                        }
+                                        return <LayoutObstacleBlock
+                                            key={i}
+                                            index={i}
+                                            invert={layout.class === 'block-right' ? true : false}
+                                            obstacle={(lot as Obstacle)}
+                                            classDef="obstacle"
+                                            />
 
                                     })}
                                 </div>
-                                {indeling.class === 'block-right' &&
-                                    <LayoutEditBlock index={i} title={indeling.title} landmarkTop={indeling.landmarkTop} landmarkBottom={indeling.landmarkBottom} />}
+                                {layout.class === 'block-right' &&
+                                    <LayoutEditBlock index={i} title={layout.title} landmarkTop={layout.landmarkTop} landmarkBottom={layout.landmarkBottom} />}
                             </div>
-                        </TabPane>
-                        return myPanel
-                    })
+
+                        })}
+                        </div>
+                    </TabPane>
                 })}
             </Tabs>
-            {this.state.selectedLot !== "0" &&
-                <LayoutEditLot
-                    lot={this.state.selectedLot}
-                    branches={this.state.selectedBranches}
-                    facilities={this.state.selectedFacilities}
-                    properties={this.state.selectedProperties} />}
+            {this.state.selectedLot &&
+                <LayoutEditLot lot={this.state.selectedLot} />
+                }
         </>
     }
 }

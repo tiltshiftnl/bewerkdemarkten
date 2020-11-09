@@ -1,4 +1,4 @@
-import { AssignedBranche, Geography, Markets, Page, Rows, Lot } from '../models'
+import { AssignedBranche, Geography, Markets, Page, Rows, Lot, Obstacle, Assignment, MarketEventDetails } from '../models'
 import { Service } from './service'
 
 export default class MarketsService extends Service {
@@ -36,6 +36,80 @@ export class MarketService extends Service {
             .catch(error => {
                 this.handleError(error)
             })
+    }
+
+    getRow(obstacle: Obstacle, matrix: any[]): [number, number] {
+            // Object Before Obstacle
+            const oStart = matrix.find(e => e.plaatsId === obstacle.kraamA)
+            const oStartPosition = matrix.indexOf(oStart)
+            
+            // Object After Obstacle
+            const oEnd = matrix.find(e => e.plaatsId === obstacle.kraamB)
+            const oEndPosition = matrix.indexOf(oEnd)
+            return [oStartPosition, oEndPosition]
+    }
+
+    async constructRelationalStructure(route: string): Promise<MarketEventDetails> {
+        const _b = await new BranchesService().retrieve(route).then(result => result) // branches.json
+        const _g = await new GeographyService().retrieve(route).then(result => result) // geografie.json
+        const _l = await new LotsService().retrieve(route).then(result => result) // locaties.json
+        const _m = await this.retrieve(route).then(result => result) // markt.json
+        const _p = await new PagesService().retrieve(route).then(result => result) // paginas.json
+        // replace row items with locations
+        const rowSets: (Lot | Obstacle)[] = []
+        _m.rows.forEach(row => {
+            //const _newRow: (Lot | Obstacle)[] = []
+            row.forEach((lot: string) => {
+                const _Lot: Lot | undefined = _l.find(e => e.plaatsId === lot)
+                if (_Lot) {
+                    rowSets.push({ ..._Lot, type: "stand" }) //where plaatsId =....
+                }
+            })
+            //rowSets.push(_newRow)
+        })
+
+        // Insert obstacles between lots.
+        _g.obstakels.forEach((o: Obstacle) => {
+            // Where to insert the obstacle?
+            const obstaclePosition = this.getRow(o, rowSets)
+
+            if (obstaclePosition !== [-1, -1]) {
+                //[obstaclePosition[0]]
+                rowSets.splice(obstaclePosition[1],0,{ ...o, type: "obstacle" })
+            } else {
+                console.log("Something is wrong with this obstacle")
+                console.log(o)
+            }
+        })
+
+        // Now I have rows with obstacles, lets paste them into the pages at the right positions,
+        // replace the plaatsList with the given rows and stitch them together with the obstacles.
+        const newPages: any = []
+        _p.forEach((page: Page) => {
+            const newListGroupArray: any = []
+            page.indelingslijstGroup.forEach((group: Assignment)=> {
+                const firstLotId: string = group.plaatsList[0]
+                const lastLotId: string = group.plaatsList[group.plaatsList.length -1]
+                //find the first
+                const firstLot = rowSets.find(e => (e as Lot).plaatsId === firstLotId)
+                //find the last
+                const lastLot = rowSets.find(e => (e as Lot).plaatsId === lastLotId)
+                if(lastLot && firstLot){
+                    const firstLotPosition = rowSets.indexOf(firstLot)
+                    const lastLotPosition = rowSets.indexOf(lastLot)
+                    //grab the part of the array that is between (and including) first and last
+                    const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                    delete (group as any).plaatsList
+                    const newListGroup = {...group, lots: pageLotsAndObstacles}
+                    newListGroupArray.push(newListGroup)
+                }
+            })
+            delete (page as any).indelingslijstGroup
+            const newPage = {...page, layout: newListGroupArray }
+            newPages.push(newPage)
+        })
+        
+        return {branches: _b, pages: newPages}
     }
 }
 

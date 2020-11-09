@@ -1,37 +1,35 @@
 import React, { Component } from "react"
+import { Lot } from "../models"
 
 export default class LayoutEditLot extends Component<{
-    lot: string
-    branches: string[]
-    facilities: string[]
-    properties: string[]
+    lot: Lot
 }> {
     render() {
-        const { lot, branches, facilities, properties } = this.props
+        const { lot } = this.props
         return <>
-            <div>{lot}</div>
-            {branches.length > 0 && <>
-                Verkoopinformatie
+            <div>{lot.plaatsId}</div>
+            {lot.branches && lot.branches.length > 0 && <>
+                Branches
                 <ul>
-                    {branches.map((name, i) => {
+                    {lot.branches.map((name, i) => {
                         return <li>{name}</li>
                     }
                     )}
                 </ul>
             </>}
-            {facilities.length > 0 && <>
-                Faciliteiten
+            {lot.verkoopinrichting && lot.verkoopinrichting.length > 0 && <>
+                Verkoopinrichting
                 <ul>
-                    {facilities.map((name, i) => {
+                    {lot.verkoopinrichting.map((name, i) => {
                         return <li>{name}</li>
                     }
                     )}
                 </ul>
             </>}
-            {properties.length > 0 && <>
-                Extra's
+            {lot.properties && lot.properties.length > 0 && <>
+                Properties
                 <ul>
-                    {properties.map((name, i) => {
+                    {lot.properties.map((name, i) => {
                         return <li>{name}</li>
                     }
                     )}
