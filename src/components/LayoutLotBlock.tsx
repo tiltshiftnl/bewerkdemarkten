@@ -9,6 +9,7 @@ export default class LayoutLotBlock extends Component<{
     classDef: string
     lotOnClick: (event: MouseEvent) => void
 }> {
+    
     render() {
         const { index, lot, classDef, lotOnClick, invert } = this.props
         return <div key={index} className={classDef} onClick={lotOnClick}>

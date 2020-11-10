@@ -241,6 +241,9 @@ textarea {
   height: 50px;
   margin-bottom: 6px;
 }
+.edit-lot {
+  padding: 1em;
+}
 
 .obstacle,
 .lot {
