@@ -48,11 +48,11 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
                     return <TabPane tab={page.title} key={i}>
                         <div className="block-wrapper">
                         {page.layout.map((layout, i) => {
-                            return <div className={layout.class}>
+                            return <div key={i} className={layout.class}>
                                 {layout.class === 'block-left' &&
                                     <LayoutEditBlock index={i} title={layout.title} landmarkTop={layout.landmarkTop} landmarkBottom={layout.landmarkBottom} />
                                 }
-                                <div className="lot-row">
+                                <div className={`lot-row`}>
                                     {layout.lots.map((lot, i) => {
                                         if (lot.type === "stand") {
                                             return <LayoutLotBlock

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Obstacle } from "../models";
 
+
 export default class SvgObstacle extends Component<{
     obstacle: Obstacle
     invert: boolean
