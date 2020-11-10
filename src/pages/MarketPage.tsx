@@ -17,16 +17,28 @@ export default class MarketPage extends DynamicBase {
         this.marketsService = new MarketsService()
     }
 
-    componentDidMount = () => {
+    componentDidMount = (): void => {
         this.refresh()
     }
-    refresh() {
+
+    refresh(): void {
         this.id = (this.props as any).match.params.id
-        this.marketsService.retrieve().then((results) => {
-            this.setState({
-                market: results[this.id]
+        if (this.id !== "new") {
+            this.marketsService.retrieve().then((results) => {
+                this.setState({
+                    market: results[this.id]
+                })
             })
-        })
+        } else {
+            // Assume a new market
+            this.setState({
+                market: {
+                    id: "NIEUW",
+                    name: ""
+                }
+            })
+        }
+
     }
 
     render() {

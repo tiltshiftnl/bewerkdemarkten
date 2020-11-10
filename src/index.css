@@ -166,7 +166,7 @@ td {
 }
 
 .event {
-  padding: 0 1em;
+  cursor: pointer;
 }
 
 textarea {
@@ -248,7 +248,7 @@ textarea {
   cursor: pointer;
 }
 .obstacle {
-  padding: 8px;
+  padding: 9px;
 }
 .obstacle > svg {
   width: 32px;

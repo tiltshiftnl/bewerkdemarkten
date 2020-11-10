@@ -45,7 +45,7 @@ export default class MarketListPage extends Component {
                 </Breadcrumb.Item>
             </Breadcrumb>
             <List
-    itemLayout="horizontal">
+                itemLayout="horizontal">
 
                 {Object.keys(this.state.markets).map((key: string, i: number) => {
                     const market: Market = this.state.markets[key]
@@ -53,7 +53,7 @@ export default class MarketListPage extends Component {
                         <MarketListItem marketId={key} market={market} />
                     </List.Item>
                 })}
-</List>
+            </List>
             <Row>
                 <Space>
                     <Button title="Nieuwe leeg" type="primary" icon={<PlusSquareOutlined />}>Nieuwe leeg</Button>

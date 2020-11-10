@@ -1,10 +1,16 @@
 import React from "react"
 import { Component } from "react"
 import { Market } from "../models"
-import { Link } from "react-router-dom"
-import { Descriptions, Dropdown, Input, Menu, Tag } from "antd"
+import { RouteComponentProps, withRouter } from "react-router-dom"
+import { Button, Descriptions, Dropdown, Input, Menu, Tag, Tooltip } from "antd"
+import { PlusOutlined } from '@ant-design/icons'
 
-export default class MarketDetailItem extends Component<{ market: Market, marketId: string }> {
+interface MarketDetailItemProps extends RouteComponentProps {
+    market: Market, marketId: string
+}
+
+class MarketDetailItem extends Component<MarketDetailItemProps> {
+    history: any
     readonly state: { market: Market } = {
         market: {
             name: "onbekend",
@@ -17,6 +23,13 @@ export default class MarketDetailItem extends Component<{ market: Market, market
         this.setState({
             market: this.props.market
         })
+    }
+
+
+    handleClose = (removedTag: any) => {
+        //const tags = this.state.tags.filter(tag => tag !== removedTag)
+        console.log(removedTag)
+        //this.setState({ tags })
     }
 
     render() {
@@ -52,9 +65,9 @@ export default class MarketDetailItem extends Component<{ market: Market, market
                 className={`ant-input${this.state.market.name ? " " : " onbekend"}`}
                 id={`market_${marketId}_name`}
                 placeholder="Vul naam in"
-                onChange={(e: any)=>{
+                onChange={(e: any) => {
                     this.setState((a: { market: Market }) => {
-                        a.market.name= e.target.value
+                        a.market.name = e.target.value
                         return a
                     })
                 }}
@@ -66,21 +79,29 @@ export default class MarketDetailItem extends Component<{ market: Market, market
                 </Dropdown.Button>
             </Descriptions.Item>
             {this.state.market.plan &&
-            <Descriptions.Item>
-                <a href={`/data/pdf/${this.state.market.plan.name}.pdf`} download>Download Plattegrond</a>
-            </Descriptions.Item>}
+                <Descriptions.Item>
+                    <a href={`/data/pdf/${this.state.market.plan.name}.pdf`} download>Download Plattegrond</a>
+                </Descriptions.Item>}
             <Descriptions.Item label="Dagen">
 
                 {
                     Object.keys(this.state.market.events).map((key: string, i: number) => {
-                        return <Link key={key} to={{
-                            pathname: `/market/detail/${marketId}-${key}`
-                        }}>
-                            <Tag color="blue" key={key}><span key={key} className="event">{key}</span></Tag>
-                        </Link>
+                        return <Tag
+                            onClick={() => this.props.history.push({ pathname: `/market/detail/${marketId}-${key}` })}
+                            onClose={() => this.handleClose(key)}
+                            color="blue"
+                            key={key}
+                            closable={true}>
+                            <span key={key} className="event">{key}</span>
+                        </Tag>
                     })
                 }
+                <Tooltip title="Dag toevoegen">
+                    <Button type="primary" shape="circle" icon={<PlusOutlined />} />
+                </Tooltip>
             </Descriptions.Item>
         </Descriptions>
     }
 }
+
+export default withRouter(MarketDetailItem)

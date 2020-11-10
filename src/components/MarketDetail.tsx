@@ -19,7 +19,7 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
             baseClass = "selected "
         }
         if (lot.branches) {
-            if (lot.branches.length > 0) {
+            if (lot.branches.length > 0 && lot.branches.indexOf("bak") === -1) {
                 return baseClass + "lot occupied"
             }
         }

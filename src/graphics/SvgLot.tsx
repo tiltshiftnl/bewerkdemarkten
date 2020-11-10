@@ -1,29 +1,55 @@
 import React, { Component } from "react";
 import { Lot } from "../models";
+import SvgBak from "./SvgBak";
+import SvgElectra from "./SvgElectra";
 
 export default class SvgLot extends Component<{
     lot: Lot
     invert: boolean
     classDef: string
 }> {
+
+    renderProperties = (properties: string[] | undefined) => {
+        let propertyColor = "#777"
+        let propertyPosition: { x: number, y: number } = { x: 37, y: 33 }
+        if (this.props.invert) {
+            propertyPosition = { x: 37, y: 0 }
+        }
+        if (properties) {
+            if (properties[0] && properties[0] === "electra") {
+                return <SvgElectra invert={this.props.invert} color={propertyColor} position={propertyPosition} />
+            }
+        }
+        return <>todo</>
+    }
+
+    renderBranches = (branches: string[] | undefined) => {
+        let branchesPosition: { x: number, y: number } = { x: 37, y: 3 }
+        let brancheColor = "#777"
+        if (this.props.invert) {
+            branchesPosition = { x: 37, y: 37 }
+        }
+        // Contains bak?
+        return <>{this.props.lot.branches && this.props.lot.branches.indexOf("bak") > -1 &&
+            <SvgBak color={brancheColor} position={branchesPosition}/>
+        }</>
+    }
+
     render() {
         const x = 0
         const y = 0
         const width = 50
         const height = 50
-        let branchesPosition: { x: number, y: number } = { x: 40, y: 10 }
+
         let facilityPosition: { x: number, y: number } = { x: 10, y: 40 }
-        let propertyPosition: { x: number, y: number } = { x: 40, y: 40 }
+
         let strokeColor = "#d9d9d9"
         let fillColor = "#fafafa"
         let textColor = "#000000"
         let facilityColor = "#faad14"
-        let propertyColor = "#52c41a"
 
         if (this.props.invert) {
-            branchesPosition = { x: 40, y: 40 }
             facilityPosition = { x: 10, y: 10 }
-            propertyPosition = { x: 40, y: 10 }
         }
         if (this.props.classDef === "lot occupied") {
             strokeColor = "#ffa39e"
@@ -53,20 +79,7 @@ export default class SvgLot extends Component<{
                     fontSize="1.5em">
                     {this.props.lot.plaatsId}
                 </text>
-                {this.props.lot.branches && this.props.lot.branches.length > 1 &&
-                    <g>
-                        <circle cx={branchesPosition.x} cy={branchesPosition.y} r="8" fill={textColor} />
-                        <text
-                            x={branchesPosition.x}
-                            y={branchesPosition.y}
-                            style={{ fill: fillColor }}
-                            dominantBaseline="middle"
-                            textAnchor="middle"
-                            fontSize="10px">
-                            {this.props.lot.branches.length}
-                        </text>
-                    </g>
-                }
+                {this.renderBranches(this.props.lot.branches)}
 
                 {this.props.lot.verkoopinrichting && this.props.lot.verkoopinrichting.length > 0 &&
                     <g>
@@ -82,22 +95,8 @@ export default class SvgLot extends Component<{
                         </text>
                     </g>
                 }
-
-                {this.props.lot.properties && this.props.lot.properties.length > 0 &&
-                    <g>
-                        <circle cx={propertyPosition.x} cy={propertyPosition.y} r="8" fill={propertyColor} />
-                        <text
-                            x={propertyPosition.x}
-                            y={propertyPosition.y}
-                            style={{ fill: "white" }}
-                            dominantBaseline="middle"
-                            textAnchor="middle"
-                            fontSize="10px">
-                            {this.props.lot.properties.length}
-                        </text>
-                    </g>
-                }
             </g>
+            {this.renderProperties(this.props.lot.properties)}
         </svg>
     }
 }
