@@ -1,6 +1,6 @@
 import { Tabs } from "antd"
 import React, { RefObject, Component, createRef } from "react"
-import { Lot, MarketEventDetails, Obstacle } from "../models"
+import { AssignedBranche, Lot, MarketEventDetails, MarketPage, Obstacle } from "../models"
 import LayoutEditBlock from "./LayoutEditBlock"
 import LayoutEditLot from "./LayoutEditLot"
 import LayoutLotBlock from "./LayoutLotBlock"
@@ -17,7 +17,6 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
         this.editBlock = createRef()
     }
     getClassname = (lot: Lot) => {
-        console.log(lot)
         let baseClass = ""
         if (this.state.selectedLot === lot) {
             baseClass = "selected "
@@ -48,6 +47,14 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
             })
         }
     }
+
+    calculateOccupied = (branche: AssignedBranche) => {
+        const pages: MarketPage[] = this.props.marketEvent.pages
+        pages.forEach((page: MarketPage) => {
+
+        })
+    }
+
 
     render() {
         const { marketEvent } = this.props

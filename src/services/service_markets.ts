@@ -39,14 +39,14 @@ export class MarketService extends Service {
     }
 
     getRow(obstacle: Obstacle, matrix: any[]): [number, number] {
-            // Object Before Obstacle
-            const oStart = matrix.find(e => e.plaatsId === obstacle.kraamA)
-            const oStartPosition = matrix.indexOf(oStart)
-            
-            // Object After Obstacle
-            const oEnd = matrix.find(e => e.plaatsId === obstacle.kraamB)
-            const oEndPosition = matrix.indexOf(oEnd)
-            return [oStartPosition, oEndPosition]
+        // Object Before Obstacle
+        const oStart = matrix.find(e => e.plaatsId === obstacle.kraamA)
+        const oStartPosition = matrix.indexOf(oStart)
+
+        // Object After Obstacle
+        const oEnd = matrix.find(e => e.plaatsId === obstacle.kraamB)
+        const oEndPosition = matrix.indexOf(oEnd)
+        return [oStartPosition, oEndPosition]
     }
 
     async constructRelationalStructure(route: string): Promise<MarketEventDetails> {
@@ -55,17 +55,27 @@ export class MarketService extends Service {
         const _l = await new LotsService().retrieve(route).then(result => result) // locaties.json
         const _m = await this.retrieve(route).then(result => result) // markt.json
         const _p = await new PagesService().retrieve(route).then(result => result) // paginas.json
+
         // replace row items with locations
         const rowSets: (Lot | Obstacle)[] = []
         _m.rows.forEach(row => {
-            //const _newRow: (Lot | Obstacle)[] = []
             row.forEach((lot: string) => {
                 const _Lot: Lot | undefined = _l.find(e => e.plaatsId === lot)
                 if (_Lot) {
-                    rowSets.push({ ..._Lot, type: "stand" }) //where plaatsId =....
+                    // Set allocated on branches for the given lot
+                    if (_Lot.branches) {
+                        _b.forEach((br: AssignedBranche, i) => {
+                            _Lot.branches?.forEach(a => {
+                                if (a === _b[i].brancheId) {
+                                    //console.log(a + " matches " + _b[i].brancheId)
+                                    _b[i].allocated = (_b[i].allocated as number) + 1 || 1
+                                }
+                            })
+                        })
+                    }
+                    rowSets.push({ ..._Lot, type: "stand" }) // where plaatsId =....
                 }
             })
-            //rowSets.push(_newRow)
         })
 
         // Insert obstacles between lots.
@@ -74,8 +84,7 @@ export class MarketService extends Service {
             const obstaclePosition = this.getRow(o, rowSets)
 
             if (obstaclePosition !== [-1, -1]) {
-                //[obstaclePosition[0]]
-                rowSets.splice(obstaclePosition[1],0,{ ...o, type: "obstacle" })
+                rowSets.splice(obstaclePosition[1], 0, { ...o, type: "obstacle" })
             } else {
                 console.log("Something is wrong with this obstacle")
                 console.log(o)
@@ -87,29 +96,29 @@ export class MarketService extends Service {
         const newPages: any = []
         _p.forEach((page: Page) => {
             const newListGroupArray: any = []
-            page.indelingslijstGroup.forEach((group: Assignment)=> {
+            page.indelingslijstGroup.forEach((group: Assignment) => {
                 const firstLotId: string = group.plaatsList[0]
-                const lastLotId: string = group.plaatsList[group.plaatsList.length -1]
+                const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
                 //find the first
                 const firstLot = rowSets.find(e => (e as Lot).plaatsId === firstLotId)
                 //find the last
                 const lastLot = rowSets.find(e => (e as Lot).plaatsId === lastLotId)
-                if(lastLot && firstLot){
+                if (lastLot && firstLot) {
                     const firstLotPosition = rowSets.indexOf(firstLot)
                     const lastLotPosition = rowSets.indexOf(lastLot)
                     //grab the part of the array that is between (and including) first and last
                     const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
                     delete (group as any).plaatsList
-                    const newListGroup = {...group, lots: pageLotsAndObstacles}
+                    const newListGroup = { ...group, lots: pageLotsAndObstacles }
                     newListGroupArray.push(newListGroup)
                 }
             })
             delete (page as any).indelingslijstGroup
-            const newPage = {...page, layout: newListGroupArray }
+            const newPage = { ...page, layout: newListGroupArray }
             newPages.push(newPage)
         })
-        
-        return {branches: _b, pages: newPages}
+
+        return { branches: _b, pages: newPages }
     }
 }
 

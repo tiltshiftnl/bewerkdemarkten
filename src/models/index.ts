@@ -80,22 +80,27 @@ export interface AssignedBranche {
     brancheId: string
     verplicht: boolean
     maximumPlaatsen?: number
+    allocated?: number
 }
 
 export interface Markets {
     [key: string]: Market
 }
 
+export interface MarketLayout {
+    class: string
+    landmarkTop: string
+    landmarkBottom: string
+    title: string
+    lots: (Lot | Obstacle)[]
+}
+
+export interface MarketPage {
+    layout: MarketLayout[]
+    title: string
+}
+
 export interface MarketEventDetails {
     branches: AssignedBranche[]
-    pages: {
-        layout: {
-            class: string
-            landmarkTop: string
-            landmarkBottom: string
-            title: string
-            lots: (Lot | Obstacle)[]
-        }[]
-        title: string
-    }[]
+    pages: MarketPage[]
 }

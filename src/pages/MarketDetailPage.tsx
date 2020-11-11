@@ -1,14 +1,12 @@
 import React from "react"
 import MarketDetail from "../components/MarketDetail"
-import { Plan, MarketEventDetails } from "../models"
+import { MarketEventDetails } from "../models"
 import MarketsService, { MarketService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
-import { Breadcrumb, Col, Row, Tabs } from 'antd'
+import { Breadcrumb, Col, Row } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
-import { ReactSVG } from "react-svg"
-
-const { TabPane } = Tabs
+import MarketAllocation from "../components/MarketAllocation"
 
 export default class MarketDetailPage extends DynamicBase {
     readonly state: { market: MarketEventDetails } = {
@@ -43,16 +41,6 @@ export default class MarketDetailPage extends DynamicBase {
         })
     }
 
-    renderSvgPages(plan: Plan) {
-        return <Tabs defaultActiveKey="1">
-            {Array.from(Array(plan.pages), (e, i) => {
-                return <TabPane tab={`Plattegrond-${i + 1}`} key={i + 1}>
-                    <ReactSVG key={i} useRequestCache={false} src={`/data/pdf/${plan.name}-${i + 1}.svg`} />
-                </TabPane>
-            })}
-        </Tabs>
-    }
-
     render() {
         return <>
             <Breadcrumb>
@@ -75,15 +63,7 @@ export default class MarketDetailPage extends DynamicBase {
             </Breadcrumb>
             <Row>
                 <Col><MarketDetail marketEvent={this.state.market} /></Col>
-
-                {/* {this.state.event && this.state.event.plan &&
-                    <Col>
-                        {this.renderSvgPages(this.state.event.plan)}
-                        <p style={{ margin: "1em" }}>
-                            <a href={`/data/pdf/${this.state.event.plan.name}.pdf`} download>Download Plattegrond</a>
-                        </p>
-                    </Col>
-                } */}
+                <Col><MarketAllocation branches={this.state.market.branches}/></Col>
             </Row>
         </>
     }
