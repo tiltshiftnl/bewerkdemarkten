@@ -1,11 +1,10 @@
-import { PlusSquareOutlined, EditOutlined } from '@ant-design/icons'
+import { HomeOutlined, PlusSquareOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, List, Row, Space } from "antd"
 import React, { Component } from "react"
 import { Market, Markets } from "../models"
 import MarketsService from "../services/service_markets"
 import MarketListItem from '../components/MarketListItem'
 import { Breadcrumb } from 'antd'
-import { HomeOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
 export default class MarketListPage extends Component {
