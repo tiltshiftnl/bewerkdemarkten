@@ -230,6 +230,7 @@ textarea {
   border-color: #ffa39e !important;
   width: 110px;
 }
+
 .block-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
@@ -241,6 +242,7 @@ textarea {
   height: 50px;
   margin-bottom: 6px;
 }
+
 .edit-lot {
   padding: 1em;
 }
@@ -250,13 +252,16 @@ textarea {
   display: inline-block;
   cursor: pointer;
 }
+
 .obstacle {
   padding: 9px;
 }
-.obstacle > svg {
+
+.obstacle>svg {
   width: 32px;
   height: 32px;
 }
+
 .ant-breadcrumb {
   margin-bottom: 2em !important;
 }
@@ -292,6 +297,38 @@ textarea {
 .page-block {
   padding-top: 2em;
   border-bottom: 1px dotted rgba(0, 0, 0, .85);
+}
+
+.ant-card.baking {
+  background-color: rgb(243, 243, 243) !important;
+}
+
+.ant-card.mandatory {
+  border: 1px solid rgb(255, 163, 158) !important;
+}
+
+.ant-card.assigned {
+  color: #52c41a;
+  background: #f6ffed;
+  border-color: #b7eb8f;
+}
+
+.ant-card.available {
+  color: #1890ff;
+  background: #e6f7ff;
+  border-color: #91d5ff;
+}
+
+.ant-card.under-assigned {
+  color: #fa8c16;
+  background: #fff7e6;
+  border-color: #ffd591;
+}
+
+.ant-card.over-assigned {
+  border: 1px solid rgb(255, 163, 158) !important;
+  background-color: rgb(255, 241, 240) !important;
+  color: rgb(255, 77, 79) !important;
 }
 
 .lot>span:not(.ant-badge-not-a-wrapper) {
