@@ -15,7 +15,6 @@ export default class MarketListPage extends Component {
 
     marketsService: MarketsService
 
-
     constructor(props: any) {
         super(props)
         this.marketsService = new MarketsService()
