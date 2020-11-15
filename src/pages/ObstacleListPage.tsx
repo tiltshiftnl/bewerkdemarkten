@@ -2,8 +2,28 @@ import { Breadcrumb } from "antd"
 import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import { HomeOutlined } from '@ant-design/icons'
+import { ObstacleTypeService } from "../services/service_lookup"
 
 export default class ObstacleListPage extends Component {
+    readonly state: { obstacles: string[] } = {
+        obstacles: []
+    }
+
+    brancheService: ObstacleTypeService
+
+    constructor(props: any) {
+        super(props)
+        this.brancheService = new ObstacleTypeService()
+    }
+
+
+    componentDidMount = () => {
+        this.brancheService.retrieve().then((obstacles: string[]) => {
+            this.setState({
+                obstacles
+            })
+        })
+    }
     render() {
         return <><Breadcrumb>
             <Breadcrumb.Item>
@@ -16,6 +36,11 @@ export default class ObstacleListPage extends Component {
                     <span>Obstakels</span>
                 </Link>
             </Breadcrumb.Item>
-        </Breadcrumb>Obstakels - Nog niet beschikbaar</>
+        </Breadcrumb>
+            <ul>{this.state.obstacles.map((obstacle: string) => {
+                return <li>{obstacle}</li>
+            })}
+            </ul>
+        </>
     }
 }
