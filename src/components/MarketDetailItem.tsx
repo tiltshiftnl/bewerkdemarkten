@@ -1,6 +1,5 @@
-import React from "react"
-import { Component } from "react"
-import { Market } from "../models"
+import React , { Component, ChangeEvent } from "react"
+import { Events, Market } from "../models"
 import { RouteComponentProps, withRouter } from "react-router-dom"
 import { Button, Descriptions, Dropdown, Input, Menu, Tag, Tooltip } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
@@ -11,7 +10,8 @@ interface MarketDetailItemProps extends RouteComponentProps {
 
 class MarketDetailItem extends Component<MarketDetailItemProps> {
     history: any
-    readonly state: { market: Market } = {
+    readonly state: { market: Market, day: string } = {
+        day: "",
         market: {
             name: "onbekend",
             id: 0,
@@ -30,6 +30,18 @@ class MarketDetailItem extends Component<MarketDetailItemProps> {
         //const tags = this.state.tags.filter(tag => tag !== removedTag)
         console.log(removedTag)
         //this.setState({ tags })
+    }
+
+    addMarktdag = () => {
+        if(this.state.day !== ""){
+            const _events: Events = this.state.market.events
+            _events[this.state.day] = {}
+            const _market: Market = {...this.state.market, events: _events}
+            this.setState({
+                market: _market,
+                day: ""
+            })
+        }
     }
 
     render() {
@@ -65,7 +77,7 @@ class MarketDetailItem extends Component<MarketDetailItemProps> {
                 className={`ant-input${this.state.market.name ? " " : " onbekend"}`}
                 id={`market_${marketId}_name`}
                 placeholder="Vul naam in"
-                onChange={(e: any) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     this.setState((a: { market: Market }) => {
                         a.market.name = e.target.value
                         return a
@@ -96,8 +108,16 @@ class MarketDetailItem extends Component<MarketDetailItemProps> {
                         </Tag>
                     })
                 }
+                <Input style={{width: "60px", marginRight: "10px"}}
+                value={this.state.day}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    this.setState({
+                        day: e.target.value.toUpperCase()
+                    })
+                }}
+                />
                 <Tooltip title="Dag toevoegen">
-                    <Button type="primary" shape="circle" icon={<PlusOutlined />} />
+                    <Button type="primary" shape="circle" icon={<PlusOutlined />} disabled={this.state.day !== "" ? false: true} onClick={() => this.addMarktdag()}/>
                 </Tooltip>
             </Descriptions.Item>
         </Descriptions>
