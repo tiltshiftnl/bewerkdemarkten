@@ -46,22 +46,21 @@ export default class CalendarPage extends Component {
 
     getListData(value: any) {
         let listData: { type: any, content: any }[] = []
-        console.log(value.day())
         switch (value.day()) {
             case 3:
                 listData = [
                     { type: 'warning', content: <Link to={'market/detail/DAPP-DI'}>DAPP-DI</Link> }
-                 ];
+                ]
                 break
             case 4:
                 listData = [
                     { type: 'success', content: <Link to={'market/detail/AC-WO'}>AC-WO</Link> }
-                ];
+                ]
                 break
             case 6:
                 listData = [
                     { type: 'error', content: <Link to={'market/detail/4045-ZA'}>4045-ZA</Link> }
-                ];
+                ]
                 break
             default:
         }
@@ -72,13 +71,13 @@ export default class CalendarPage extends Component {
         const listData = this.getListData(value);
         return (
             <ul className="events">
-                {listData.map((item,i) => (
+                {listData.map((item, i) => (
                     <li key={i}>
                         {item.content}
                     </li>
                 ))}
             </ul>
-        );
+        )
     }
 
     render() {
