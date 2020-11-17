@@ -1,10 +1,8 @@
-import FullCalendar from "@fullcalendar/react"
 import React, { Component } from "react"
 import { DaysClosedService } from "../services/service_lookup"
-import nlLocale from '@fullcalendar/core/locales/nl'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import { Breadcrumb } from 'antd'
+import { Breadcrumb, Calendar } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
+import { Link } from "@amsterdam/asc-ui"
 interface Event {
     title?: string
     date?: string
@@ -30,25 +28,59 @@ export default class CalendarPage extends Component {
 
     componentDidMount = () => {
         this.daysClosedService.retrieve().then((daysClosed: string[]) => {
-            const _daysClosed: Event[] = daysClosed.map(entry => {
+            const _daysClosed: { type: string, content: string }[] = daysClosed.map(entry => {
                 return {
-                    title: "Gesloten",
-                    date: entry,
-                    display: 'background',
-                    backgroundColor: 'rgba(0,0,0,0.2)'
+                    type: "warning",
+                    content: entry
                 }
             })
             _daysClosed.push({
-                groupId: 'blueEvents', // recurrent events in this group move together
-                title: 'Dappermarkt',
-                daysOfWeek: ['4'],
-                backgroundColor: 'rgba(255,0,0,0.2)'
+                type: 'success',
+                content: "woop"
             })
             this.setState({
                 daysClosed: _daysClosed
             })
         })
     }
+
+    getListData(value: any) {
+        let listData: { type: any, content: any }[] = []
+        console.log(value.day())
+        switch (value.day()) {
+            case 3:
+                listData = [
+                    { type: 'warning', content: <Link to={'market/detail/DAPP-DI'}>DAPP-DI</Link> }
+                 ];
+                break
+            case 4:
+                listData = [
+                    { type: 'success', content: <Link to={'market/detail/AC-WO'}>AC-WO</Link> }
+                ];
+                break
+            case 6:
+                listData = [
+                    { type: 'error', content: <Link to={'market/detail/4045-ZA'}>4045-ZA</Link> }
+                ];
+                break
+            default:
+        }
+        return listData
+    }
+
+    dateCellRender = (value: any) => {
+        const listData = this.getListData(value);
+        return (
+            <ul className="events">
+                {listData.map((item,i) => (
+                    <li key={i}>
+                        {item.content}
+                    </li>
+                ))}
+            </ul>
+        );
+    }
+
     render() {
         return <>
             <Breadcrumb>
@@ -59,14 +91,7 @@ export default class CalendarPage extends Component {
                     <span>Kalender</span>
                 </Breadcrumb.Item>
             </Breadcrumb>
-            <FullCalendar
-                height={"auto"}
-                aspectRatio={1}
-                locale={nlLocale}
-                plugins={[dayGridPlugin]}
-                events={this.state.daysClosed}
-                initialView="dayGridMonth"
-            />
+            <Calendar dateCellRender={this.dateCellRender} />
         </>
     }
 }
