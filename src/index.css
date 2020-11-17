@@ -299,34 +299,32 @@ textarea {
   border-bottom: 1px dotted rgba(0, 0, 0, .85);
 }
 
-.ant-card.baking {
-  background-color: rgb(243, 243, 243) !important;
+.baking {
+  background-color: rgb(248, 248, 248) !important;
 }
 
-.ant-card.mandatory {
-  border: 1px solid rgb(255, 163, 158) !important;
+.mandatory > *{
+  font-weight: bold;
 }
 
-.ant-card.assigned {
-  color: #52c41a;
-  background: #f6ffed;
+.under-assigned {
+  background: #e7fcd3;
   border-color: #b7eb8f;
 }
-
-.ant-card.available {
-  color: #1890ff;
-  background: #e6f7ff;
-  border-color: #91d5ff;
+th {
+  border-bottom: 1px solid #ccc;
+  padding: 1em;
 }
 
-.ant-card.under-assigned {
-  color: #fa8c16;
-  background: #fff7e6;
-  border-color: #ffd591;
+td {
+  padding: 1em;
 }
 
-.ant-card.over-assigned {
-  border: 1px solid rgb(255, 163, 158) !important;
+.available {
+  background: #ddf7f8;
+}
+
+.over-assigned {
   background-color: rgb(255, 241, 240) !important;
   color: rgb(255, 77, 79) !important;
 }

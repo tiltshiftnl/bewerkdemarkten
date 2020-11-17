@@ -1,12 +1,16 @@
-import { Card, Col, Row } from "antd";
+import { Button, InputNumber, Switch } from "antd";
 import React, { Component } from "react";
 import { AssignedBranche } from "../models";
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default class MarketAllocation extends Component<{ branches: AssignedBranche[] }> {
 
     getClass(branche: AssignedBranche): string{
         let baseClass: string = ""
         if(branche.brancheId === "bak"){
+            if(branche.verplicht){
+                return "baking mandatory"
+            }
             return "baking"
         }
         if(branche.maximumPlaatsen) {
@@ -29,20 +33,35 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
         if(branche.verplicht){
             baseClass += " mandatory"
         }
-        return baseClass
+        return baseClass.trim()
     }
 
     render() {
-        return <Row gutter={[8,8]}>
+        return <><table>
+            <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegwezen</th><th></th></tr>
             {this.props.branches.map((branche, i) => {
-                return <Col xs={24} sm={12} md={8} lg={6} xl={4}>
-                    <Card title={branche.brancheId.split('-')[0]} className={this.getClass(branche)}>
-                        <Row><Col span={12} >Code:</Col><Col>{branche.brancheId}</Col></Row>
-                        <Row><Col span={12}>Verplicht:</Col><Col>{branche.verplicht && <><b>Ja</b>&nbsp;</>}</Col></Row>
-                        <Row><Col span={12}>Maximum:</Col><Col>{branche.maximumPlaatsen && <>{branche.maximumPlaatsen}</>}</Col></Row>
-                        <Row><Col span={12}>Toegewezen:</Col><Col>{branche.allocated && <>{branche.allocated}</>}</Col></Row>
-                    </Card>
-                </Col>
-            })}</Row>
+                return <tr className={this.getClass(branche)}>
+                    <td>{branche.brancheId.split('-')[0]}</td>
+                        <td>{branche.brancheId}</td>
+                        <td><Switch checked={branche.verplicht} onChange={(checked: boolean) => {
+                            branche.verplicht = checked
+                        }} /></td>
+                        <td><InputNumber min={0} max={99} defaultValue={branche.maximumPlaatsen || 0}/></td>
+                        <td>{branche.allocated && <>{branche.allocated}</>}</td>
+                        <td><MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    onClick={() => {}}
+                /></td>
+                    </tr>
+
+            })}</table>
+            <Button
+                onClick={() => {}}
+                style={{ marginTop: '20px' }}
+                icon={<PlusOutlined />}
+            >Toevoegen</Button>
+            <Button type="primary" htmlType="submit">
+                Opslaan
+        </Button></>
     }
 }
