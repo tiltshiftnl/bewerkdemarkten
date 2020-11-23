@@ -9,30 +9,35 @@
         "phase": "activatie",
         "events": {
             "DI": {
+                "weekday": 2,
                 "plan": {
                     "name": "kaart-4045-DI",
                     "pages": 2
                 }
             },
             "WO": {
+                "weekday": 3,
                 "plan": {
                     "name": "kaart-4045-WO",
                     "pages": 2
                 }
             },
             "DO": {
+                "weekday": 4,
                 "plan": {
                     "name": "kaart-4045-DO",
                     "pages": 2
                 }
             },
             "VR": {
+                "weekday": 5,
                 "plan": {
                     "name": "kaart-4045-VR",
                     "pages": 2
                 }
             },
             "ZA": {
+                "weekday": 6,
                 "plan": {
                     "name": "kaart-4045-ZA",
                     "pages": 2
@@ -46,36 +51,42 @@
         "phase": "live",
         "events": {
             "MA": {
+                "weekday": 1,
                 "plan": {
                     "name": "kaart-AC-MA",
                     "pages": 4
                 }
             },
             "DI": {
+                "weekday": 2,
                 "plan": {
                     "name": "kaart-AC-DI",
                     "pages": 4
                 }
             },
             "WO": {
+                "weekday": 3,
                 "plan": {
                     "name": "kaart-AC-WO",
                     "pages": 4
                 }
             },
             "DO": {
+                "weekday": 4,
                 "plan": {
                     "name": "kaart-AC-DO",
                     "pages": 4
                 }
             },
             "VR": {
+                "weekday": 5,
                 "plan": {
                     "name": "kaart-AC-VR",
                     "pages": 4
                 }
             },
             "ZA": {
+                "weekday": 6,
                 "plan": {
                     "name": "kaart-AC-ZA",
                     "pages": 4
@@ -88,35 +99,35 @@
         "name": "A. de Komplein",
         "phase": "wenweken",
         "events": {
-            "MA": {},
-            "DO": {},
-            "VR": {}
+            "MA": {"weekday": 1},
+            "DO": {"weekday": 4},
+            "VR": {"weekday": 5}
         }
     },
     "AVELD": {
         "name": "Amstelveld antiek en curiosa",
         "events": {
-            "MA": {}
+            "MA": {"weekday": 1}
         }
     },
     "BenL": {
         "name": "Bos en Lommer",
         "events": {
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "DI": {"weekday": 2},
+            "WO": {"weekday": 3},
+            "DO": {"weekday": 4},
+            "VR": {"weekday": 5},
+            "ZA": {"weekday": 6}
         }
     },
     "BKSL": {
         "events": {
             "B": {},
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "DI": {"weekday": 2},
+            "WO": {"weekday": 3},
+            "DO": {"weekday": 4},
+            "VR": {"weekday": 5},
+            "ZA": {"weekday": 6}
         }
     },
     "DAPP": {
@@ -126,36 +137,42 @@
         },
         "events": {
             "MA": {
+                "weekday": 1,
                 "plan": {
                     "name": "kaart-DAPP-MA",
                     "pages": 4
                 }
             },
             "DI": {
+                "weekday": 2,
                 "plan": {
                     "name": "kaart-DAPP-DI",
                     "pages": 4
                 }
             },
             "WO": {
+                "weekday": 3,
                 "plan": {
                     "name": "kaart-DAPP-WO",
                     "pages": 4
                 }
             },
             "DO": {
+                "weekday": 4,
                 "plan": {
                     "name": "kaart-DAPP-DO",
                     "pages": 4
                 }
             },
             "VR": {
+                "weekday": 5,
                 "plan": {
                     "name": "kaart-DAPP-VR",
                     "pages": 4
                 }
             },
             "ZA": {
+                "weekday": 6,
                 "plan": {
                     "name": "kaart-DAPP-ZA",
                     "pages": 4
@@ -165,27 +182,28 @@
     },
     "EESB": {
         "events": {
-            "WO": {}
+            "WO": {"weekday": 3}
         }
     },
     "GH": {
         "events": {
-            "ZA": {}
+            "ZA": {"weekday": 6}
         }
     },
     "HLM": {
         "events": {
-            "WO": {}
+            "WO": {"weekday": 3}
         }
     },
     "KR": {
         "events": {
-            "DI": {}
+            "DI": {"weekday": 2}
         }
     },
     "LBZ": {
         "events": {
             "MA": {
+                "weekday": 1,
                 "plan": {
                     "name": "kaart-LBZ-MA",
                     "pages": 2
@@ -195,51 +213,54 @@
     },
     "LIN": {
         "events": {
-            "MA": {}
+            "MA": {"weekday": 1}
         }
     },
     "NOM": {
         "events": {
-            "MA": {},
-            "ZA": {}
+            "MA": {"weekday": 1},
+            "ZA": {"weekday": 6}
         }
     },
     "NOMBO": {
         "events": {
-            "ZA": {}
+            "ZA": {"weekday": 6}
         }
     },
     "NW": {
         "events": {
             "ANT": {},
-            "MA": {},
-            "DI": {},
-            "WO": {},
-            "DO": {},
-            "VR": {},
-            "ZA": {}
+            "MA": {"weekday": 1},
+            "DI": {"weekday": 2},
+            "WO": {"weekday": 3},
+            "DO": {"weekday": 4},
+            "VR": {"weekday": 5},
+            "ZA": {"weekday": 6}
         }
     },
     "NWBIO": {
         "events": {
-            "ZA": {}
+            "ZA": {"weekday": 6}
         }
     },
     "PEKC": {
         "events": {
             "WO": {
+                "weekday": 3,
                 "plan": {
                     "name": "kaart-PEKC-WO",
                     "pages": 2
                 }
             },
             "VR": {
+                "weekday": 5,
                 "plan": {
                     "name": "kaart-PEKC-VR",
                     "pages": 2
                 }
             },
             "ZA": {
+                "weekday": 6,
                 "plan": {
                     "name": "kaart-PEKC-ZA",
                     "pages": 2
@@ -249,52 +270,58 @@
     },
     "RBOS": {
         "events": {
-            "WO": {}
+            "WO": {"weekday": 3}
         }
     },
     "SPUI": {
         "events": {
-            "VR": {}
+            "VR": {"weekday": 5}
         }
     },
     "STAD": {
         "events": {
-            "ZA": {}
+            "ZA": {"weekday": 5}
         }
     },
     "TK": {
         "events": {
             "MA": {
+                "weekday": 1,
                 "plan": {
                     "name": "kaart-TK-MA",
                     "pages": 2
                 }
             },
             "DI": {
+                "weekday": 2,
                 "plan": {
                     "name": "kaart-TK-DI",
                     "pages": 2
                 }
             },
             "WO": {
+                "weekday": 3,
                 "plan": {
                     "name": "kaart-TK-WO",
                     "pages": 2
                 }
             },
             "DO": {
+                "weekday": 4,
                 "plan": {
                     "name": "kaart-TK-DO",
                     "pages": 2
                 }
             },
             "VR": {
+                "weekday": 5,
                 "plan": {
                     "name": "kaart-TK-VR",
                     "pages": 2
                 }
             },
             "ZA": {
+                "weekday": 6,
                 "plan": {
                     "name": "kaart-TK-ZA",
                     "pages": 2
@@ -305,6 +332,7 @@
     "TM": {
         "events": {
             "DI": {
+                "weekday": 2,
                 "plan": {
                     "name": "kaart-TM-DI",
                     "pages": 1
@@ -319,6 +347,7 @@
         },
         "events": {
             "MA": {
+                "weekday": 1,
                 "plan": {
                     "name": "kaart-WST-MA",
                     "pages": 2

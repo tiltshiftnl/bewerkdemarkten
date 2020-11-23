@@ -3,67 +3,56 @@ import { DaysClosedService } from "../services/service_lookup"
 import { Breadcrumb, Calendar } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "@amsterdam/asc-ui"
-interface Event {
-    title?: string
-    date?: string
-    display?: string
-    backgroundColor?: string
-    groupId?: string
-    daysOfWeek?: string[]
-    startTime?: string
-    endTime?: string
-}
+import MarketsService from "../services/service_markets"
+import { Market, Markets } from "../models"
 
 export default class CalendarPage extends Component {
-    readonly state: { daysClosed: Event[] } = {
-        daysClosed: []
+    readonly state: { daysClosed: string[], markets: Markets } = {
+        daysClosed: [],
+        markets: {}
     }
 
     daysClosedService: DaysClosedService
-
+    marketsService: MarketsService
     constructor(props: any) {
         super(props)
         this.daysClosedService = new DaysClosedService()
+        this.marketsService = new MarketsService()
     }
 
     componentDidMount = () => {
+        
         this.daysClosedService.retrieve().then((daysClosed: string[]) => {
-            const _daysClosed: { type: string, content: string }[] = daysClosed.map(entry => {
-                return {
-                    type: "warning",
-                    content: entry
-                }
-            })
-            _daysClosed.push({
-                type: 'success',
-                content: "woop"
-            })
-            this.setState({
-                daysClosed: _daysClosed
+            this.marketsService.retrieve().then((markets: Markets) => {
+                this.setState({
+                    markets: markets,
+                    daysClosed: daysClosed
+                })
             })
         })
     }
 
     getListData(value: any) {
-        let listData: { type: any, content: any }[] = []
-        switch (value.day()) {
-            case 3:
-                listData = [
-                    { type: 'warning', content: <Link to={'market/detail/DAPP-DI'}>DAPP-DI</Link> }
-                ]
-                break
-            case 4:
-                listData = [
-                    { type: 'success', content: <Link to={'market/detail/AC-WO'}>AC-WO</Link> }
-                ]
-                break
-            case 6:
-                listData = [
-                    { type: 'error', content: <Link to={'market/detail/4045-ZA'}>4045-ZA</Link> }
-                ]
-                break
-            default:
+        // If day in daysClosed, skip.
+        console.log(this.state.daysClosed)
+        console.log(this.state.daysClosed.indexOf(value.format('YYYY-MM-DD')))
+        if(this.state.daysClosed.indexOf(value.format('YYYY-MM-DD')) > -1) {
+            console.log("Huh?")
+            return []
         }
+        const listData: { type: string, content: any }[] = []
+
+        // select markets for the given day and display them in the calendar
+        Object.keys(this.state.markets).forEach((marketid: string) => {
+            const _market: Market = this.state.markets[marketid]
+            const wl: any = Object.keys(_market.events).filter((eventid: string) => {
+                return _market.events[eventid].weekday === value.day()
+            })
+            if(wl.length === 1) {
+                const _item: string = marketid + '-' + wl[0]
+                listData.push({ type: 'succes', content: <Link to={`market/detail/${_item}`}>{_item}</Link> })
+            }
+        })
         return listData
     }
 
@@ -90,7 +79,9 @@ export default class CalendarPage extends Component {
                     <span>Kalender</span>
                 </Breadcrumb.Item>
             </Breadcrumb>
-            <Calendar dateCellRender={this.dateCellRender} />
+            {this.state.markets &&
+                <Calendar dateCellRender={this.dateCellRender} />
+            }
         </>
     }
 }

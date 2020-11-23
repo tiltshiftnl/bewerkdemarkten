@@ -4,6 +4,7 @@ export interface Plan {
 }
 export interface Event {
     plan?: Plan
+    weekday?: number
 }
 
 export interface Events {
@@ -33,6 +34,7 @@ export interface Market {
     phase?: string
     plan?: Plan
     events: Events
+    
 }
 
 export interface Lot {
