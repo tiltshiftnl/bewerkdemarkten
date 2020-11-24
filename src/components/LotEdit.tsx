@@ -2,6 +2,7 @@ import { Col, Input, Row, Select, Checkbox } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
+import { LotPropertyService } from "../services/service_lookup"
 
 interface LotEditProps {
     branches: AssignedBranche[],
@@ -9,8 +10,22 @@ interface LotEditProps {
 }
 
 export default class LotEdit extends Component<LotEditProps> {
-    readonly state: { lot?: Lot } = {}
+    readonly state: { lot?: Lot, properties: string[] } = { properties: [] }
+    propertyService: LotPropertyService
 
+    constructor(props: any) {
+        super(props)
+        this.propertyService = new LotPropertyService()
+    }
+
+
+    componentDidMount = () => {
+        this.propertyService.retrieve().then((properties: string[]) => {
+            this.setState({
+                properties
+            })
+        })
+    }
 
     setBak = (e: CheckboxChangeEvent) => {
         if (this.state.lot) {
@@ -40,44 +55,48 @@ export default class LotEdit extends Component<LotEditProps> {
         return false
     }
 
-    setElectricity = (e: CheckboxChangeEvent) => {
-        if (this.state.lot) {
-            let _properties: string[] = this.state.lot?.properties || []
-            if (e.target.checked) {
-                _properties.push("electra")
-            } else {
-                _properties = _properties?.filter(e => e !== "electra")
+    setProperty = (e: CheckboxChangeEvent) => {
+        if (e.target.id) {
+            if (this.state.lot) {
+                let _properties: string[] = this.state.lot?.properties || []
+                if (e.target.checked) {
+                    _properties.push(e.target.id)
+                } else {
+                    _properties = _properties?.filter(p => p !== e.target.id)
+                }
+                this.setState({
+                    lot: { ...this.state.lot, properties: _properties }
+                })
             }
-            this.setState({
-                lot: { ...this.state.lot, properties: _properties }
-            })
         }
     }
 
-    getElectricity(): boolean {
+    getProperty(value: string): boolean {
         if (this.state.lot && this.state.lot.properties) {
-            return this.state.lot.properties.indexOf("electra") > -1
+            return this.state.lot.properties.indexOf(value) > -1
         }
         return false
     }
 
-    setOwnMaterial = (e: CheckboxChangeEvent) => {
-        if (this.state.lot) {
-            let _verkoopinrichting: string[] = this.state.lot?.verkoopinrichting || []
-            if (e.target.checked) {
-                _verkoopinrichting.push("eigen-materieel")
-            } else {
-                _verkoopinrichting = _verkoopinrichting?.filter(e => e !== "eigen-materieel")
+    setVerkoopinrichting = (e: CheckboxChangeEvent) => {
+        if (e.target.id) {
+            if (this.state.lot) {
+                let _verkoopinrichting: string[] = this.state.lot?.verkoopinrichting || []
+                if (e.target.checked) {
+                    _verkoopinrichting.push(e.target.id)
+                } else {
+                    _verkoopinrichting = _verkoopinrichting?.filter(v => v !== e.target.id)
+                }
+                this.setState({
+                    lot: { ...this.state.lot, verkoopinrichting: _verkoopinrichting }
+                })
             }
-            this.setState({
-                lot: { ...this.state.lot, verkoopinrichting: _verkoopinrichting }
-            })
         }
     }
 
-    getOwnMaterial(): boolean {
+    getVerkoopinrichting(value: string): boolean {
         if (this.state.lot && this.state.lot.verkoopinrichting) {
-            return this.state.lot.verkoopinrichting.indexOf("eigen-materieel") > -1
+            return this.state.lot.verkoopinrichting.indexOf(value) > -1
         }
         return false
     }
@@ -122,12 +141,14 @@ export default class LotEdit extends Component<LotEditProps> {
             </Row>
             <Row gutter={formGutter}>
                 <Col {...firstColSpan}>Eigen materieel</Col>
-                <Col {...secondColSpan}><Checkbox checked={this.getOwnMaterial()} onChange={this.setOwnMaterial} /></Col>
+                <Col {...secondColSpan}><Checkbox id="eigen-materieel" checked={this.getVerkoopinrichting("eigen-materieel")} onChange={this.setVerkoopinrichting} /></Col>
             </Row>
-            <Row gutter={formGutter}>
-                <Col {...firstColSpan}>Electra</Col>
-                <Col {...secondColSpan}><Checkbox checked={this.getElectricity()} onChange={this.setElectricity} /></Col>
+            {this.state.properties && this.state.properties.map((prop: string, i: number) => {
+                return <Row key={i} gutter={formGutter}>
+                <Col {...firstColSpan}>{prop.charAt(0).toUpperCase() + prop.slice(1)}</Col>
+                <Col {...secondColSpan}><Checkbox id={prop} checked={this.getProperty(prop)} onChange={this.setProperty} /></Col>
             </Row>
+            })}
             <Row gutter={formGutter}>
                 <Col {...firstColSpan}>Bak</Col>
                 <Col {...secondColSpan}><Checkbox checked={this.getBak()} onChange={this.setBak} /></Col>
