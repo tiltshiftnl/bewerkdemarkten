@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import SvgObstacle from "../graphics/SvgObstacle"
 import { Obstacle } from "../models"
 
-export default class LayoutObstacleBlock extends Component<{
+export default class ObstacleBlock extends Component<{
     index: number
     obstacle: Obstacle
     invert: boolean

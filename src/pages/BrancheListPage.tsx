@@ -5,7 +5,7 @@ import { HomeOutlined } from '@ant-design/icons'
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-
+import { getTextColor } from '../helpers/PresentationHelpers'
 export default class BrancheListPage extends Component {
 
     readonly state: { branches: Branche[] } = {
@@ -22,20 +22,10 @@ export default class BrancheListPage extends Component {
 
     componentDidMount = () => {
         this.brancheService.retrieve().then((branches: Branche[]) => {
-            console.log(branches)
             this.setState({
                 branches
             })
         })
-    }
-
-    getTextColor(hexcolor: string){
-        var r = parseInt(hexcolor.substr(1,2),16);
-        var g = parseInt(hexcolor.substr(3,2),16);
-        var b = parseInt(hexcolor.substr(4,2),16);
-        var yiq = ((r*299)+(g*587)+(b*114))/1000;
-        // Return new color if to dark, else return the original
-        return (yiq < 40) ? '#2980b9' : "black";
     }
 
     render() {
@@ -52,9 +42,12 @@ export default class BrancheListPage extends Component {
             </Breadcrumb.Item>
         </Breadcrumb>
             <table>
+                <thead>
                 <tr><th>Code</th><th>Titel</th><th>Omschrijving</th><th></th></tr>
+                </thead>
+                <tbody>
                 {this.state.branches.map((branche, i) => {
-                    return <tr style={{ backgroundColor: branche.color, color: this.getTextColor(branche.color) }}>
+                    return <tr key={i} style={{ backgroundColor: branche.color, color: getTextColor(branche.color) }}>
                         <td>{branche.number ? branche.number : ""}</td>
                         <td>{branche.brancheId}</td>
                         <td>{branche.description}</td>
@@ -64,7 +57,7 @@ export default class BrancheListPage extends Component {
                         /></td>
                     </tr>
 
-                })}</table>
+                })}</tbody></table>
             <Button
                 onClick={() => { }}
                 style={{ marginTop: '20px' }}

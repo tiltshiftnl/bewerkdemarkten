@@ -1,21 +1,35 @@
 import { Tabs } from "antd"
 import React, { RefObject, Component, createRef } from "react"
-import { AssignedBranche, Lot, MarketEventDetails, MarketPage, Obstacle } from "../models"
-import LayoutEditBlock from "./LayoutEditBlock"
-import LayoutEditLot from "./LayoutEditLot"
-import LayoutLotBlock from "./LayoutLotBlock"
-import LayoutObstacleBlock from "./LayoutObstacleBlock"
+import { Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle } from "../models"
+import LayoutEdit from "./LayoutEdit"
+import LotEdit from "./LotEdit"
+import LotBlock from "./LotBlock"
+import ObstacleBlock from "./ObstacleBlock"
 
 const { TabPane } = Tabs
-export default class MarketDetail extends Component<{ marketEvent: MarketEventDetails }> {
-    editBlock: RefObject<LayoutEditLot>
-    readonly state: { selectedLot?: Lot } = {
-        selectedLot: undefined
+
+interface MarketDetailPageProps {
+    marketEvent: MarketEventDetails
+    stateChanged?: (marketEvent: MarketEventDetails) => void 
+}
+
+export default class MarketDetail extends Component<MarketDetailPageProps> {
+    lotEdit: RefObject<LotEdit>
+
+    readonly state: { selectedLot?: Lot, marketEvent: MarketEventDetails, currentPosition: [number, number, number] } = {
+        selectedLot: undefined,
+        marketEvent: {
+            branches: [],
+            pages: []
+        },
+        currentPosition: [0, 0, 0]
     }
-    constructor(props: { marketEvent: MarketEventDetails }) {
+
+    constructor(props: MarketDetailPageProps) {
         super(props)
-        this.editBlock = createRef()
+        this.lotEdit = createRef()
     }
+
     getClassname = (lot: Lot) => {
         let baseClass = ""
         if (this.state.selectedLot === lot) {
@@ -30,62 +44,80 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
         return baseClass + "lot"
     }
 
-    toggleSelectedLot = (lot: Lot) => {
+    toggleSelectedLot = (lot: Lot, pageindex: number, layoutindex: number, lotindex: number) => {
         if (lot === this.state.selectedLot) {
-            this.editBlock.current?.setState({
+            this.lotEdit.current?.setState({
                 lot: undefined
             })
             this.setState({
-                selectedLot: undefined
+                selectedLot: undefined,
+                currentPosition: [0, 0, 0]
             })
         } else {
-            this.editBlock.current?.setState({
+            this.lotEdit.current?.setState({
                 lot: lot
             })
             this.setState({
-                selectedLot: lot
+                selectedLot: lot,
+                currentPosition: [pageindex, layoutindex, lotindex]
             })
         }
     }
 
-    calculateOccupied = (branche: AssignedBranche) => {
-        const pages: MarketPage[] = this.props.marketEvent.pages
-        pages.forEach((page: MarketPage) => {
-
+    lotChanged = (lot: Lot) => {
+        this.props.marketEvent
+            .pages[this.state.currentPosition[0]]
+            .layout[this.state.currentPosition[1]]
+            .lots[this.state.currentPosition[2]] = lot
+        // now we need to refresh the props.
+        this.setState({
+            selectedLot: lot
         })
+        // and we need to tell the code list to refresh!
+        if(this.props.stateChanged) {
+            this.props.stateChanged(this.props.marketEvent)
+        }
+
     }
 
+    layoutChanged = (layout: MarketLayout) => {
+        console.log(layout)
+        // TODO: Persist!
+    }
 
     render() {
         const { marketEvent } = this.props
         return <>
             <Tabs defaultActiveKey="10">
-                {marketEvent.pages.map((page, i) => {
+                {marketEvent.pages.map((page: MarketPage, i: number) => {
+                    const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
                     return <TabPane tab={page.title} key={i}>
                         <div className="block-wrapper">
-                            {page.layout.map((layout, i) => {
+                            {page.layout.map((layout: MarketLayout, i: number) => {
+                                const layoutindex = i
                                 return <div key={i} className={layout.class}>
                                     {layout.class === 'block-left' &&
-                                        <LayoutEditBlock
+                                        <LayoutEdit
                                             index={i}
-                                            title={layout.title}
-                                            landmarkTop={layout.landmarkTop}
-                                            landmarkBottom={layout.landmarkBottom} />
+                                            layout={layout}
+                                            changed={this.layoutChanged}
+                                        />
                                     }
                                     <div className={`lot-row`}>
-                                        {layout.lots.map((lot, i) => {
+                                        {layout.lots.map((lot: Lot | Obstacle, i: number) => {
+                                            const lotindex = i
                                             if (lot.type === "stand") {
-                                                return <LayoutLotBlock
+                                                return <LotBlock
                                                     key={i}
                                                     index={i}
                                                     invert={layout.class === 'block-right' ? true : false}
                                                     lot={(lot as Lot)}
                                                     classDef={this.getClassname((lot as Lot))}
-                                                    lotOnClick={(event: any) => { this.toggleSelectedLot(lot) }} />
+                                                    lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }} />
 
                                             }
-                                            return <LayoutObstacleBlock
+                                            return <ObstacleBlock
                                                 key={i}
                                                 index={i}
                                                 invert={layout.class === 'block-right' ? true : false}
@@ -96,11 +128,10 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
                                         })}
                                     </div>
                                     {layout.class === 'block-right' &&
-                                        <LayoutEditBlock
+                                        <LayoutEdit
                                             index={i}
-                                            title={layout.title}
-                                            landmarkTop={layout.landmarkTop}
-                                            landmarkBottom={layout.landmarkBottom} />}
+                                            layout={layout}
+                                        />}
                                 </div>
 
                             })}
@@ -108,9 +139,9 @@ export default class MarketDetail extends Component<{ marketEvent: MarketEventDe
                     </TabPane>
                 })}
             </Tabs>
-            <LayoutEditLot
-                ref={this.editBlock}
-                branches={this.props.marketEvent.branches} />
+            <LotEdit
+                ref={this.lotEdit}
+                branches={this.props.marketEvent.branches} changed={this.lotChanged} />
         </>
     }
 }

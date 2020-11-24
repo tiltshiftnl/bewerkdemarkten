@@ -40,7 +40,6 @@ export default class AnnouncementListPage extends Component {
 
     componentDidMount = () => {
         this.announcementService.retrieve().then((announcements: Announcements) => {
-            console.log(announcements)
             this.setState({
                 announcements
             })

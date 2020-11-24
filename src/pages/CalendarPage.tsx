@@ -34,10 +34,9 @@ export default class CalendarPage extends Component {
 
     getListData(value: any) {
         // If day in daysClosed, skip.
-        console.log(this.state.daysClosed)
-        console.log(this.state.daysClosed.indexOf(value.format('YYYY-MM-DD')))
+        // console.log(this.state.daysClosed)
+        // console.log(this.state.daysClosed.indexOf(value.format('YYYY-MM-DD')))
         if(this.state.daysClosed.indexOf(value.format('YYYY-MM-DD')) > -1) {
-            console.log("Huh?")
             return []
         }
         const listData: { type: string, content: any }[] = []

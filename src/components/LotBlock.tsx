@@ -2,7 +2,7 @@ import React, { Component, MouseEvent } from "react"
 import SvgLot from "../graphics/SvgLot"
 import { Lot } from "../models"
 
-export default class LayoutLotBlock extends Component<{
+export default class LotBlock extends Component<{
     index: number
     lot: Lot
     invert: boolean

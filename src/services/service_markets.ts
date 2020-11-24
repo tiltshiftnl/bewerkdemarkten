@@ -29,10 +29,6 @@ export class MarketService extends Service {
                 }
                 return response.json()
             })
-            .then(json => {
-                const item = json
-                return item
-            })
             .catch(error => {
                 this.handleError(error)
             })

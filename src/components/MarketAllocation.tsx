@@ -38,9 +38,12 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
 
     render() {
         return <><table>
-            <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegwezen</th><th></th></tr>
+            <thead>
+                <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th></th></tr>
+            </thead>
+            <tbody>
             {this.props.branches.map((branche, i) => {
-                return <tr className={this.getClass(branche)}>
+                return <tr key={i} className={this.getClass(branche)}>
                     <td>{branche.brancheId.split('-')[0]}</td>
                         <td>{branche.brancheId}</td>
                         <td><Switch checked={branche.verplicht} onChange={(checked: boolean) => {
@@ -54,7 +57,7 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
                 /></td>
                     </tr>
 
-            })}</table>
+            })}</tbody></table>
             <Button
                 onClick={() => {}}
                 style={{ marginTop: '20px' }}

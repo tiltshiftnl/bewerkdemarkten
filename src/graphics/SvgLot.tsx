@@ -9,7 +9,29 @@ export default class SvgLot extends Component<{
     classDef: string
 }> {
 
-    renderProperties = (properties: string[] | undefined) => {
+    renderVerkoopinrichting = () => {
+        let facilityPosition: { x: number, y: number } = { x: 10, y: 40 }
+        let facilityColor = "#faad14"
+        if (this.props.invert) {
+            facilityPosition = { x: 10, y: 10 }
+        }
+        if(this.props.lot.verkoopinrichting && this.props.lot.verkoopinrichting.length > 0)
+        return <g>
+            <circle cx={facilityPosition.x} cy={facilityPosition.y} r="8" fill={facilityColor} />
+            <text
+                x={facilityPosition.x}
+                y={facilityPosition.y}
+                style={{ fill: "white" }}
+                dominantBaseline="middle"
+                textAnchor="middle"
+                fontSize="10px">
+                {this.props.lot.verkoopinrichting.length}
+            </text>
+        </g>
+    }
+
+    renderProperties = () => {
+        const properties = this.props.lot.properties
         let propertyColor = "#777"
         let propertyPosition: { x: number, y: number } = { x: 37, y: 33 }
         if (this.props.invert) {
@@ -23,7 +45,7 @@ export default class SvgLot extends Component<{
         return <>todo</>
     }
 
-    renderBranches = (branches: string[] | undefined) => {
+    renderBranches = () => {
         let branchesPosition: { x: number, y: number } = { x: 37, y: 3 }
         let brancheColor = "#777"
         if (this.props.invert) {
@@ -41,16 +63,12 @@ export default class SvgLot extends Component<{
         const width = 50
         const height = 50
 
-        let facilityPosition: { x: number, y: number } = { x: 10, y: 40 }
+        
 
         let strokeColor = "#d9d9d9"
         let fillColor = "#fafafa"
         let textColor = "#000000"
-        let facilityColor = "#faad14"
-
-        if (this.props.invert) {
-            facilityPosition = { x: 10, y: 10 }
-        }
+        
         if (this.props.classDef === "lot occupied") {
             strokeColor = "#ffa39e"
             fillColor = "#fff1f0"
@@ -79,24 +97,11 @@ export default class SvgLot extends Component<{
                     fontSize="1.5em">
                     {this.props.lot.plaatsId}
                 </text>
-                {this.renderBranches(this.props.lot.branches)}
+                {this.renderBranches()}
 
-                {this.props.lot.verkoopinrichting && this.props.lot.verkoopinrichting.length > 0 &&
-                    <g>
-                        <circle cx={facilityPosition.x} cy={facilityPosition.y} r="8" fill={facilityColor} />
-                        <text
-                            x={facilityPosition.x}
-                            y={facilityPosition.y}
-                            style={{ fill: "white" }}
-                            dominantBaseline="middle"
-                            textAnchor="middle"
-                            fontSize="10px">
-                            {this.props.lot.verkoopinrichting.length}
-                        </text>
-                    </g>
-                }
+                {this.renderVerkoopinrichting()}
             </g>
-            {this.renderProperties(this.props.lot.properties)}
+            {this.renderProperties()}
         </svg>
     }
 }

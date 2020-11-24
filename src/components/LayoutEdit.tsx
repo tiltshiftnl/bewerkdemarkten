@@ -1,17 +1,21 @@
 import React, { Component } from "react";
 import { Col, Input, Row } from "antd"
-export default class LayoutEditBlock extends Component<{ index: number, title: string, landmarkTop: string, landmarkBottom: string }> {
-    readonly state: { title: string, landmarkTop: string, landmarkBottom: string } = {
-        title: "",
-        landmarkTop: "",
-        landmarkBottom: ""
+import { MarketLayout } from "../models";
+export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout) => void }> {
+    readonly state: { layout: MarketLayout } = {
+        layout: {
+            title: "",
+            landmarkTop: "",
+            landmarkBottom: "",
+            lots: [],
+            class: ""
+        }
+
     }
 
     componentDidMount() {
         this.setState({
-            title: this.props.title,
-            landmarkTop: this.props.landmarkTop,
-            landmarkBottom: this.props.landmarkBottom
+            layout: this.props.layout,
         })
     }
 
@@ -22,10 +26,13 @@ export default class LayoutEditBlock extends Component<{ index: number, title: s
                 <Input
                     id={`market_${index}_title`}
                     placeholder="Vul titel in"
-                    value={this.state.title}
+                    value={this.state.layout.title}
                     onChange={(e: any) => {
+                        if (this.props.changed){
+                            this.props.changed({...this.state.layout, title: e.target.value})
+                        }
                         this.setState({
-                            title: e.target.value
+                            layout: {...this.state.layout, title: e.target.value}
                         })
                     }} />
             </Col>
@@ -33,10 +40,10 @@ export default class LayoutEditBlock extends Component<{ index: number, title: s
                 <Input
                     id={`market_${index}_landmarkTop`}
                     placeholder="Herkeningspunt start"
-                    value={this.state.landmarkTop}
+                    value={this.state.layout.landmarkTop}
                     onChange={(e: any) => {
                         this.setState({
-                            landmarkTop: e.target.value
+                            layout: {...this.state.layout, landmarkTop: e.target.value}
                         })
                     }} />
             </Col>
@@ -44,10 +51,10 @@ export default class LayoutEditBlock extends Component<{ index: number, title: s
                 <Input
                     id={`market_${index}_landmarkBottom`}
                     placeholder="Herkenningspunt eind"
-                    value={this.state.landmarkBottom}
+                    value={this.state.layout.landmarkBottom}
                     onChange={(e: any) => {
                         this.setState({
-                            landmarkBottom: e.target.value
+                            layout: {...this.state.layout, landmarkBottom: e.target.value}
                         })
                     }} />
             </Col>

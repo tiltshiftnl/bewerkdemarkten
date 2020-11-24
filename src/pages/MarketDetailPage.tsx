@@ -41,6 +41,12 @@ export default class MarketDetailPage extends DynamicBase {
         })
     }
 
+    marketEventStateChanged = (marketEvent: MarketEventDetails) => {
+        this.setState({
+            market: marketEvent
+        })
+    }
+
     render() {
         return <>
             <Breadcrumb>
@@ -62,7 +68,7 @@ export default class MarketDetailPage extends DynamicBase {
                     </Breadcrumb.Item></>}
             </Breadcrumb>
             <Row>
-                <Col><MarketDetail marketEvent={this.state.market} /></Col>
+                <Col><MarketDetail marketEvent={this.state.market} stateChanged={this.marketEventStateChanged}/></Col>
                 <Col><MarketAllocation branches={this.state.market.branches}/></Col>
             </Row>
         </>
