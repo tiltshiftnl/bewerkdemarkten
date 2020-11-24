@@ -42,6 +42,7 @@ export default class MarketDetailPage extends DynamicBase {
     }
 
     marketEventStateChanged = (marketEvent: MarketEventDetails) => {
+        console.log(marketEvent)
         this.setState({
             market: marketEvent
         })

@@ -83,6 +83,8 @@ export interface AssignedBranche {
     verplicht: boolean
     maximumPlaatsen?: number
     allocated?: number
+    backGroundColor: string
+    color: string
 }
 
 export interface Markets {

@@ -1,5 +1,7 @@
+import { getTextColor } from '../helpers/PresentationHelpers'
 import { AssignedBranche, Geography, Markets, Page, Rows, Lot, Obstacle, Assignment, MarketEventDetails } from '../models'
 import { Service } from './service'
+import { BrancheService } from './service_lookup'
 
 export default class MarketsService extends Service {
     async retrieve(): Promise<Markets> {
@@ -51,6 +53,7 @@ export class MarketService extends Service {
         const _l = await new LotsService().retrieve(route).then(result => result) // locaties.json
         const _m = await this.retrieve(route).then(result => result) // markt.json
         const _p = await new PagesService().retrieve(route).then(result => result) // paginas.json
+        const _bb = await new BrancheService().retrieve().then(result => result)
 
         // replace row items with locations
         const rowSets: (Lot | Obstacle)[] = []
@@ -63,7 +66,13 @@ export class MarketService extends Service {
                         _b.forEach((br: AssignedBranche, i) => {
                             _Lot.branches?.forEach(a => {
                                 if (a === _b[i].brancheId) {
-                                    //console.log(a + " matches " + _b[i].brancheId)
+                                    const _bbLookupValue = _bb.filter(e => e.brancheId === _b[i].brancheId)
+                                    if(_bbLookupValue.length === 1 && _bbLookupValue[0].color !== "") {
+                                        _b[i].backGroundColor = _bbLookupValue[0].color
+                                        _b[i].color = getTextColor(_bbLookupValue[0].color)
+                                    } else {
+                                        console.log("No lookup values found")
+                                    }
                                     _b[i].allocated = (_b[i].allocated as number) + 1 || 1
                                 }
                             })

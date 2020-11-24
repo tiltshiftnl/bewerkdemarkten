@@ -87,6 +87,7 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
 
     render() {
         const { marketEvent } = this.props
+        console.log(marketEvent)
         return <>
             <Tabs defaultActiveKey="10">
                 {marketEvent.pages.map((page: MarketPage, i: number) => {

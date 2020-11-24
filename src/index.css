@@ -311,6 +311,7 @@ textarea {
   background: #e7fcd3;
   border-color: #b7eb8f;
 }
+
 th {
   border-bottom: 1px solid #ccc;
   padding: 1em;
@@ -322,6 +323,11 @@ td {
 
 .available {
   background: #ddf7f8;
+}
+
+.assigned {
+  color: #0f0 !important;
+  font-style: bold;
 }
 
 .over-assigned {

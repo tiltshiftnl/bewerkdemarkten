@@ -57,6 +57,10 @@ export default class SvgLot extends Component<{
         }</>
     }
 
+    getfillColor = () => {
+        return "#fafafa"
+    }
+
     render() {
         const x = 0
         const y = 0
@@ -66,7 +70,7 @@ export default class SvgLot extends Component<{
         
 
         let strokeColor = "#d9d9d9"
-        let fillColor = "#fafafa"
+        let fillColor = this.getfillColor()
         let textColor = "#000000"
         
         if (this.props.classDef === "lot occupied") {

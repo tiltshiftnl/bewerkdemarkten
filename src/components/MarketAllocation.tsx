@@ -2,8 +2,16 @@ import { Button, InputNumber, Switch } from "antd";
 import React, { Component } from "react";
 import { AssignedBranche } from "../models";
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import CSS from 'csstype';
 
 export default class MarketAllocation extends Component<{ branches: AssignedBranche[] }> {
+
+    getStyle = (branche: AssignedBranche): CSS.Properties => {
+        return {
+            background: branche.backGroundColor || "#fff",
+            color: branche.color || "#000"
+        }
+    }
 
     getClass(branche: AssignedBranche): string{
         let baseClass: string = ""
@@ -43,7 +51,7 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
             </thead>
             <tbody>
             {this.props.branches.map((branche, i) => {
-                return <tr key={i} className={this.getClass(branche)}>
+                return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
                     <td>{branche.brancheId.split('-')[0]}</td>
                         <td>{branche.brancheId}</td>
                         <td><Switch checked={branche.verplicht} onChange={(checked: boolean) => {
