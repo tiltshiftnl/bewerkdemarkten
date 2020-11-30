@@ -1,4 +1,4 @@
-import React from "react"
+import React, { createRef, RefObject } from "react"
 import MarketDetail from "../components/MarketDetail"
 import { MarketEventDetails } from "../models"
 import MarketsService, { MarketService } from "../services/service_markets"
@@ -11,6 +11,7 @@ import MarketAllocation from "../components/MarketAllocation"
 const { TabPane } = Tabs
 
 export default class MarketDetailPage extends DynamicBase {
+    allocationRef: RefObject<MarketAllocation>
     readonly state: { market: MarketEventDetails } = {
         market: {
             branches: [],
@@ -25,6 +26,7 @@ export default class MarketDetailPage extends DynamicBase {
         super(props)
         this.marketService = new MarketService()
         this.marketsService = new MarketsService()
+        this.allocationRef = createRef()
     }
 
     refresh() {
@@ -39,6 +41,9 @@ export default class MarketDetailPage extends DynamicBase {
             this.setState({
                 market: result,
                 name: this.id
+            })
+            this.allocationRef.current?.setState({
+                branches: result.branches
             })
         })
     }
@@ -75,7 +80,7 @@ export default class MarketDetailPage extends DynamicBase {
                 <MarketDetail marketEvent={this.state.market} branches={this.state.market.branches} stateChanged={this.marketEventStateChanged}/>
                 </TabPane>
                 <TabPane tab="Branchelijst" key="2">
-                <MarketAllocation branches={this.state.market.branches}/>
+                <MarketAllocation ref={this.allocationRef} branches={this.state.market.branches}/>
                 </TabPane>
             </Tabs>
         </>

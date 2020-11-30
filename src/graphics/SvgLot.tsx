@@ -16,19 +16,30 @@ export default class SvgLot extends Component<{
         if (this.props.invert) {
             facilityPosition = { x: 10, y: 10 }
         }
-        if(this.props.lot.verkoopinrichting && this.props.lot.verkoopinrichting.length > 0)
-        return <g>
-            <circle cx={facilityPosition.x} cy={facilityPosition.y} r="8" fill={facilityColor} />
-            <text
-                x={facilityPosition.x}
-                y={facilityPosition.y}
-                style={{ fill: "white" }}
-                dominantBaseline="middle"
-                textAnchor="middle"
-                fontSize="10px">
-                {this.props.lot.verkoopinrichting.length}
-            </text>
-        </g>
+        if (this.props.lot.verkoopinrichting && this.props.lot.verkoopinrichting.length > 0)
+            return <g>
+                {/* <defs>
+                    <pattern id="transformedPattern"
+                        x="0" y="0" width="1" height="8"
+                        patternUnits="userSpaceOnUse"
+                        patternTransform="rotate(45)">
+                        <circle cx="1" cy="1" r="1" style={{ stroke: "none", fill: "#faad14" }} />
+                    </pattern>
+                </defs>
+                <rect x="0" y="40" width="50" height="10"
+                    style={{ stroke: "none", fill: "url(#transformedPattern)" }} /> */}
+                <circle cx={facilityPosition.x} cy={facilityPosition.y} r="8" fill={facilityColor} />
+                
+                <text
+                    x={facilityPosition.x}
+                    y={facilityPosition.y}
+                    style={{ fill: "white" }}
+                    dominantBaseline="middle"
+                    textAnchor="middle"
+                    fontSize="10px">
+                    {this.props.lot.verkoopinrichting.length}
+                </text>
+            </g>
     }
 
     renderProperties = () => {
@@ -54,7 +65,7 @@ export default class SvgLot extends Component<{
         }
         // Contains bak?
         return <>{this.props.lot.branches && this.props.lot.branches.indexOf("bak") > -1 &&
-            <SvgBak color={brancheColor} position={branchesPosition}/>
+            <SvgBak color={brancheColor} position={branchesPosition} />
         }</>
     }
 
@@ -63,18 +74,24 @@ export default class SvgLot extends Component<{
         if (this.props.classDef.indexOf("selected") > -1) {
             return "#1890ff"
         }
+        if (this.props.branche && this.props.branche.backGroundColor) {
+            return this.props.branche.backGroundColor
+        }
         return "#fafafa"
     }
 
     getFillColor = () => {
-        if(this.props.branche && this.props.branche.backGroundColor){
+        if(this.props.branche?.brancheId === "207-grill-frituur"){
+            console.log(this.props.branche)
+        }
+        if (this.props.branche && this.props.branche.backGroundColor) {
             return this.props.branche.backGroundColor
         }
         return "#fafafa"
     }
 
     getTextColor = () => {
-        if(this.props.branche && this.props.branche.color){
+        if (this.props.branche && this.props.branche.color) {
             return this.props.branche.color
         }
         return "#000000"
@@ -85,11 +102,11 @@ export default class SvgLot extends Component<{
         const y = 0
         const width = 50
         const height = 50
-        
+
         let strokeColor = this.getStrokeColor()
         let fillColor = this.getFillColor()
         let textColor = this.getTextColor()
-        
+
         return <svg style={{ width: "50px" }} viewBox="0 0 50 50">
             <g>
                 <rect x={x} y={y} width={width} height={height} style={{
@@ -108,8 +125,9 @@ export default class SvgLot extends Component<{
                 </text>
                 {this.renderBranches()}
 
-                {this.renderVerkoopinrichting()}
+                
             </g>
+            {this.renderVerkoopinrichting()}
             {this.renderProperties()}
         </svg>
     }

@@ -4,8 +4,10 @@ import { AssignedBranche } from "../models";
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import CSS from 'csstype';
 
-export default class MarketAllocation extends Component<{ branches: AssignedBranche[] }> {
-
+export default class MarketAllocation extends Component<{branches: AssignedBranche[]}> {
+    readonly state: {branches?: AssignedBranche[]} = {
+        branches: []
+    }
     getStyle = (branche: AssignedBranche): CSS.Properties => {
         return {
             background: branche.backGroundColor || "#fff",
@@ -44,13 +46,19 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
         return baseClass.trim()
     }
 
+    componentDidMount = () => {
+        this.setState({
+            branches: this.props.branches
+        })
+    }
+
     render() {
         return <><table>
             <thead>
                 <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th></th></tr>
             </thead>
             <tbody>
-            {this.props.branches.map((branche, i) => {
+            {this.state.branches && this.state.branches.map((branche, i) => {
                 return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
                     <td>{branche.brancheId.split('-')[0]}</td>
                         <td>{branche.brancheId}</td>
