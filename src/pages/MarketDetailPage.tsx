@@ -3,10 +3,12 @@ import MarketDetail from "../components/MarketDetail"
 import { MarketEventDetails } from "../models"
 import MarketsService, { MarketService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
-import { Breadcrumb, Col, Row } from 'antd'
+import { Breadcrumb, Tabs } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
 import MarketAllocation from "../components/MarketAllocation"
+
+const { TabPane } = Tabs
 
 export default class MarketDetailPage extends DynamicBase {
     readonly state: { market: MarketEventDetails } = {
@@ -68,10 +70,14 @@ export default class MarketDetailPage extends DynamicBase {
                         <span>{this.id.split('-')[1]}</span>
                     </Breadcrumb.Item></>}
             </Breadcrumb>
-            <Row>
-                <Col><MarketDetail marketEvent={this.state.market} stateChanged={this.marketEventStateChanged}/></Col>
-                <Col><MarketAllocation branches={this.state.market.branches}/></Col>
-            </Row>
+            <Tabs defaultActiveKey="1">
+                <TabPane tab="Details" key="1">
+                <MarketDetail marketEvent={this.state.market} branches={this.state.market.branches} stateChanged={this.marketEventStateChanged}/>
+                </TabPane>
+                <TabPane tab="Branchelijst" key="2">
+                <MarketAllocation branches={this.state.market.branches}/>
+                </TabPane>
+            </Tabs>
         </>
     }
 }

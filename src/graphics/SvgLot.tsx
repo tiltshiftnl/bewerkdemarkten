@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Lot } from "../models";
+import { AssignedBranche, Lot } from "../models";
 import SvgBak from "./SvgBak";
 import SvgElectra from "./SvgElectra";
 
 export default class SvgLot extends Component<{
     lot: Lot
-    invert: boolean
+    branche?: AssignedBranche
     classDef: string
+    invert: boolean
 }> {
 
     renderVerkoopinrichting = () => {
@@ -42,7 +43,7 @@ export default class SvgLot extends Component<{
                 return <SvgElectra invert={this.props.invert} color={propertyColor} position={propertyPosition} />
             }
         }
-        return <>todo</>
+        return <></>
     }
 
     renderBranches = () => {
@@ -57,8 +58,26 @@ export default class SvgLot extends Component<{
         }</>
     }
 
-    getfillColor = () => {
+
+    getStrokeColor = () => {
+        if (this.props.classDef.indexOf("selected") > -1) {
+            return "#1890ff"
+        }
         return "#fafafa"
+    }
+
+    getFillColor = () => {
+        if(this.props.branche && this.props.branche.backGroundColor){
+            return this.props.branche.backGroundColor
+        }
+        return "#fafafa"
+    }
+
+    getTextColor = () => {
+        if(this.props.branche && this.props.branche.color){
+            return this.props.branche.color
+        }
+        return "#000000"
     }
 
     render() {
@@ -66,31 +85,17 @@ export default class SvgLot extends Component<{
         const y = 0
         const width = 50
         const height = 50
-
         
-
-        let strokeColor = "#d9d9d9"
-        let fillColor = this.getfillColor()
-        let textColor = "#000000"
+        let strokeColor = this.getStrokeColor()
+        let fillColor = this.getFillColor()
+        let textColor = this.getTextColor()
         
-        if (this.props.classDef === "lot occupied") {
-            strokeColor = "#ffa39e"
-            fillColor = "#fff1f0"
-            textColor = "#ff4d4f"
-        }
-
-        if (this.props.classDef.indexOf("selected") > -1) {
-            strokeColor = "#ffffff"
-            fillColor = "#1890ff"
-            textColor = "#ffffff"
-        }
-
         return <svg style={{ width: "50px" }} viewBox="0 0 50 50">
             <g>
                 <rect x={x} y={y} width={width} height={height} style={{
                     fill: fillColor,
                     stroke: strokeColor,
-                    strokeWidth: "1px"
+                    strokeWidth: "4px"
                 }} />
                 <text
                     x={x + width / 2}

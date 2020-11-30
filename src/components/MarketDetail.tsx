@@ -1,6 +1,6 @@
 import { Tabs } from "antd"
 import React, { RefObject, Component, createRef } from "react"
-import { Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle } from "../models"
+import { AssignedBranche, Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle } from "../models"
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
@@ -10,7 +10,8 @@ const { TabPane } = Tabs
 
 interface MarketDetailPageProps {
     marketEvent: MarketEventDetails
-    stateChanged?: (marketEvent: MarketEventDetails) => void 
+    branches: AssignedBranche[]
+    stateChanged?: (marketEvent: MarketEventDetails) => void
 }
 
 export default class MarketDetail extends Component<MarketDetailPageProps> {
@@ -35,13 +36,33 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
         if (this.state.selectedLot === lot) {
             baseClass = "selected "
         }
+        // if (lot.branches) {
+        //     if (lot.branches.filter((item: string) => item !== "bak").length > 0) {
+        //         return baseClass + "lot occupied"
+        //     }
+        // }
+
+        return baseClass + "lot"
+    }
+
+    getBranche = (lot: Lot): AssignedBranche => {
         if (lot.branches) {
-            if (lot.branches.filter((item: string) => item !== "bak").length > 0) {
-                return baseClass + "lot occupied"
+            const _lotbranches = lot.branches.filter((item: string) => item !== "bak")
+            if(_lotbranches.length === 1){
+                const _activeBranche = this.props.branches.filter(b => b.brancheId === _lotbranches[0])
+                if (_activeBranche) {
+                    return _activeBranche[0]
+                }
             }
         }
 
-        return baseClass + "lot"
+        return {
+            brancheId: "",
+            verplicht: false,
+            color: "",
+            backGroundColor: ""
+
+        }
     }
 
     toggleSelectedLot = (lot: Lot, pageindex: number, layoutindex: number, lotindex: number) => {
@@ -74,7 +95,7 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
             selectedLot: lot
         })
         // and we need to tell the code list to refresh!
-        if(this.props.stateChanged) {
+        if (this.props.stateChanged) {
             this.props.stateChanged(this.props.marketEvent)
         }
 
@@ -87,7 +108,6 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
 
     render() {
         const { marketEvent } = this.props
-        console.log(marketEvent)
         return <>
             <Tabs defaultActiveKey="10">
                 {marketEvent.pages.map((page: MarketPage, i: number) => {
@@ -114,7 +134,8 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
                                                     index={i}
                                                     invert={layout.class === 'block-right' ? true : false}
                                                     lot={(lot as Lot)}
-                                                    classDef={this.getClassname((lot as Lot))}
+                                                    classDef={this.getClassname(lot as Lot)}
+                                                    branche={this.getBranche(lot as Lot)}
                                                     lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }} />
 
                                             }

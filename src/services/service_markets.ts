@@ -70,8 +70,6 @@ export class MarketService extends Service {
                                     if(_bbLookupValue.length === 1 && _bbLookupValue[0].color !== "") {
                                         _b[i].backGroundColor = _bbLookupValue[0].color
                                         _b[i].color = getTextColor(_bbLookupValue[0].color)
-                                    } else {
-                                        console.log("No lookup values found")
                                     }
                                     _b[i].allocated = (_b[i].allocated as number) + 1 || 1
                                 }
