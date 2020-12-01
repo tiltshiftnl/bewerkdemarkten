@@ -24,7 +24,6 @@ export default class SvgElectra extends Component<{ color: string, invert?: bool
                     id="rect982"
                     x="10"
                 y="10"
-                    transform={this.props.invert ? "rotate(-180 1.1 1.5 )" : "rotate(0 0 0 )"}
                     style={{
                         opacity: 1,
                         fill: this.props.color,
