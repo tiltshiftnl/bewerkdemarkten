@@ -34,9 +34,7 @@ export default class SvgLot extends Component<{
             propertyPosition = { x: 36, y: 1 }
         }
         if (properties) {
-            return properties.map((prop: string, i: number) => {
-                //console.log(prop)
-                //console.log(i)
+            return properties.map((prop: string) => {
                 switch(prop) {
                     case "bankje":
                         propertyPosition = this.props.invert ? { x: 24, y: 13 } : { x: 24, y: 20 }
