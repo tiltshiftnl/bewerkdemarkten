@@ -36,11 +36,6 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
         if (this.state.selectedLot === lot) {
             baseClass = "selected "
         }
-        // if (lot.branches) {
-        //     if (lot.branches.filter((item: string) => item !== "bak").length > 0) {
-        //         return baseClass + "lot occupied"
-        //     }
-        // }
 
         return baseClass + "lot"
     }

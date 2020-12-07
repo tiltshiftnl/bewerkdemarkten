@@ -53,7 +53,15 @@ export default class BrancheListPage extends Component {
                         <td>{branche.description}</td>
                         <td><MinusCircleOutlined
                             className="dynamic-delete-button"
-                            onClick={() => { }}
+                            onClick={() => { 
+                                if (this.state.branches) {
+                                    const _branches = this.state.branches
+                                    delete _branches[i]
+                                    this.setState({
+                                        branches: _branches
+                                    })
+                                }
+                            }}
                         /></td>
                     </tr>
 
