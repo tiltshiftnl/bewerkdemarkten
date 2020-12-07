@@ -1,9 +1,10 @@
-import { Breadcrumb, Button, Col, Input, Row } from "antd"
+import { Breadcrumb, //Button, 
+    Col, Input, Row } from "antd"
 import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import { HomeOutlined } from '@ant-design/icons'
 import { ObstacleTypeService } from "../services/service_lookup"
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+//import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default class ObstacleListPage extends Component {
     readonly state: { obstacles: string[] } = {

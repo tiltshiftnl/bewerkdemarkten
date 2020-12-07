@@ -14,6 +14,7 @@
     "antd": "^4.8.0",
     "keycloak-js": "^11.0.2",
     "react": "^17.0.1",
+    "react-color": "^2.19.3",
     "react-dom": "^17.0.1",
     "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.9.53",
+    "@types/react-color": "^3.0.4",
     "@types/react-edit-text": "^1.1.0",
     "@types/react-router-dom": "^5.1.6"
   }
