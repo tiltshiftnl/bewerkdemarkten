@@ -1,20 +1,67 @@
-import { Button, Input, InputNumber, Popover, Switch } from "antd"
-import React, { ChangeEvent, Component } from "react"
-import { AssignedBranche } from "../models"
-import { MinusCircleOutlined, PlusOutlined, BgColorsOutlined, FontColorsOutlined } from '@ant-design/icons'
+import { Button, InputNumber, Select, Switch } from "antd"
+import React, { Component } from "react"
+import { AssignedBranche, Branche } from "../models"
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import CSS from 'csstype'
-import { ChromePicker } from 'react-color'
+import { BrancheService } from "../services/service_lookup"
+import { getTextColor } from "../helpers/PresentationHelpers"
+
 
 export default class MarketAllocation extends Component<{ branches: AssignedBranche[] }> {
-    readonly state: { branches?: AssignedBranche[], displayColorPicker: boolean } = {
+
+    readonly state: { branches?: AssignedBranche[], displayColorPicker: boolean, lookupBranches: Branche[] } = {
         displayColorPicker: false,
-        branches: []
+        branches: [],
+        lookupBranches: []
     }
+
+    brancheService: BrancheService
+
     getStyle = (branche: AssignedBranche): CSS.Properties => {
         return {
             background: branche.backGroundColor || "#fff",
             color: branche.color || "#000"
         }
+    }
+
+    constructor(props: { branches: AssignedBranche[] }) {
+        super(props)
+        this.brancheService = new BrancheService()
+    }
+
+    getBrancheId = (branche: AssignedBranche, i: number) => {
+        let _availableBranches: string[] = []
+        if (branche.brancheId) {
+            return branche.brancheId
+        }
+        if (this.state.branches) {
+            _availableBranches = this.state.branches?.map(e => e.brancheId)
+        }
+
+        console.log(_availableBranches)
+
+        return <Select
+            style={{ width: '100%' }}
+            placeholder="Selecteer een branche"
+            value={branche.brancheId || ""}
+            onChange={(e: string) => {
+                const _selectedBranche: Branche = this.state.lookupBranches.filter((item: Branche) => item.brancheId === e)[0]
+                if (this.state.branches && _selectedBranche) {
+                    const _branches = this.state.branches
+                    _branches[i].brancheId = _selectedBranche.brancheId
+                    _branches[i].backGroundColor = _selectedBranche.color
+                    _branches[i].color = getTextColor(_selectedBranche.color)
+                    // Find the color, set the foreground color with the function.
+                    this.setState({
+                        branches: _branches
+                    })
+                }
+            }}
+        >
+            {this.state.lookupBranches.filter((item: Branche) => _availableBranches.indexOf(item.brancheId) === -1).map((br, i) => {
+                return <Select.Option key={i} value={br.brancheId}>{br.brancheId}</Select.Option>
+            })}
+        </Select>
     }
 
     getClass(branche: AssignedBranche): string {
@@ -49,32 +96,24 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
     }
 
     componentDidMount = () => {
-        this.setState({
-            branches: this.props.branches
+        this.brancheService.retrieve().then((lookupBranches: Branche[]) => {
+            this.setState({
+                lookupBranches,
+                branches: this.props.branches
+            })
         })
     }
 
     render() {
         return <><table>
             <thead>
-                <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th colSpan={2}>Kleur</th><th></th></tr>
+                <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th></th></tr>
             </thead>
             <tbody>
                 {this.state.branches && this.state.branches.map((branche, i) => {
                     return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
                         <td>{branche.brancheId.split('-')[0]}</td>
-                        <td>
-                            <Input value={branche.brancheId} placeholder={"ID-Naam"}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                    if (e.target.value && this.state.branches) {
-                                        const _branches = this.state.branches
-                                        _branches[i].brancheId = e.target.value
-                                        this.setState({
-                                            branches: _branches
-                                        })
-                                    }
-                                }}
-                            /></td>
+                        <td>{this.getBrancheId(branche, i)}</td>
                         <td><Switch checked={branche.verplicht} onChange={(checked: boolean) => {
                             if (this.state.branches) {
                                 const _branches = this.state.branches
@@ -98,40 +137,6 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
                                 }} />
                         </td>
                         <td>{branche.allocated && <>{branche.allocated}</>}</td>
-                        <td>
-
-                            <Popover content={<ChromePicker color={branche.backGroundColor} disableAlpha={true} onChange={(color: any, event: any) => {
-                                console.log(color)
-                                if (this.state.branches) {
-                                    const _branches = this.state.branches
-                                    _branches[i].backGroundColor = color.hex
-                                    this.setState({
-                                        branches: _branches
-                                    })
-                                }
-
-
-                            }} />} trigger="click">
-                                <BgColorsOutlined style={{ backgroundColor: branche.backGroundColor, color: branche.color }} className="market-button" />
-                            </Popover>
-                        </td>
-                        <td>
-                            <Popover content={<ChromePicker color={branche.color} disableAlpha={true} onChange={(color: any, event: any) => {
-                                console.log(color)
-                                if (this.state.branches) {
-                                    const _branches = this.state.branches
-                                    _branches[i].color = color.hex
-                                    this.setState({
-                                        branches: _branches
-                                    })
-                                }
-
-
-                            }} />} trigger="click">
-                                <FontColorsOutlined className="market-button" style={{ backgroundColor: branche.backGroundColor, color: branche.color }} />
-                            </Popover>
-                        </td>
-
                         <td><MinusCircleOutlined
                             className="dynamic-delete-button"
                             onClick={() => {

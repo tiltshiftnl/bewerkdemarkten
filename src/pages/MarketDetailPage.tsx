@@ -40,7 +40,6 @@ export default class MarketDetailPage extends DynamicBase {
         //     }
         // })
         this.marketService.constructRelationalStructure(this.id).then(result => {
-            console.log(result)
             this.setState({
                 market: result,
                 name: this.id
@@ -50,7 +49,6 @@ export default class MarketDetailPage extends DynamicBase {
             })
         }).catch((e: Error)=> {
             // No result
-            console.log(e)
             this.setState({
                 name: this.id
             })
