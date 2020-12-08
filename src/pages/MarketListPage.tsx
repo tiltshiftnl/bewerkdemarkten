@@ -11,10 +11,9 @@ import { //MinusCircleOutlined,
 } from '@ant-design/icons'
 export default class MarketListPage extends Component {
 
-    readonly state: { markets: Markets, showModal: boolean, newMarketName: string, newMarketId: string } = {
+    readonly state: { markets: Markets, showModal: boolean, newMarketId: string } = {
         markets: {},
         showModal: false,
-        newMarketName: "",
         newMarketId: ""
     }
 
@@ -27,11 +26,11 @@ export default class MarketListPage extends Component {
 
     handleOk = () => {
         //Add the newMarket to the markets
-        if (this.state.newMarketId !== "" && this.state.newMarketName !== "") {
+        if (this.state.newMarketId !== "") {
             const _markets = this.state.markets
             _markets[this.state.newMarketId] = {
                 id: 0,
-                name: this.state.newMarketName,
+                name: "",
                 events: {}
             }
 
@@ -113,13 +112,6 @@ export default class MarketListPage extends Component {
                         newMarketId: e.target.value.toUpperCase() || ""
                     })
                 }} />
-                <Input value={this.state.newMarketName} placeholder="Naam" onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    this.setState({
-                        newMarketName: e.target.value || ""
-                    })
-
-                }} />
-                <Input placeholder="Gemeente" defaultValue="Amsterdam" disabled />
             </Modal>
         </>
     }

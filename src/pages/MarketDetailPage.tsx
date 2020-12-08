@@ -31,19 +31,28 @@ export default class MarketDetailPage extends DynamicBase {
 
     refresh() {
         this.id = (this.props as any).match.params.id
-        this.marketsService.retrieve().then(results => {
-            const map = results[this.id.split('-')[0]].events[this.id.split('-')[1]]
-            this.setState({
-                event: map || undefined
-            })
-        })
+        // this.marketsService.retrieve().then(results => {
+        //     if (results[this.id.split('-')[0]]) {
+        //         const map = results[this.id.split('-')[0]].events[this.id.split('-')[1]]
+        //         this.setState({
+        //             event: map || undefined
+        //         })
+        //     }
+        // })
         this.marketService.constructRelationalStructure(this.id).then(result => {
+            console.log(result)
             this.setState({
                 market: result,
                 name: this.id
             })
             this.allocationRef.current?.setState({
                 branches: result.branches
+            })
+        }).catch((e: Error)=> {
+            // No result
+            console.log(e)
+            this.setState({
+                name: this.id
             })
         })
     }
@@ -77,10 +86,10 @@ export default class MarketDetailPage extends DynamicBase {
             </Breadcrumb>
             <Tabs defaultActiveKey="1">
                 <TabPane tab="Details" key="1">
-                <MarketDetail marketEvent={this.state.market} branches={this.state.market.branches} stateChanged={this.marketEventStateChanged}/>
+                    <MarketDetail marketEvent={this.state.market} branches={this.state.market.branches} stateChanged={this.marketEventStateChanged} />
                 </TabPane>
                 <TabPane tab="Branchelijst" key="2">
-                <MarketAllocation ref={this.allocationRef} branches={this.state.market.branches}/>
+                    <MarketAllocation ref={this.allocationRef} branches={this.state.market.branches} />
                 </TabPane>
             </Tabs>
         </>

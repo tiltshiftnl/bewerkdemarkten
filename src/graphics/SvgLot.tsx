@@ -34,23 +34,23 @@ export default class SvgLot extends Component<{
             propertyPosition = { x: 36, y: 1 }
         }
         if (properties) {
-            return properties.map((prop: string) => {
+            return properties.map((prop: string, i: number) => {
                 switch(prop) {
                     case "bankje":
                         propertyPosition = this.props.invert ? { x: 24, y: 13 } : { x: 24, y: 20 }
-                        return <SvgBench invert={this.props.invert} color="#c75819" position={propertyPosition} />
+                        return <SvgBench key={i} invert={this.props.invert} color="#c75819" position={propertyPosition} />
                     case "electra":
                         propertyPosition = this.props.invert ? { x: 36, y: 3 } : { x: 36, y: 31 }
-                        return <SvgElectra invert={this.props.invert} color="#000" position={propertyPosition} />
+                        return <SvgElectra key={i} invert={this.props.invert} color="#000" position={propertyPosition} />
                     case "water":
                         propertyPosition = this.props.invert ? { x: 10, y: 2 } : { x: 10, y: 35 }
-                        return <SvgWater invert={this.props.invert} color="#1890ff" position={propertyPosition} />
+                        return <SvgWater key={i} invert={this.props.invert} color="#1890ff" position={propertyPosition} />
                     case "boom":
                             propertyPosition = this.props.invert ? { x: 10, y: 15 } : { x: 10, y: 21 }
-                            return <SvgTree invert={this.props.invert} color="#73ab4f" position={propertyPosition} />
+                            return <SvgTree key={i} invert={this.props.invert} color="#73ab4f" position={propertyPosition} />
                     case "lantaarnpaal":
                                 propertyPosition = this.props.invert ? { x: 32, y: 12 } : { x: 32, y: 15 }
-                                return <SvgLight invert={this.props.invert} color="yellow" position={propertyPosition} />
+                                return <SvgLight key={i} invert={this.props.invert} color="yellow" position={propertyPosition} />
                     default:
                         return <></>
                 }
