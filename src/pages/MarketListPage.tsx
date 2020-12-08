@@ -1,19 +1,21 @@
-import { HomeOutlined, // PlusSquareOutlined, EditOutlined 
-} from '@ant-design/icons'
-import { Button, Col, Row, //Space 
-} from "antd"
-import React, { Component } from "react"
+import { HomeOutlined } from '@ant-design/icons'
+import { Button, Col, Row, Modal, Input } from "antd"
+import React, { ChangeEvent, Component } from "react"
 import { Market, Markets } from "../models"
 import MarketsService from "../services/service_markets"
 import MarketListItem from '../components/MarketListItem'
 import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
 import { //MinusCircleOutlined, 
-    PlusOutlined } from '@ant-design/icons'
+    PlusOutlined
+} from '@ant-design/icons'
 export default class MarketListPage extends Component {
 
-    readonly state: { markets: Markets } = {
-        markets: {}
+    readonly state: { markets: Markets, showModal: boolean, newMarketName: string, newMarketId: string } = {
+        markets: {},
+        showModal: false,
+        newMarketName: "",
+        newMarketId: ""
     }
 
     marketsService: MarketsService
@@ -22,6 +24,29 @@ export default class MarketListPage extends Component {
         super(props)
         this.marketsService = new MarketsService()
     }
+
+    handleOk = () => {
+        //Add the newMarket to the markets
+        if (this.state.newMarketId !== "" && this.state.newMarketName !== "") {
+            const _markets = this.state.markets
+            _markets[this.state.newMarketId] = {
+                id: 0,
+                name: this.state.newMarketName,
+                events: {}
+            }
+
+            this.setState({
+                markets: _markets,
+                showModal: false
+            })
+        }
+    };
+
+    handleCancel = () => {
+        this.setState({
+            showModal: false
+        })
+    };
 
     componentDidMount = () => {
         this.marketsService.retrieve().then((markets: Markets) => {
@@ -53,26 +78,49 @@ export default class MarketListPage extends Component {
                     </Col>
                 })}
             </Row>
-                    <Button
-                        onClick={() => {
-                            // const _branches = this.state.branches || []
-                            // _branches.push({
-                            //     brancheId: "",
-                            //     verplicht: false,
-                            //     color: "#000",
-                            //     backGroundColor: "#fff",
-                            //     allocated: 0
-                            // })
-                            // this.setState({
-                            //     branches: _branches
-                            // })
-                        }}
-                        style={{ marginTop: '20px' }}
-                        icon={<PlusOutlined />}
-                    >Toevoegen</Button>
-                    <Button type="primary" htmlType="submit">
-                        Opslaan
-            </Button>
+            <Button
+                onClick={() => {
+                    this.setState({
+                        showModal: true
+                    })
+                    // const _branches = this.state.branches || []
+                    // _branches.push({
+                    //     brancheId: "",
+                    //     verplicht: false,
+                    //     color: "#000",
+                    //     backGroundColor: "#fff",
+                    //     allocated: 0
+                    // })
+                    // this.setState({
+                    //     branches: _branches
+                    // })
+                }}
+                style={{ marginTop: '20px' }}
+                icon={<PlusOutlined />}
+            >Toevoegen</Button>
+            {/* <Button type="primary" htmlType="submit">
+                Opslaan
+            </Button> */}
+            <Modal
+                title="Markt toevoegen"
+                visible={this.state.showModal}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                cancelText="Annuleren"
+            >
+                <Input value={this.state.newMarketId} placeholder="Code" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    this.setState({
+                        newMarketId: e.target.value.toUpperCase() || ""
+                    })
+                }} />
+                <Input value={this.state.newMarketName} placeholder="Naam" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    this.setState({
+                        newMarketName: e.target.value || ""
+                    })
+
+                }} />
+                <Input placeholder="Gemeente" defaultValue="Amsterdam" disabled />
+            </Modal>
         </>
     }
 }

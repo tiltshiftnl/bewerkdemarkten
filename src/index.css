@@ -400,3 +400,7 @@ td {
   border-radius: 0 !important;
   background: none !important;
 }
+
+.ant-modal-content .ant-input {
+  margin-bottom: 1em;
+}
