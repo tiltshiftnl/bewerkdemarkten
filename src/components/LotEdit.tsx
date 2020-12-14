@@ -128,11 +128,13 @@ export default class LotEdit extends Component<LotEditProps> {
                         placeholder="Selecteer een branche"
                         value={!this.state.lot ? [] : this.state.lot.branches?.filter(e => e !== "bak")}
                         onChange={(e: string[]) => {
+                            console.log(e)
                             this.setState({
                                 lot: { ...this.state.lot, branches: [e] }
                             })
                         }}
                     >
+                        <Select.Option key={"blanco"} value={""}><em><b>Niet toegewezen</b></em></Select.Option>
                         {this.props.branches.filter((item: AssignedBranche) => item.brancheId !== "bak").map((br, i) => {
                             return <Select.Option key={i} value={br.brancheId}>{br.brancheId}</Select.Option>
                         })}
