@@ -91,8 +91,12 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
         })
     }
 
-    layoutChanged = (layout: MarketLayout) => {
-        console.log(layout)
+    layoutChanged = (layout: MarketLayout, position: [number, number]) => {
+        let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+        _marketEventDetails.pages[position[0]].layout[position[1]] = layout
+        this.setState({
+            marketEventDetails: _marketEventDetails
+        })
         // TODO: Persist!
     }
 
@@ -147,6 +151,7 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
                                             index={i}
                                             layout={layout}
                                             changed={this.layoutChanged}
+                                            position={[pageindex, layoutindex]}
                                         />
                                     }
                                     <div className={`lot-row`}>
@@ -177,6 +182,8 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
                                         <LayoutEdit
                                             index={i}
                                             layout={layout}
+                                            changed={this.layoutChanged}
+                                            position={[pageindex, layoutindex]}
                                         />}
                                 </div>
 

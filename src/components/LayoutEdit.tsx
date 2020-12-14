@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Col, Input, Row } from "antd"
+import { Col, Input, Row, Select } from "antd"
 import { MarketLayout } from "../models";
-export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout) => void }> {
+export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout, position: [number, number]) => void, position: [number, number] }> {
     readonly state: { layout: MarketLayout } = {
         layout: {
             title: "",
@@ -28,11 +28,11 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     placeholder="Vul titel in"
                     value={this.state.layout.title}
                     onChange={(e: any) => {
-                        if (this.props.changed){
-                            this.props.changed({...this.state.layout, title: e.target.value})
+                        if (this.props.changed) {
+                            this.props.changed({ ...this.state.layout, title: e.target.value }, this.props.position)
                         }
                         this.setState({
-                            layout: {...this.state.layout, title: e.target.value}
+                            layout: { ...this.state.layout, title: e.target.value }
                         })
                     }} />
             </Col>
@@ -43,7 +43,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     value={this.state.layout.landmarkTop}
                     onChange={(e: any) => {
                         this.setState({
-                            layout: {...this.state.layout, landmarkTop: e.target.value}
+                            layout: { ...this.state.layout, landmarkTop: e.target.value }
                         })
                     }} />
             </Col>
@@ -54,9 +54,23 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     value={this.state.layout.landmarkBottom}
                     onChange={(e: any) => {
                         this.setState({
-                            layout: {...this.state.layout, landmarkBottom: e.target.value}
+                            layout: { ...this.state.layout, landmarkBottom: e.target.value }
                         })
                     }} />
+            </Col>
+            <Col>
+
+                <Select value={this.state.layout.class || "block-left"} onChange={(e: string) => {
+                    if (this.props.changed) {
+                        this.props.changed({ ...this.state.layout, class: e }, this.props.position)
+                    }
+                    this.setState({
+                        layout: { ...this.state.layout, class: e }
+                    })
+                }}>
+                    <Select.Option key="0" value="block-left">Links</Select.Option>
+                    <Select.Option key="1" value="block-right">Rechts</Select.Option>
+                </Select>
             </Col>
         </Row>
     }
