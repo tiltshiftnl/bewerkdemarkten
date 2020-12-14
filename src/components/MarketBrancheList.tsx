@@ -3,30 +3,18 @@ import React, { Component } from "react"
 import { AssignedBranche, Branche } from "../models"
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import CSS from 'csstype'
-import { BrancheService } from "../services/service_lookup"
 import { getTextColor } from "../helpers/PresentationHelpers"
 
 
-export default class MarketAllocation extends Component<{ branches: AssignedBranche[] }> {
+export default class MarketBrancheList extends Component<{ lookupBranches: Branche[] }> {
 
-    readonly state: { branches?: AssignedBranche[], displayColorPicker: boolean, lookupBranches: Branche[] } = {
-        displayColorPicker: false,
-        branches: [],
-        lookupBranches: []
-    }
-
-    brancheService: BrancheService
+    readonly state: { branches?: AssignedBranche[] } = {}
 
     getStyle = (branche: AssignedBranche): CSS.Properties => {
         return {
             background: branche.backGroundColor || "#fff",
             color: branche.color || "#000"
         }
-    }
-
-    constructor(props: { branches: AssignedBranche[] }) {
-        super(props)
-        this.brancheService = new BrancheService()
     }
 
     getBrancheId = (branche: AssignedBranche, i: number) => {
@@ -38,14 +26,12 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
             _availableBranches = this.state.branches?.map(e => e.brancheId)
         }
 
-        console.log(_availableBranches)
-
         return <Select
             style={{ width: '100%' }}
             placeholder="Selecteer een branche"
             value={branche.brancheId || ""}
             onChange={(e: string) => {
-                const _selectedBranche: Branche = this.state.lookupBranches.filter((item: Branche) => item.brancheId === e)[0]
+                const _selectedBranche: Branche = this.props.lookupBranches.filter((item: Branche) => item.brancheId === e)[0]
                 if (this.state.branches && _selectedBranche) {
                     const _branches = this.state.branches
                     _branches[i].brancheId = _selectedBranche.brancheId
@@ -58,7 +44,7 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
                 }
             }}
         >
-            {this.state.lookupBranches.filter((item: Branche) => _availableBranches.indexOf(item.brancheId) === -1).map((br, i) => {
+            {this.props.lookupBranches.filter((item: Branche) => _availableBranches.indexOf(item.brancheId) === -1).map((br, i) => {
                 return <Select.Option key={i} value={br.brancheId}>{br.brancheId}</Select.Option>
             })}
         </Select>
@@ -95,22 +81,13 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
         return baseClass.trim()
     }
 
-    componentDidMount = () => {
-        this.brancheService.retrieve().then((lookupBranches: Branche[]) => {
-            this.setState({
-                lookupBranches,
-                branches: this.props.branches
-            })
-        })
-    }
-
     render() {
-        return <><table>
+        return <>{this.state.branches && <><table>
             <thead>
                 <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th></th></tr>
             </thead>
             <tbody>
-                {this.state.branches && this.state.branches.map((branche, i) => {
+                {this.state.branches.map((branche, i) => {
                     return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
                         <td>{branche.brancheId.split('-')[0]}</td>
                         <td>{this.getBrancheId(branche, i)}</td>
@@ -126,7 +103,6 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
                         <td>
                             <InputNumber min={0} max={99} value={branche.maximumPlaatsen || 0}
                                 onChange={(value: string | number | undefined) => {
-                                    console.log(value)
                                     if (value && this.state.branches) {
                                         const _branches = this.state.branches
                                         _branches[i].maximumPlaatsen = value as number
@@ -171,6 +147,6 @@ export default class MarketAllocation extends Component<{ branches: AssignedBran
             >Toevoegen</Button>
             <Button type="primary" htmlType="submit">
                 Opslaan
-        </Button></>
+        </Button></>}</>
     }
 }

@@ -1,6 +1,6 @@
-import { Tabs } from "antd"
-import React, { RefObject, Component, createRef } from "react"
-import { AssignedBranche, Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle } from "../models"
+import { Input, Tabs } from "antd"
+import React, { RefObject, Component, createRef, MouseEvent, KeyboardEvent, ChangeEvent } from "react"
+import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle } from "../models"
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
@@ -8,25 +8,23 @@ import ObstacleBlock from "./ObstacleBlock"
 
 const { TabPane } = Tabs
 
-interface MarketDetailPageProps {
-    marketEvent: MarketEventDetails
-    branches: AssignedBranche[]
-    stateChanged?: (marketEvent: MarketEventDetails) => void
+interface MarketDetailPageState {
+    selectedLot?: Lot, marketEventDetails: MarketEventDetails, currentPosition: [number, number, number], activeKey: string
 }
 
-export default class MarketDetail extends Component<MarketDetailPageProps> {
+export default class MarketDetail extends Component<{ lookupBranches: Branche[] }> {
     lotEdit: RefObject<LotEdit>
-
-    readonly state: { selectedLot?: Lot, marketEvent: MarketEventDetails, currentPosition: [number, number, number] } = {
+    readonly state: MarketDetailPageState = {
         selectedLot: undefined,
-        marketEvent: {
+        marketEventDetails: {
             branches: [],
             pages: []
         },
+        activeKey: "0",
         currentPosition: [0, 0, 0]
     }
 
-    constructor(props: MarketDetailPageProps) {
+    constructor(props: { lookupBranches: Branche[] }) {
         super(props)
         this.lotEdit = createRef()
     }
@@ -43,8 +41,8 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
     getBranche = (lot: Lot): AssignedBranche => {
         if (lot.branches) {
             const _lotbranches = lot.branches.filter((item: string) => item !== "bak")
-            if(_lotbranches.length === 1){
-                const _activeBranche = this.props.branches.filter(b => b.brancheId === _lotbranches[0])
+            if (_lotbranches.length === 1) {
+                const _activeBranche = this.state.marketEventDetails.branches.filter(b => b.brancheId === _lotbranches[0])
                 if (_activeBranche) {
                     return _activeBranche[0]
                 }
@@ -81,19 +79,16 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
     }
 
     lotChanged = (lot: Lot) => {
-        this.props.marketEvent
+        const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+        _marketEventDetails
             .pages[this.state.currentPosition[0]]
             .layout[this.state.currentPosition[1]]
             .lots[this.state.currentPosition[2]] = lot
         // now we need to refresh the props.
         this.setState({
-            selectedLot: lot
+            selectedLot: lot,
+            marketEventDetails: _marketEventDetails
         })
-        // and we need to tell the code list to refresh!
-        if (this.props.stateChanged) {
-            this.props.stateChanged(this.props.marketEvent)
-        }
-
     }
 
     layoutChanged = (layout: MarketLayout) => {
@@ -101,14 +96,48 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
         // TODO: Persist!
     }
 
+    onTabChange = (activeKey: string) => {
+        this.setState({ activeKey })
+    }
+
+    onTabEdit = (e: string | MouseEvent<Element, globalThis.MouseEvent> | KeyboardEvent<Element>) => {
+        let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+        if (typeof e === "string") {
+            _marketEventDetails.pages.splice(parseInt(e), 1)
+            this.setState({
+                marketEventDetails: _marketEventDetails
+            })
+        } else {
+            _marketEventDetails.pages.push({
+                title: "Nieuwe pagina",
+                layout: []
+            })
+        }
+        this.setState({
+            marketEventDetails: _marketEventDetails
+        })
+    }
+
     render() {
-        const { marketEvent } = this.props
         return <>
-            <Tabs defaultActiveKey="10">
-                {marketEvent.pages.map((page: MarketPage, i: number) => {
+            <Tabs
+                type="editable-card"
+                activeKey={this.state.activeKey}
+                onEdit={this.onTabEdit}
+                tabPosition="top"
+                onChange={this.onTabChange}
+            >
+                {this.state.marketEventDetails.pages.map((page: MarketPage, i: number) => {
                     const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    return <TabPane tab={page.title} key={i}>
+                    return <TabPane tab={<><Input size="small" value={page.title}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+                            _marketEventDetails.pages[i].title = e.target.value
+                            this.setState({
+                                marketEventDetails: _marketEventDetails
+                            })
+                        }} /></>} key={i}>
                         <div className="block-wrapper">
                             {page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
@@ -158,7 +187,7 @@ export default class MarketDetail extends Component<MarketDetailPageProps> {
             </Tabs>
             <LotEdit
                 ref={this.lotEdit}
-                branches={this.props.marketEvent.branches} changed={this.lotChanged} />
+                branches={this.state.marketEventDetails.branches} changed={this.lotChanged} />
         </>
     }
 }

@@ -1,64 +1,55 @@
 import React, { createRef, RefObject } from "react"
 import MarketDetail from "../components/MarketDetail"
-import { MarketEventDetails } from "../models"
-import MarketsService, { MarketService } from "../services/service_markets"
+import { MarketService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb, Tabs } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
-import MarketAllocation from "../components/MarketAllocation"
+import { Branche } from "../models"
+import { BrancheService } from "../services/service_lookup"
+import MarketBrancheList from "../components/MarketBrancheList"
 
 const { TabPane } = Tabs
 
 export default class MarketDetailPage extends DynamicBase {
-    allocationRef: RefObject<MarketAllocation>
-    readonly state: { market: MarketEventDetails } = {
-        market: {
-            branches: [],
-            pages: []
-        }
-    }
+    readonly state: { lookupBranches?: Branche[] } = {}
+
+    marketBrancheListRef: RefObject<MarketBrancheList>
+    marketDetailRef: RefObject<MarketDetail>
 
     marketService: MarketService
-    marketsService: MarketsService
+
+    lookupBrancheService: BrancheService
 
     constructor(props: any) {
         super(props)
         this.marketService = new MarketService()
-        this.marketsService = new MarketsService()
-        this.allocationRef = createRef()
+        this.lookupBrancheService = new BrancheService()
+
+        this.marketBrancheListRef = createRef()
+        this.marketDetailRef = createRef()
     }
 
     refresh() {
         this.id = (this.props as any).match.params.id
-        // this.marketsService.retrieve().then(results => {
-        //     if (results[this.id.split('-')[0]]) {
-        //         const map = results[this.id.split('-')[0]].events[this.id.split('-')[1]]
-        //         this.setState({
-        //             event: map || undefined
-        //         })
-        //     }
-        // })
-        this.marketService.constructRelationalStructure(this.id).then(result => {
+        this.lookupBrancheService.retrieve().then((lookupBranches: Branche[]) => {
             this.setState({
-                market: result,
-                name: this.id
+                lookupBranches
             })
-            this.allocationRef.current?.setState({
+        })
+        this.marketService.constructRelationalStructure(this.id).then(result => {
+            this.marketBrancheListRef.current?.setState({
                 branches: result.branches
             })
-        }).catch((e: Error)=> {
+            this.marketDetailRef.current?.setState({
+                marketEventDetails: result
+            })
+        }).catch((e: Error) => {
+            console.log(e)
             // No result
             this.setState({
                 name: this.id
             })
-        })
-    }
-
-    marketEventStateChanged = (marketEvent: MarketEventDetails) => {
-        console.log(marketEvent)
-        this.setState({
-            market: marketEvent
         })
     }
 
@@ -82,14 +73,15 @@ export default class MarketDetailPage extends DynamicBase {
                         <span>{this.id.split('-')[1]}</span>
                     </Breadcrumb.Item></>}
             </Breadcrumb>
-            <Tabs defaultActiveKey="1">
-                <TabPane tab="Details" key="1">
-                    <MarketDetail marketEvent={this.state.market} branches={this.state.market.branches} stateChanged={this.marketEventStateChanged} />
-                </TabPane>
-                <TabPane tab="Branchelijst" key="2">
-                    <MarketAllocation ref={this.allocationRef} branches={this.state.market.branches} />
-                </TabPane>
-            </Tabs>
+            {this.state.lookupBranches &&
+                <Tabs defaultActiveKey="0">
+                    <TabPane tab="Details" key="0">
+                        <MarketDetail ref={this.marketDetailRef} lookupBranches={this.state.lookupBranches} />
+                    </TabPane>
+                    <TabPane tab="Branchelijst" key="1" forceRender={true}>
+                        <MarketBrancheList ref={this.marketBrancheListRef} lookupBranches={this.state.lookupBranches} />
+                    </TabPane>
+                </Tabs>}
         </>
     }
 }
