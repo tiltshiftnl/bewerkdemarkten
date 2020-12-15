@@ -24,12 +24,27 @@ export default class MarketsService extends Service {
 
 export class MarketService extends Service {
     async retrieve(route: string): Promise<Rows> {
+        // Retrieve from Cache
+        const cachedMarket = localStorage.getItem(`bwdm_cache_${route}_market`)
+        if (cachedMarket) {
+            console.log(`Market for ${route} is cached`)
+            return JSON.parse(cachedMarket)
+        }
+        console.log(`Market for ${route} not cached`)
+
+        // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/markt.json")
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
                 }
                 return response.json()
+            })
+            .then(json => {
+                const item = json
+                // Cache
+                localStorage.setItem(`bwdm_cache_${route}_market`, JSON.stringify(item))
+                return item
             })
             .catch(error => {
                 this.handleError(error)
@@ -67,7 +82,7 @@ export class MarketService extends Service {
                             _Lot.branches?.forEach(a => {
                                 if (a === _b[i].brancheId) {
                                     const _bbLookupValue = _bb.filter(e => e.brancheId === _b[i].brancheId)
-                                    if(_bbLookupValue.length === 1 && _bbLookupValue[0].color !== "") {
+                                    if (_bbLookupValue.length === 1 && _bbLookupValue[0].color !== "") {
                                         _b[i].backGroundColor = _bbLookupValue[0].color
                                         _b[i].color = getTextColor(_bbLookupValue[0].color)
                                     }
@@ -127,6 +142,15 @@ export class MarketService extends Service {
 
 export class BranchesService extends Service {
     async retrieve(route: string): Promise<AssignedBranche[]> {
+        // Retrieve from Cache
+        const cachedBranches = localStorage.getItem(`bwdm_cache_${route}_branches`)
+        if (cachedBranches) {
+            console.log(`Branches for ${route} are cached`)
+            return JSON.parse(cachedBranches)
+        }
+        console.log(`Branches for ${route} not cached`)
+
+        // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/branches.json")
             .then(response => {
                 if (!response.ok) {
@@ -136,6 +160,8 @@ export class BranchesService extends Service {
             })
             .then(json => {
                 const item = json
+                // Cache
+                localStorage.setItem(`bwdm_cache_${route}_branches`, JSON.stringify(item))
                 return item
             })
             .catch(error => {
@@ -146,6 +172,15 @@ export class BranchesService extends Service {
 
 export class GeographyService extends Service {
     async retrieve(route: string): Promise<Geography> {
+        // Retrieve from Cache
+        const cachedGeography = localStorage.getItem(`bwdm_cache_${route}_geography`)
+        if (cachedGeography) {
+            console.log(`Geography for ${route} are cached`)
+            return JSON.parse(cachedGeography)
+        }
+        console.log(`Geography for ${route} not cached`)
+
+        // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/geografie.json")
             .then(response => {
                 if (!response.ok) {
@@ -155,6 +190,8 @@ export class GeographyService extends Service {
             })
             .then(json => {
                 const item = json
+                // Cache
+                localStorage.setItem(`bwdm_cache_${route}_geography`, JSON.stringify(item))
                 return item
             })
             .catch(error => {
@@ -165,6 +202,15 @@ export class GeographyService extends Service {
 
 export class LotsService extends Service {
     async retrieve(route: string): Promise<Lot[]> {
+        // Retrieve from Cache
+        const cachedLots = localStorage.getItem(`bwdm_cache_${route}_lots`)
+        if (cachedLots) {
+            console.log(`Lots for ${route} are cached`)
+            return JSON.parse(cachedLots)
+        }
+        console.log(`Lots for ${route} not cached`)
+
+        // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/locaties.json")
             .then(response => {
                 if (!response.ok) {
@@ -174,6 +220,8 @@ export class LotsService extends Service {
             })
             .then(json => {
                 const item = json
+                // Cache
+                localStorage.setItem(`bwdm_cache_${route}_lots`, JSON.stringify(item))
                 return item
             })
             .catch(error => {
@@ -184,6 +232,15 @@ export class LotsService extends Service {
 
 export class PagesService extends Service {
     async retrieve(route: string): Promise<Page[]> {
+        // Retrieve from Cache
+        const cachedPages = localStorage.getItem(`bwdm_cache_${route}_pages`)
+        if (cachedPages) {
+            console.log(`Pages for ${route} are cached`)
+            return JSON.parse(cachedPages)
+        }
+        console.log(`Pages for ${route} not cached`)
+
+        // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/paginas.json")
             .then(response => {
                 if (!response.ok) {
@@ -193,6 +250,8 @@ export class PagesService extends Service {
             })
             .then(json => {
                 const item = json
+                // Cache
+                localStorage.setItem(`bwdm_cache_${route}_pages`, JSON.stringify(item))
                 return item
             })
             .catch(error => {
