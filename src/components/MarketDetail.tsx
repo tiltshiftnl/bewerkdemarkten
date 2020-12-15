@@ -91,13 +91,21 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
         })
     }
 
-    layoutChanged = (layout: MarketLayout, position: [number, number]) => {
+    layoutChanged = (layout: MarketLayout | undefined, position: [number, number], add?: boolean) => {
+        console.log(layout)
         let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
-        _marketEventDetails.pages[position[0]].layout[position[1]] = layout
+        if (layout) {
+            if (add){
+                _marketEventDetails.pages[position[0]].layout.splice(position[1] + 1, 0, layout)
+            } else {
+                _marketEventDetails.pages[position[0]].layout[position[1]] = layout
+            }
+        } else {
+            _marketEventDetails.pages[position[0]].layout.splice(position[1], 1)
+        }
         this.setState({
             marketEventDetails: _marketEventDetails
         })
-        // TODO: Persist!
     }
 
     onTabChange = (activeKey: string) => {

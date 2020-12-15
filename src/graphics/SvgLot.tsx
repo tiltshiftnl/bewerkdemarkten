@@ -83,9 +83,6 @@ export default class SvgLot extends Component<{
     }
 
     getFillColor = () => {
-        if(this.props.branche?.brancheId === "207-grill-frituur"){
-            console.log(this.props.branche)
-        }
         if (this.props.branche && this.props.branche.backGroundColor) {
             return this.props.branche.backGroundColor
         }

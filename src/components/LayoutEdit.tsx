@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Col, Input, Row, Select } from "antd"
 import { MarketLayout } from "../models";
-export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout, position: [number, number]) => void, position: [number, number] }> {
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
+export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout | undefined, position: [number, number], add?: boolean) => void, position: [number, number] }> {
     readonly state: { layout: MarketLayout } = {
         layout: {
             title: "",
@@ -71,6 +72,31 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     <Select.Option key="0" value="block-left">Links</Select.Option>
                     <Select.Option key="1" value="block-right">Rechts</Select.Option>
                 </Select>
+            </Col>
+            <Col>
+                <MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    onClick={() => {
+                        if (this.props.changed) {
+                            this.props.changed(undefined, this.props.position)
+                        }
+                    }}
+                />
+                <PlusCircleOutlined
+                    className="dynamic-delete-button"
+                    onClick={() => {
+                        if (this.props.changed) {
+                            const _newLayout: MarketLayout = {
+                                title: "Nieuwe rij",
+                                class: "block-left",
+                                landmarkBottom: "",
+                                landmarkTop: "",
+                                lots: []
+                            }
+                            this.props.changed(_newLayout, this.props.position, true)
+                        }
+                    }}
+                />
             </Col>
         </Row>
     }
