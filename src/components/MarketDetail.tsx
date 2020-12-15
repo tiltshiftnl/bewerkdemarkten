@@ -5,7 +5,7 @@ import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
 import ObstacleBlock from "./ObstacleBlock"
-
+import { PlusCircleOutlined } from '@ant-design/icons'
 const { TabPane } = Tabs
 
 interface MarketDetailPageState {
@@ -95,8 +95,8 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
         console.log(layout)
         let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
         if (layout) {
-            if (add){
-                _marketEventDetails.pages[position[0]].layout.splice(position[1] + 1, 0, layout)
+            if (add) {
+                _marketEventDetails.pages[position[0]].layout.splice(position[1], 0, layout)
             } else {
                 _marketEventDetails.pages[position[0]].layout[position[1]] = layout
             }
@@ -151,6 +151,20 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
                             })
                         }} /></>} key={i}>
                         <div className="block-wrapper">
+                            <PlusCircleOutlined
+                                className="dynamic-delete-button"
+                                onClick={() => {
+                                    const _newLayout: MarketLayout = {
+                                        title: "Nieuwe rij",
+                                        class: "block-left",
+                                        landmarkBottom: "",
+                                        landmarkTop: "",
+                                        lots: []
+                                    }
+                                    this.layoutChanged(_newLayout, [pageindex, 0], true)
+
+                                }}
+                            />
                             {page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
                                 return <div key={i} className={layout.class}>

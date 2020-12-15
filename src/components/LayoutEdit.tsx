@@ -93,7 +93,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                                 landmarkTop: "",
                                 lots: []
                             }
-                            this.props.changed(_newLayout, this.props.position, true)
+                            this.props.changed(_newLayout, [this.props.position[0], this.props.position[1] + 1], true)
                         }
                     }}
                 />
