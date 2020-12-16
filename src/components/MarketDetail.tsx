@@ -1,6 +1,6 @@
 import { Input, Tabs } from "antd"
 import React, { RefObject, Component, createRef, MouseEvent, KeyboardEvent, ChangeEvent } from "react"
-import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle } from "../models"
+import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
@@ -30,12 +30,12 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
     }
 
     getClassname = (lot: Lot) => {
+        console.log(this.state.selectedLot)
         let baseClass = ""
         if (this.state.selectedLot === lot) {
             baseClass = "selected "
         }
-
-        return baseClass + "lot"
+        return baseClass + lot.type
     }
 
     getBranche = (lot: Lot): AssignedBranche => {
@@ -54,15 +54,16 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
             verplicht: false,
             color: "",
             backGroundColor: ""
-
         }
     }
 
     toggleSelectedLot = (lot: Lot, pageindex: number, layoutindex: number, lotindex: number) => {
+        console.log(lot)
         if (lot === this.state.selectedLot) {
             this.lotEdit.current?.setState({
                 lot: undefined
             })
+
             this.setState({
                 selectedLot: undefined,
                 currentPosition: [0, 0, 0]
@@ -78,16 +79,34 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
         }
     }
 
-    lotChanged = (lot: Lot) => {
+    lotChanged = (lot: Lot | undefined) => {
+        if (lot) {
+            const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+            _marketEventDetails
+                .pages[this.state.currentPosition[0]]
+                .layout[this.state.currentPosition[1]]
+                .lots[this.state.currentPosition[2]] = lot
+
+            // Now we need to refresh the props.
+            this.setState({
+                selectedLot: lot,
+                marketEventDetails: _marketEventDetails
+            })
+        }
+    }
+
+    lotAdd = (lot: Lot, position: [number, number]) => {
         const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
-        _marketEventDetails
-            .pages[this.state.currentPosition[0]]
-            .layout[this.state.currentPosition[1]]
-            .lots[this.state.currentPosition[2]] = lot
-        // now we need to refresh the props.
+        _marketEventDetails.pages[position[0]].layout[position[1]].lots.push(lot)
         this.setState({
-            selectedLot: lot,
             marketEventDetails: _marketEventDetails
+        }, () => {
+            this.lotEdit.current?.setState({
+                lot: lot
+            })
+            this.setState({
+                selectedLot: lot
+            })
         })
     }
 
@@ -177,28 +196,43 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
                                         />
                                     }
                                     <div className={`lot-row`}>
-                                        {layout.lots.map((lot: Lot | Obstacle, i: number) => {
+                                        {layout.lots.map((lot: Lot, i: number) => {
                                             const lotindex = i
                                             if (lot.type === "stand") {
                                                 return <LotBlock
                                                     key={i}
                                                     index={i}
                                                     invert={layout.class === 'block-right' ? true : false}
-                                                    lot={(lot as Lot)}
-                                                    classDef={this.getClassname(lot as Lot)}
-                                                    branche={this.getBranche(lot as Lot)}
-                                                    lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }} />
-
+                                                    lot={lot}
+                                                    classDef={this.getClassname(lot)}
+                                                    branche={this.getBranche(lot)}
+                                                    lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }}
+                                                />
                                             }
                                             return <ObstacleBlock
                                                 key={i}
                                                 index={i}
                                                 invert={layout.class === 'block-right' ? true : false}
-                                                obstacle={(lot as Obstacle)}
-                                                classDef="obstacle"
+                                                obstacle={lot}
+                                                classDef={this.getClassname(lot)}
+                                                lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }}
                                             />
 
                                         })}
+                                        <PlusCircleOutlined
+                                            className="dynamic-delete-button"
+                                            onClick={() => {
+                                                const _newLot: Lot = {
+                                                    plaatsId: "0",
+                                                    branches: [],
+                                                    verkoopinrichting: [],
+                                                    properties: [],
+                                                    type: "stand"
+                                                }
+                                                this.lotAdd(_newLot, [pageindex, layoutindex])
+
+                                            }}
+                                        />
                                     </div>
                                     {layout.class === 'block-right' &&
                                         <LayoutEdit

@@ -3,8 +3,10 @@ import React, { Component } from "react";
 export default class SvgLoopje extends Component {
     render() {
         return <svg
-            width="50"
-            height="50"
+            x="8"
+            y="8"
+            width="36"
+            height="36"
             viewBox="0 0 13.229167 13.229167"
             version="1.1"
             id="svg8">

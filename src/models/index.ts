@@ -37,19 +37,33 @@ export interface Market {
     
 }
 
-export interface Lot {
+// Kraam
+export interface Stand {
     plaatsId: string
     branches?: string[]
     verkoopinrichting?: string[]
     properties?: string[]
-    type?: "lot" | "stand"
+    type?: "stand"
 }
 
+// Obstakel
 export interface Obstacle {
     kraamA: string
     kraamB: string
     obstakel: string[]
     type?: "obstacle"
+}
+
+// Plek
+export interface Lot {
+    plaatsId?: string
+    branches?: string[]
+    verkoopinrichting?: string[]
+    properties?: string[]
+    kraamA?: string
+    kraamB?: string
+    obstakel?: string[]
+    type?: "lot" | "stand" | "obstacle"
 }
 
 export interface Geography {
@@ -96,7 +110,7 @@ export interface MarketLayout {
     landmarkTop: string
     landmarkBottom: string
     title: string
-    lots: (Lot | Obstacle)[]
+    lots: Lot[]
 }
 
 export interface MarketPage {

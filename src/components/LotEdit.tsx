@@ -1,12 +1,14 @@
-import { Col, Input, Row, Select, Checkbox } from "antd"
+import { Col, Input, Row, Select, Checkbox, Button, Radio } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService } from "../services/service_lookup"
+import { MinusOutlined } from '@ant-design/icons'
+import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
     branches: AssignedBranche[],
-    changed?: (lot: Lot) => void
+    changed?: (lot: Lot | undefined) => void
 }
 
 export default class LotEdit extends Component<LotEditProps> {
@@ -19,6 +21,19 @@ export default class LotEdit extends Component<LotEditProps> {
     }
 
 
+    onToggle = (e: RadioChangeEvent) => {
+
+        let _lot: Lot | undefined = this.state.lot
+
+        if (_lot && this.props.changed) {
+            _lot.type = e.target.value
+            this.props.changed(this.state.lot)
+            this.setState({
+                lot: _lot
+            })
+        }
+    }
+
     componentDidMount = () => {
         this.propertyService.retrieve().then((properties: string[]) => {
             this.setState({
@@ -28,8 +43,8 @@ export default class LotEdit extends Component<LotEditProps> {
     }
 
     setBak = (e: CheckboxChangeEvent) => {
-        if (this.state.lot) {
-            let _branches: string[] = this.state.lot?.branches || []
+        if (this.state.lot && this.state.lot) {
+            let _branches: string[] = this.state.lot.branches || []
             if (e.target.checked) {
                 _branches.push("bak")
             } else {
@@ -107,7 +122,17 @@ export default class LotEdit extends Component<LotEditProps> {
         const formGutter: [number, number] = [4, 4]
 
         return <div className="edit-lot">
-            <Row gutter={formGutter}>
+            {this.state.lot &&
+            <><Row align="middle">
+                <Col>
+                    <Radio.Group value={this.state.lot?.type} optionType="button" buttonStyle="solid" onChange={this.onToggle}>
+                        <Radio.Button value="stand">Kraam</Radio.Button>
+                        <Radio.Button value="obstacle">Obstakel</Radio.Button>
+                    </Radio.Group>
+                </Col>
+            </Row>
+            {this.state.lot.type === "stand" &&
+            <><Row gutter={formGutter}>
                 <Col {...firstColSpan}>Kraam</Col>
                 <Col {...secondColSpan}>
                     <Input
@@ -147,13 +172,26 @@ export default class LotEdit extends Component<LotEditProps> {
             </Row>
             {this.state.properties && this.state.properties.map((prop: string, i: number) => {
                 return <Row key={i} gutter={formGutter}>
-                <Col {...firstColSpan}>{prop.charAt(0).toUpperCase() + prop.slice(1)}</Col>
-                <Col {...secondColSpan}><Checkbox id={prop} checked={this.getProperty(prop)} onChange={this.setProperty} /></Col>
-            </Row>
+                    <Col {...firstColSpan}>{prop.charAt(0).toUpperCase() + prop.slice(1)}</Col>
+                    <Col {...secondColSpan}><Checkbox id={prop} checked={this.getProperty(prop)} onChange={this.setProperty} /></Col>
+                </Row>
             })}
             <Row gutter={formGutter}>
                 <Col {...firstColSpan}>Bak</Col>
                 <Col {...secondColSpan}><Checkbox checked={this.getBak()} onChange={this.setBak} /></Col>
-            </Row></div>
+            </Row></>}
+            <Row gutter={formGutter}>
+                <Col {...firstColSpan}><Button type="primary" danger
+                    onClick={() => {
+                        // Tell parent component to remove this lot.
+                        this.setState({
+                            lot: undefined
+                        })
+                    }}
+                    style={{ marginTop: '20px' }}
+                    icon={<MinusOutlined />}
+                >Verwijderen</Button></Col>
+            </Row></>}
+        </div>
     }
 }

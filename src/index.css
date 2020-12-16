@@ -253,15 +253,6 @@ textarea {
   cursor: pointer;
 }
 
-.obstacle {
-  padding: 9px;
-}
-
-.obstacle>svg {
-  width: 32px;
-  height: 32px;
-}
-
 .ant-breadcrumb {
   margin-bottom: 2em !important;
 }
