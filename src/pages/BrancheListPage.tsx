@@ -29,12 +29,16 @@ export default class BrancheListPage extends Component {
         this.brancheService = new BrancheService()
     }
 
+    updateBranches = (branches: Branche[]) => {
+        localStorage.setItem('bwdm_lookup_branches', JSON.stringify(branches))
+        this.setState({
+            branches
+        })
+    }
 
     componentDidMount = () => {
         this.brancheService.retrieve().then((branches: Branche[]) => {
-            this.setState({
-                branches
-            })
+            this.updateBranches(branches)
         })
     }
 
@@ -66,9 +70,8 @@ export default class BrancheListPage extends Component {
                                             const _branches = this.state.branches
                                             _branches[i].brancheId = e.target.value
                                             _branches[i].number = parseInt(e.target.value.split('-')[0])
-                                            this.setState({
-                                                branches: _branches
-                                            })
+                                            this.updateBranches(_branches)
+                                            
                                         }
                                     }}
                                 />
@@ -79,9 +82,7 @@ export default class BrancheListPage extends Component {
                                         if (e.target.value && this.state.branches) {
                                             const _branches = this.state.branches
                                             _branches[i].description = e.target.value
-                                            this.setState({
-                                                branches: _branches
-                                            })
+                                            this.updateBranches(_branches)
                                         }
                                     }}
                                 />
@@ -93,9 +94,7 @@ export default class BrancheListPage extends Component {
                                     if (this.state.branches) {
                                         const _branches = this.state.branches
                                         _branches[i].color = color.hex
-                                        this.setState({
-                                            branches: _branches
-                                        })
+                                        this.updateBranches(_branches)
                                     }
 
 
@@ -109,9 +108,7 @@ export default class BrancheListPage extends Component {
                                     if (this.state.branches) {
                                         const _branches = this.state.branches
                                         delete _branches[i]
-                                        this.setState({
-                                            branches: _branches
-                                        })
+                                        this.updateBranches(_branches)
                                     }
                                 }}
                             /></td>
@@ -127,15 +124,11 @@ export default class BrancheListPage extends Component {
                         description: "",
                         color: "#fff"
                     })
-                    this.setState({
-                        branches: _branches
-                    })
+                    this.updateBranches(_branches)
                 }}
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            <Button type="primary" htmlType="submit">
-                Opslaan
-        </Button></>
+            </>
     }
 }

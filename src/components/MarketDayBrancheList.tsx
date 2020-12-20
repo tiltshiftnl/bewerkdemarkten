@@ -6,9 +6,17 @@ import CSS from 'csstype'
 import { getTextColor } from "../helpers/PresentationHelpers"
 
 
-export default class MarketBrancheList extends Component<{ lookupBranches: Branche[] }> {
+export default class MarketDayBrancheList extends Component<{ id: string, lookupBranches: Branche[] }> {
 
     readonly state: { branches?: AssignedBranche[] } = {}
+
+
+    updateAssignedBranches = (branches: AssignedBranche[]) => {
+        localStorage.setItem(`bwdm_cache_${this.props.id}_branches`, JSON.stringify(branches))
+        this.setState({
+            branches
+        })
+    }
 
     getStyle = (branche: AssignedBranche): CSS.Properties => {
         return {
@@ -38,9 +46,7 @@ export default class MarketBrancheList extends Component<{ lookupBranches: Branc
                     _branches[i].backGroundColor = _selectedBranche.color
                     _branches[i].color = getTextColor(_selectedBranche.color)
                     // Find the color, set the foreground color with the function.
-                    this.setState({
-                        branches: _branches
-                    })
+                    this.updateAssignedBranches(_branches)
                 }
             }}
         >
@@ -95,9 +101,7 @@ export default class MarketBrancheList extends Component<{ lookupBranches: Branc
                             if (this.state.branches) {
                                 const _branches = this.state.branches
                                 _branches[i].verplicht = checked
-                                this.setState({
-                                    branches: _branches
-                                })
+                                this.updateAssignedBranches(_branches)
                             }
                         }} /></td>
                         <td>
@@ -106,9 +110,7 @@ export default class MarketBrancheList extends Component<{ lookupBranches: Branc
                                     if (value && this.state.branches) {
                                         const _branches = this.state.branches
                                         _branches[i].maximumPlaatsen = value as number
-                                        this.setState({
-                                            branches: _branches
-                                        })
+                                        this.updateAssignedBranches(_branches)
                                     }
                                 }} />
                         </td>
@@ -119,9 +121,7 @@ export default class MarketBrancheList extends Component<{ lookupBranches: Branc
                                 if (this.state.branches) {
                                     const _branches = this.state.branches
                                     delete _branches[i]
-                                    this.setState({
-                                        branches: _branches
-                                    })
+                                    this.updateAssignedBranches(_branches)
                                 }
                             }}
                         /></td>
@@ -138,15 +138,11 @@ export default class MarketBrancheList extends Component<{ lookupBranches: Branc
                         backGroundColor: "#fff",
                         allocated: 0
                     })
-                    this.setState({
-                        branches: _branches
-                    })
+                    this.updateAssignedBranches(_branches)
                 }}
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            <Button type="primary" htmlType="submit">
-                Opslaan
-        </Button></>}</>
+            </>}</>
     }
 }

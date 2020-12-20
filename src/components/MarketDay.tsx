@@ -4,17 +4,16 @@ import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, Market
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
-import ObstacleBlock from "./ObstacleBlock"
 import { PlusCircleOutlined } from '@ant-design/icons'
 const { TabPane } = Tabs
 
-interface MarketDetailPageState {
+interface MarketDayPageState {
     selectedLot?: Lot, marketEventDetails: MarketEventDetails, currentPosition: [number, number, number], activeKey: string
 }
 
-export default class MarketDetail extends Component<{ lookupBranches: Branche[] }> {
+export default class MarketDay extends Component<{ lookupBranches: Branche[] }> {
     lotEdit: RefObject<LotEdit>
-    readonly state: MarketDetailPageState = {
+    readonly state: MarketDayPageState = {
         selectedLot: undefined,
         marketEventDetails: {
             branches: [],
@@ -30,7 +29,6 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
     }
 
     getClassname = (lot: Lot) => {
-        console.log(this.state.selectedLot)
         let baseClass = ""
         if (this.state.selectedLot === lot) {
             baseClass = "selected "
@@ -198,7 +196,6 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
                                     <div className={`lot-row`}>
                                         {layout.lots.map((lot: Lot, i: number) => {
                                             const lotindex = i
-                                            if (lot.type === "stand") {
                                                 return <LotBlock
                                                     key={i}
                                                     index={i}
@@ -208,15 +205,15 @@ export default class MarketDetail extends Component<{ lookupBranches: Branche[] 
                                                     branche={this.getBranche(lot)}
                                                     lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }}
                                                 />
-                                            }
-                                            return <ObstacleBlock
-                                                key={i}
-                                                index={i}
-                                                invert={layout.class === 'block-right' ? true : false}
-                                                obstacle={lot}
-                                                classDef={this.getClassname(lot)}
-                                                lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }}
-                                            />
+
+                                            // return <ObstacleBlock
+                                            //     key={i}
+                                            //     index={i}
+                                            //     invert={layout.class === 'block-right' ? true : false}
+                                            //     obstacle={lot}
+                                            //     classDef={this.getClassname(lot)}
+                                            //     lotOnClick={(event: any) => { this.toggleSelectedLot(lot, pageindex, layoutindex, lotindex) }}
+                                            // />
 
                                         })}
                                         <PlusCircleOutlined

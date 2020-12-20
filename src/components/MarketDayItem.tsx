@@ -4,11 +4,11 @@ import { RouteComponentProps, withRouter } from "react-router-dom"
 import { Button, Descriptions, Dropdown, Input, Menu, Tag, Tooltip } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 
-interface MarketDetailItemProps extends RouteComponentProps {
+interface MarketDayItemProps extends RouteComponentProps {
     market: Market, marketId: string
 }
 
-class MarketDetailItem extends Component<MarketDetailItemProps> {
+class MarketDayItem extends Component<MarketDayItemProps> {
     history: any
     readonly state: { market: Market, day: string } = {
         day: "",
@@ -99,7 +99,7 @@ class MarketDetailItem extends Component<MarketDetailItemProps> {
                 {
                     Object.keys(this.state.market.events).map((key: string, i: number) => {
                         return <Tag
-                            onClick={() => this.props.history.push({ pathname: `/market/detail/${marketId}-${key}` })}
+                            onClick={() => this.props.history.push({ pathname: `/market/day/${marketId}-${key}` })}
                             onClose={() => this.handleClose(key)}
                             color="blue"
                             key={key}
@@ -124,4 +124,4 @@ class MarketDetailItem extends Component<MarketDetailItemProps> {
     }
 }
 
-export default withRouter(MarketDetailItem)
+export default withRouter(MarketDayItem)

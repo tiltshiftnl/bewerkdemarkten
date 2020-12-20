@@ -5,6 +5,13 @@ import { BrancheService } from './service_lookup'
 
 export default class MarketsService extends Service {
     async retrieve(): Promise<Markets> {
+        // Retrieve from Cache
+        const cachedMarkets = localStorage.getItem(`bwdm_cache_markets`)
+        if (cachedMarkets) {
+            console.debug(`Markets cached`)
+            return JSON.parse(cachedMarkets)
+        }
+        console.debug(`Markets not cached`)
         return fetch(this.config.API_BASE_URL + "/markets.json")
             .then(response => {
                 if (!response.ok) {
@@ -14,6 +21,8 @@ export default class MarketsService extends Service {
             })
             .then(json => {
                 const item = json
+                // Cache
+                localStorage.setItem(`bwdm_cache_markets`, JSON.stringify(item))
                 return item
             })
             .catch(error => {
@@ -27,10 +36,10 @@ export class MarketService extends Service {
         // Retrieve from Cache
         const cachedMarket = localStorage.getItem(`bwdm_cache_${route}_market`)
         if (cachedMarket) {
-            console.log(`Market for ${route} is cached`)
+            console.debug(`Market for ${route} is cached`)
             return JSON.parse(cachedMarket)
         }
-        console.log(`Market for ${route} not cached`)
+        console.debug(`Market for ${route} not cached`)
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/markt.json")
@@ -104,8 +113,8 @@ export class MarketService extends Service {
             if (obstaclePosition !== [-1, -1]) {
                 rowSets.splice(obstaclePosition[1], 0, { ...o, type: "obstacle" })
             } else {
-                console.log("Something is wrong with this obstacle")
-                console.log(o)
+                console.debug("Something is wrong with this obstacle")
+                console.debug(o)
             }
         })
 
@@ -145,10 +154,10 @@ export class BranchesService extends Service {
         // Retrieve from Cache
         const cachedBranches = localStorage.getItem(`bwdm_cache_${route}_branches`)
         if (cachedBranches) {
-            console.log(`Branches for ${route} are cached`)
+            console.debug(`Branches for ${route} are cached`)
             return JSON.parse(cachedBranches)
         }
-        console.log(`Branches for ${route} not cached`)
+        console.debug(`Branches for ${route} not cached`)
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/branches.json")
@@ -175,10 +184,10 @@ export class GeographyService extends Service {
         // Retrieve from Cache
         const cachedGeography = localStorage.getItem(`bwdm_cache_${route}_geography`)
         if (cachedGeography) {
-            console.log(`Geography for ${route} are cached`)
+            console.debug(`Geography for ${route} are cached`)
             return JSON.parse(cachedGeography)
         }
-        console.log(`Geography for ${route} not cached`)
+        console.debug(`Geography for ${route} not cached`)
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/geografie.json")
@@ -205,10 +214,10 @@ export class LotsService extends Service {
         // Retrieve from Cache
         const cachedLots = localStorage.getItem(`bwdm_cache_${route}_lots`)
         if (cachedLots) {
-            console.log(`Lots for ${route} are cached`)
+            console.debug(`Lots for ${route} are cached`)
             return JSON.parse(cachedLots)
         }
-        console.log(`Lots for ${route} not cached`)
+        console.debug(`Lots for ${route} not cached`)
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/locaties.json")
@@ -235,10 +244,10 @@ export class PagesService extends Service {
         // Retrieve from Cache
         const cachedPages = localStorage.getItem(`bwdm_cache_${route}_pages`)
         if (cachedPages) {
-            console.log(`Pages for ${route} are cached`)
+            console.debug(`Pages for ${route} are cached`)
             return JSON.parse(cachedPages)
         }
-        console.log(`Pages for ${route} not cached`)
+        console.debug(`Pages for ${route} not cached`)
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/" + route + "/paginas.json")

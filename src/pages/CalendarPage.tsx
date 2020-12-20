@@ -49,7 +49,7 @@ export default class CalendarPage extends Component {
             })
             if(wl.length === 1) {
                 const _item: string = marketid + '-' + wl[0]
-                listData.push({ type: 'succes', content: <Link to={`market/detail/${_item}`}>{_item}</Link> })
+                listData.push({ type: 'succes', content: <Link to={`market/day/${_item}`}>{_item}</Link> })
             }
         })
         return listData

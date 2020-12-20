@@ -57,8 +57,8 @@ export default class ObstacleListPage extends Component {
                 </Link>
             </Breadcrumb.Item>
         </Breadcrumb>
-            {this.state.properties.map((obstacle: string) => {
-                return <Row gutter={[8, 8]}><Col><Input value={obstacle} disabled={true}/></Col><Col>
+            {this.state.properties.map((obstacle: string, i: number) => {
+                return <Row key={i} gutter={[8, 8]}><Col><Input value={obstacle} disabled={true}/></Col><Col>
                 {/* <MinusCircleOutlined
                     className="dynamic-delete-button"
                     onClick={() => this.remove(obstacle)}
@@ -72,9 +72,7 @@ export default class ObstacleListPage extends Component {
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            <Button type="primary" htmlType="submit">
-                Opslaan
-        </Button> */}
+            */}
         </>
     }
 }

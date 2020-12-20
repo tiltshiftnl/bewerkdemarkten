@@ -4,7 +4,7 @@ import MarketsService from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
-import MarketDetailItem from "../components/MarketDetailItem"
+import MarketDayItem from "../components/MarketDayItem"
 import { Link } from "react-router-dom"
 
 export default class MarketPage extends DynamicBase {
@@ -61,7 +61,7 @@ export default class MarketPage extends DynamicBase {
                 </Breadcrumb.Item>
             </Breadcrumb>
             {this.state.market &&
-                <MarketDetailItem marketId={this.id} market={this.state.market} />
+                <MarketDayItem marketId={this.id} market={this.state.market} />
             }
         </>
     }

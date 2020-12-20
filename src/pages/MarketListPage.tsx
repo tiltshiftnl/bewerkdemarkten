@@ -24,6 +24,13 @@ export default class MarketListPage extends Component {
         this.marketsService = new MarketsService()
     }
 
+    updateMarkets = (markets: Markets) => {
+        localStorage.setItem('bwdm_cache_markets', JSON.stringify(markets))
+        this.setState({
+            markets
+        })
+    }
+
     handleOk = () => {
         //Add the newMarket to the markets
         if (this.state.newMarketId !== "") {
@@ -33,9 +40,8 @@ export default class MarketListPage extends Component {
                 name: "",
                 events: {}
             }
-
+            this.updateMarkets(_markets)
             this.setState({
-                markets: _markets,
                 showModal: false
             })
         }
@@ -97,9 +103,6 @@ export default class MarketListPage extends Component {
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            {/* <Button type="primary" htmlType="submit">
-                Opslaan
-            </Button> */}
             <Modal
                 title="Markt toevoegen"
                 visible={this.state.showModal}

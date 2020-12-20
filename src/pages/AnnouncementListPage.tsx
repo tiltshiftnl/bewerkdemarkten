@@ -60,13 +60,13 @@ export default class AnnouncementListPage extends Component {
                     </Link>
                 </Breadcrumb.Item>
             </Breadcrumb>{
-                Object.keys(this.state.announcements).map((entry: string) => {
+                Object.keys(this.state.announcements).map((entry: string, i: number) => {
 
                     const _acti: string = (this.state.announcements as any)[entry]["activatie"]
                     const _wenp: string = (this.state.announcements as any)[entry]["wenperiode"]
                     const _live: string = (this.state.announcements as any)[entry]["live"]
 
-                    return <div style={{ border: "1px solid #ccc", margin: "1em", padding: "1em"}}>
+                    return <div key={i} style={{ border: "1px solid #ccc", margin: "1em", padding: "1em"}}>
                         <p><b>{entry}:</b></p>
                         <hr/>
                         <div dangerouslySetInnerHTML={{__html:_acti}} />

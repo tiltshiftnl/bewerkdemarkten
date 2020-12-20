@@ -1,5 +1,5 @@
 import React, { createRef, RefObject } from "react"
-import MarketDetail from "../components/MarketDetail"
+import MarketDay from "../components/MarketDay"
 import { MarketService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb, Tabs } from 'antd'
@@ -7,15 +7,15 @@ import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
-import MarketBrancheList from "../components/MarketBrancheList"
+import MarketDayBrancheList from "../components/MarketDayBrancheList"
 
 const { TabPane } = Tabs
 
-export default class MarketDetailPage extends DynamicBase {
+export default class MarketDayPage extends DynamicBase {
     readonly state: { lookupBranches?: Branche[] } = {}
 
-    marketBrancheListRef: RefObject<MarketBrancheList>
-    marketDetailRef: RefObject<MarketDetail>
+    marketDayBrancheListRef: RefObject<MarketDayBrancheList>
+    marketDayRef: RefObject<MarketDay>
 
     marketService: MarketService
 
@@ -26,8 +26,8 @@ export default class MarketDetailPage extends DynamicBase {
         this.marketService = new MarketService()
         this.lookupBrancheService = new BrancheService()
 
-        this.marketBrancheListRef = createRef()
-        this.marketDetailRef = createRef()
+        this.marketDayBrancheListRef = createRef()
+        this.marketDayRef = createRef()
     }
 
     refresh() {
@@ -38,14 +38,12 @@ export default class MarketDetailPage extends DynamicBase {
             })
         })
         this.marketService.constructRelationalStructure(this.id).then(result => {
-            this.marketBrancheListRef.current?.setState({
-                branches: result.branches
-            })
-            this.marketDetailRef.current?.setState({
+            this.marketDayBrancheListRef.current?.updateAssignedBranches(result.branches)
+            this.marketDayRef.current?.setState({
                 marketEventDetails: result
             })
         }).catch((e: Error) => {
-            console.log(e)
+            console.error(e)
             // No result
             this.setState({
                 name: this.id
@@ -76,10 +74,10 @@ export default class MarketDetailPage extends DynamicBase {
             {this.state.lookupBranches &&
                 <Tabs defaultActiveKey="0">
                     <TabPane tab="Details" key="0">
-                        <MarketDetail ref={this.marketDetailRef} lookupBranches={this.state.lookupBranches} />
+                        <MarketDay ref={this.marketDayRef} lookupBranches={this.state.lookupBranches} />
                     </TabPane>
                     <TabPane tab="Branchelijst" key="1" forceRender={true}>
-                        <MarketBrancheList ref={this.marketBrancheListRef} lookupBranches={this.state.lookupBranches} />
+                        <MarketDayBrancheList id={this.id} ref={this.marketDayBrancheListRef} lookupBranches={this.state.lookupBranches} />
                     </TabPane>
                 </Tabs>}
         </>
