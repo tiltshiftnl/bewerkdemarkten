@@ -6,10 +6,10 @@ export class BrancheService extends Service {
         // Retrieve from Cache
         const cachedBranches = localStorage.getItem('bwdm_lookup_branches')
         if (cachedBranches) {
-            console.log("Branches are cached")
+            console.debug("Branches are cached")
             return JSON.parse(cachedBranches)
         }
-        console.log("Branches not cached")
+        console.debug("Branches not cached")
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/branches.json")
@@ -36,10 +36,10 @@ export class DaysClosedService extends Service {
         // Retrieve from Cache
         const cachedDaysClosed = localStorage.getItem('bwdm_lookup_daysclosed')
         if (cachedDaysClosed) {
-            console.log("DaysClosed are cached")
+            console.debug("DaysClosed are cached")
             return JSON.parse(cachedDaysClosed)
         }
-        console.log("DaysClosed not cached")
+        console.debug("DaysClosed not cached")
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/daysClosed.json")
@@ -66,10 +66,10 @@ export class AnnouncementService extends Service {
         // Retrieve from Cache
         const cachedAnnouncements = localStorage.getItem('bwdm_lookup_announcements')
         if (cachedAnnouncements) {
-            console.log("Announcements are cached")
+            console.debug("Announcements are cached")
             return JSON.parse(cachedAnnouncements)
         }
-        console.log("Announcements not cached")
+        console.debug("Announcements not cached")
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/mededelingen.json")
@@ -96,10 +96,10 @@ export class ObstacleTypeService extends Service {
         // Retrieve from Cache
         const cachedObstacleTypes = localStorage.getItem('bwdm_lookup_obstacletypes')
         if (cachedObstacleTypes) {
-            console.log("ObstacleTypes are cached")
+            console.debug("ObstacleTypes are cached")
             return JSON.parse(cachedObstacleTypes)
         }
-        console.log("ObstacleTypes not cached")
+        console.debug("ObstacleTypes not cached")
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/obstakeltypes.json")
@@ -126,10 +126,10 @@ export class LotPropertyService extends Service {
         // Retrieve from Cache
         const cachedProperties = localStorage.getItem('bwdm_lookup_properties')
         if (cachedProperties) {
-            console.log("Properties are cached")
+            console.debug("Properties are cached")
             return JSON.parse(cachedProperties)
         }
-        console.log("Properties not cached")
+        console.debug("Properties not cached")
 
         // Fetch
         return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json")
