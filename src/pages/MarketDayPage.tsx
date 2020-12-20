@@ -43,7 +43,7 @@ export default class MarketDayPage extends DynamicBase {
                 marketEventDetails: result
             })
         }).catch((e: Error) => {
-            console.error(e)
+            console.error(`Marktdag bestaat nog niet, ${this.id} wordt nieuw aangemaakt.`)
             // No result
             this.setState({
                 name: this.id

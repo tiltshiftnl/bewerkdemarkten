@@ -27,7 +27,7 @@ export default class MarketListItem extends Component<{ market: Market, marketId
             }}>
                 <span style={{fontWeight: "bold", fontSize: "1.2em"}}>{marketId} </span>
                 <span style={{color: "rgba(0, 0, 0, 0.45)"}}> {this.state.market.name || ""}</span>
-                <span style={{ color: "rgba(0,0,0,0.20"}}> Amsterdam</span>
+                {/* <span style={{ color: "rgba(0,0,0,0.20"}}> Amsterdam</span> */}
         </Link>
     }
 }
