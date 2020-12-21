@@ -1,9 +1,9 @@
-import { Col, Input, Row, Select, Checkbox, Button, Radio, Tooltip } from "antd"
+import { Col, Input, Row, Select, Checkbox, Radio, Tooltip } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
-import { LeftOutlined, RightOutlined, MinusOutlined } from '@ant-design/icons'
+import { LeftCircleOutlined, RightCircleOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
@@ -147,8 +147,8 @@ export default class LotEdit extends Component<LotEditProps> {
                                     <Select
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een type"
-                                        value={!this.state.lot ? "" : 
-                                        this.state.lot.obstakel ? this.state.lot.obstakel.length === -1 ? "" : this.state.lot.obstakel[0] : ""}
+                                        value={!this.state.lot ? "" :
+                                            this.state.lot.obstakel ? this.state.lot.obstakel.length === -1 ? "" : this.state.lot.obstakel[0] : ""}
                                         onChange={(e: string) => {
                                             let _b = [e]
                                             if (e === "") {
@@ -197,9 +197,9 @@ export default class LotEdit extends Component<LotEditProps> {
                                             }
                                             // Did it have "bak"? Then add bak back.
                                             if (
-                                                this.state.lot && 
-                                                this.state.lot.branches && 
-                                                this.state.lot.branches.filter(e => e === "bak").length > 0){
+                                                this.state.lot &&
+                                                this.state.lot.branches &&
+                                                this.state.lot.branches.filter(e => e === "bak").length > 0) {
                                                 _b.push("bak")
                                             }
                                             this.setState({
@@ -232,38 +232,38 @@ export default class LotEdit extends Component<LotEditProps> {
                     <Row gutter={formGutter}>
                         <Col>
                             <Tooltip title="Nieuwe voor geselecteerd item invoegen">
-                                <Button type="primary" shape="circle"
+                                <LeftCircleOutlined
+                                    className="dynamic-button"
                                     onClick={() => {
                                         // Tell parent component to remove this lot.
                                         if (this.props.prepend && this.state.currentPosition) {
                                             this.props.prepend(this.state.currentPosition)
                                         }
                                     }}
-                                    style={{ marginTop: '20px' }}
-                                    icon={<LeftOutlined />}
                                 />
                             </Tooltip>
-                            <Button type="primary" danger
+                            <Tooltip title="Verwijderen">
+                            <MinusCircleOutlined
+                                className="dynamic-button"
                                 onClick={() => {
                                     // Tell parent component to remove this lot.
                                     if (this.props.delete && this.state.currentPosition) {
                                         this.props.delete(this.state.currentPosition)
                                     }
                                 }}
-                                style={{ marginTop: '20px' }}
-                                icon={<MinusOutlined />}
-                            >Verwijderen</Button>
-                            <Tooltip title="Nieuwe achter geselecteerd item invoegen"></Tooltip>
-                            <Button type="primary" shape="circle"
-                                onClick={() => {
-                                    // Tell parent component to remove this lot.
-                                    if (this.props.append && this.state.currentPosition) {
-                                        this.props.append(this.state.currentPosition)
-                                    }
-                                }}
-                                style={{ marginTop: '20px' }}
-                                icon={<RightOutlined />}
                             />
+                            </Tooltip>
+                            <Tooltip title="Nieuwe achter geselecteerd item invoegen">
+                                <RightCircleOutlined
+                                    className="dynamic-button"
+                                    onClick={() => {
+                                        // Tell parent component to remove this lot.
+                                        if (this.props.append && this.state.currentPosition) {
+                                            this.props.append(this.state.currentPosition)
+                                        }
+                                    }}
+                                />
+                            </Tooltip>
                         </Col>
                     </Row>
                 </>}

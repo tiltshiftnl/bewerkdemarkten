@@ -75,7 +75,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
             </Col>
             <Col>
                 <MinusCircleOutlined
-                    className="dynamic-delete-button"
+                    className="dynamic-button"
                     onClick={() => {
                         if (this.props.changed) {
                             this.props.changed(undefined, this.props.position)
@@ -83,7 +83,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     }}
                 />
                 <PlusCircleOutlined
-                    className="dynamic-delete-button"
+                    className="dynamic-button"
                     onClick={() => {
                         if (this.props.changed) {
                             const _newLayout: MarketLayout = {

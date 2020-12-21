@@ -117,7 +117,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                         </td>
                         <td>{branche.allocated && <>{branche.allocated}</>}</td>
                         <td><MinusCircleOutlined
-                            className="dynamic-delete-button"
+                            className="dynamic-button"
                             onClick={() => {
                                 if (this.state.branches) {
                                     const _branches = this.state.branches

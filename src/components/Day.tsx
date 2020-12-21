@@ -226,7 +226,7 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                         }} /></>} key={i}>
                         <div className="block-wrapper">
                             <PlusCircleOutlined
-                                className="dynamic-delete-button"
+                                className="dynamic-button"
                                 onClick={() => {
                                     const _newLayout: MarketLayout = {
                                         title: "Nieuwe rij",
@@ -266,7 +266,7 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                                             />
                                         })}
                                         <PlusCircleOutlined
-                                            className="dynamic-delete-button"
+                                            className="dynamic-button"
                                             onClick={() => {
                                                 this.lotAdd([pageindex, layoutindex])
                                             }}

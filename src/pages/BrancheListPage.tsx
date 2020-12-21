@@ -102,7 +102,7 @@ export default class BrancheListPage extends Component {
                                 </Popover>
                             </td>
                             <td><MinusCircleOutlined
-                                className="dynamic-delete-button"
+                                className="dynamic-button"
                                 onClick={() => {
                                     if (this.state.branches) {
                                         const _branches = this.state.branches

@@ -60,7 +60,7 @@ export default class ObstacleListPage extends Component {
             {this.state.properties.map((obstacle: string, i: number) => {
                 return <Row key={i} gutter={[8, 8]}><Col><Input value={obstacle} disabled={true}/></Col><Col>
                 {/* <MinusCircleOutlined
-                    className="dynamic-delete-button"
+                    className="dynamic-button"
                     onClick={() => this.remove(obstacle)}
                 /> */}
                 </Col></Row>

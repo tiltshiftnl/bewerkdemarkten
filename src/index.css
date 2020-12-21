@@ -1,3 +1,7 @@
+:root {
+  --button-default: #1890ff;
+  --button-default-hover: rgba(24, 144, 255, .7);
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -28,20 +32,20 @@ td {
 }
 
 .fc-button-primary:disabled {
-  background-color: #004699 !important;
+  background-color: var(--button-default) !important;
   color: #fff !important;
   opacity: 1 !important;
 }
 
 .fc-button-primary:hover {
-  background-color: #002f66 !important;
+  background-color: var(--button-default-hover) !important;
   color: #fff !important;
 }
 
 .fc-button-primary {
   background-color: #fff !important;
-  color: #004699 !important;
-  border: 1px solid #004699 !important;
+  color: var(--button-default) !important;
+  border: 1px solid var(--button-default) !important;
 }
 
 #header {
@@ -93,7 +97,7 @@ td {
 
 .menu-item.active {
   color: #ec0000 !important;
-  background-color: #ffffff;
+  background-color: #fff;
   border-bottom: 2px solid #e40;
 }
 
@@ -337,7 +341,7 @@ td {
   vertical-align: middle;
 }
 .market-button,
-.dynamic-delete-button {
+.dynamic-button {
   margin: 0 8px;
   cursor: pointer;
   position: relative;
@@ -345,16 +349,16 @@ td {
   font-size: 24px;
   transition: all 0.3s;
 }
-.dynamic-delete-button {
-  color: #999;
+.dynamic-button > svg {
+  color: var(--button-default);
 }
 
-.dynamic-delete-button:hover {
-  color: #777;
+.dynamic-button:hover > svg {
+  color:  var(--button-default-hover);
 }
 
 .market-button,
-.dynamic-delete-button[disabled] {
+.dynamic-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
 }
