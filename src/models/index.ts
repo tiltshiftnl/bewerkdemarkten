@@ -65,6 +65,7 @@ export interface Lot {
     obstakel?: string[]
     type?: "lot" | "stand" | "obstacle"
     selected?: boolean
+    rowPosition?: [number, number]
 }
 
 export interface Geography {

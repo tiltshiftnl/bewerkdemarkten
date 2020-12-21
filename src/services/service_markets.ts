@@ -81,10 +81,11 @@ export class MarketService extends Service {
 
         // replace row items with locations
         const rowSets: (Lot | Obstacle)[] = []
-        _m.rows.forEach(row => {
-            row.forEach((lot: string) => {
+        _m.rows.forEach((row: string[], rowsetindex: number) => {
+            row.forEach((lot: string, rowindex: number) => {
                 const _Lot: Lot | undefined = _l.find(e => e.plaatsId === lot)
                 if (_Lot) {
+                    _Lot.rowPosition = [rowsetindex, rowindex]
                     // Set allocated on branches for the given lot
                     if (_Lot.branches) {
                         _b.forEach((br: AssignedBranche, i) => {
