@@ -64,6 +64,7 @@ export interface Lot {
     kraamB?: string
     obstakel?: string[]
     type?: "lot" | "stand" | "obstacle"
+    selected?: boolean
 }
 
 export interface Geography {

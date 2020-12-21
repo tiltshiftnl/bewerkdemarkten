@@ -90,7 +90,6 @@ export default class BrancheListPage extends Component {
                             <td>
 
                                 <Popover content={<ChromePicker color={branche.color} disableAlpha={true} onChange={(color: any, event: any) => {
-                                    console.log(color)
                                     if (this.state.branches) {
                                         const _branches = this.state.branches
                                         _branches[i].color = color.hex
