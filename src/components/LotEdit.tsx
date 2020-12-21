@@ -2,7 +2,7 @@ import { Col, Input, Row, Select, Checkbox, Button, Radio, Tooltip } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
-import { LotPropertyService } from "../services/service_lookup"
+import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
 import { LeftOutlined, RightOutlined, MinusOutlined } from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
@@ -15,12 +15,14 @@ interface LotEditProps {
 }
 
 export default class LotEdit extends Component<LotEditProps> {
-    readonly state: { lot?: Lot, properties: string[], currentPosition?: [number, number, number] } = { properties: [] }
+    readonly state: { lot?: Lot, properties: string[], obstacleTypes: string[], currentPosition?: [number, number, number] } = { properties: [], obstacleTypes: [] }
     propertyService: LotPropertyService
+    obstacleTypeService: ObstacleTypeService
 
     constructor(props: any) {
         super(props)
         this.propertyService = new LotPropertyService()
+        this.obstacleTypeService = new ObstacleTypeService()
     }
 
 
@@ -38,6 +40,11 @@ export default class LotEdit extends Component<LotEditProps> {
         this.propertyService.retrieve().then((properties: string[]) => {
             this.setState({
                 properties
+            })
+        })
+        this.obstacleTypeService.retrieve().then((obstacleTypes: string[]) => {
+            this.setState({
+                obstacleTypes
             })
         })
     }
@@ -132,6 +139,30 @@ export default class LotEdit extends Component<LotEditProps> {
                             </Radio.Group>
                         </Col>
                     </Row>
+                    {this.state.lot.type === "obstacle" && 
+                    <>
+                    <Row gutter={formGutter}>
+                                <Col {...firstColSpan}>Type</Col>
+                                <Col {...secondColSpan}>
+                                <Select
+                                        style={{ width: '100%' }}
+                                        placeholder="Selecteer een type"
+                                        value={!this.state.lot ? [] : this.state.lot.obstakel}
+                                        onChange={(e: string[]) => {
+                                            this.setState({
+                                                lot: { ...this.state.lot, obstakel: [e] }
+                                            })
+                                        }}
+                                    >
+                                        <Select.Option key={"blanco"} value={""}><em><b>Niet toegewezen</b></em></Select.Option>
+                                        {this.state.obstacleTypes.map((br, i) => {
+                                            return <Select.Option key={i} value={br}>{br}</Select.Option>
+                                        })}
+                                    </Select>
+                                </Col>
+                            </Row>
+                    </>
+                    }
                     {this.state.lot.type === "stand" &&
                         <>
                             <Row gutter={formGutter}>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class SvgLoopje extends Component<{color: string}> {
+export default class SvgWalkWithClose extends Component<{color: string}> {
     render() {
         return <svg
             x="8"
@@ -56,6 +56,19 @@ export default class SvgLoopje extends Component<{color: string}> {
                     }}
                     d="M 9.2604167,9.2604168 6.6145833,11.90625 3.96875,9.2604168"
                     id="path837-3" />
+                <path
+                    style={{
+                        fill: "none",
+                        stroke: this.props.color,
+                        strokeWidth: 0.52916667,
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeOpacity: 1,
+                        strokeMiterlimit: 4,
+                        strokeDasharray: "none"
+                    }}
+                    d="M 4,6.6 9.2,6.6"
+                    id="path837-4" />
             </g>
         </svg>
     }
