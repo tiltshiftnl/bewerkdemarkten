@@ -1,6 +1,6 @@
 import React, { Component, MouseEvent } from "react"
-import SvgLot from "../graphics/SvgLot"
-import SvgObstacle from "../graphics/SvgObstacle"
+import Stand from "../graphics/Stand"
+import Obstacle from "../graphics/Obstacle"
 import { AssignedBranche, Lot } from "../models"
 
 export default class LotBlock extends Component<{
@@ -16,10 +16,10 @@ export default class LotBlock extends Component<{
         const { index, lot, classDef, lotOnClick, invert, branche } = this.props
         return <div key={index} className={classDef} onClick={lotOnClick}>
             {lot.type === "stand" &&
-                <SvgLot lot={lot} invert={invert} branche={branche} classDef={classDef} />
+                <Stand stand={lot} invert={invert} branche={branche} classDef={classDef} />
             }
             {lot.type === "obstacle" &&
-                <SvgObstacle obstacle={lot} invert={invert} classDef={classDef} />
+                <Obstacle obstacle={lot} invert={invert} classDef={classDef} />
             }
         </div>
     }

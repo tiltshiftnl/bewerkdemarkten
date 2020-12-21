@@ -7,20 +7,21 @@ import SvgLight from "./SvgLight";
 import SvgTree from "./SvgTree";
 import SvgWater from "./SvgWater";
 
-export default class SvgLot extends Component<{
-    lot: Lot
+export default class Stand extends Component<{
+    stand: Lot
     branche?: AssignedBranche
     classDef: string
     invert: boolean
 }> {
 
     renderVerkoopinrichting = () => {
+        const { stand, invert } = this.props
         let facilityPosition: { x: number, y: number } = { x: 2, y: 20 }
         let facilityColor = this.getFillColor() //"#faad14"
-        if (this.props.invert) {
+        if (invert) {
             facilityPosition = { x: 2, y: 2 }
         }
-        if (this.props.lot.verkoopinrichting && this.props.lot.verkoopinrichting.length > 0)
+        if (stand.verkoopinrichting && stand.verkoopinrichting.length > 0)
             return <g>
                 <rect x={facilityPosition.x} y={facilityPosition.y} height={28} width={6} fill={facilityColor} />
             </g>
@@ -28,80 +29,85 @@ export default class SvgLot extends Component<{
 
     renderProperties = () => {
         // Todo: Render ALL properties (how?)
-        const properties = this.props.lot.properties
+        const { invert, stand } = this.props
         let propertyPosition: { x: number, y: number } = { x: 36, y: 31 }
-        if (this.props.invert) {
+        if (invert) {
             propertyPosition = { x: 36, y: 1 }
         }
-        if (properties) {
-            return properties.map((prop: string, i: number) => {
-                switch(prop) {
+        if (stand.properties) {
+            return stand.properties.map((prop: string, i: number) => {
+                switch (prop) {
                     case "bankje":
-                        propertyPosition = this.props.invert ? { x: 24, y: 13 } : { x: 24, y: 20 }
-                        return <SvgBench key={i} invert={this.props.invert} color="#c75819" position={propertyPosition} />
+                        propertyPosition = invert ? { x: 24, y: 13 } : { x: 24, y: 20 }
+                        return <SvgBench key={i} invert={invert} color="#c75819" position={propertyPosition} />
                     case "electra":
-                        propertyPosition = this.props.invert ? { x: 36, y: 3 } : { x: 36, y: 31 }
-                        return <SvgElectra key={i} invert={this.props.invert} color="#000" position={propertyPosition} />
+                        propertyPosition = invert ? { x: 36, y: 3 } : { x: 36, y: 31 }
+                        return <SvgElectra key={i} invert={invert} color="#000" position={propertyPosition} />
                     case "water":
-                        propertyPosition = this.props.invert ? { x: 10, y: 2 } : { x: 10, y: 35 }
-                        return <SvgWater key={i} invert={this.props.invert} color="#1890ff" position={propertyPosition} />
+                        propertyPosition = invert ? { x: 10, y: 2 } : { x: 10, y: 35 }
+                        return <SvgWater key={i} invert={invert} color="#1890ff" position={propertyPosition} />
                     case "boom":
-                            propertyPosition = this.props.invert ? { x: 10, y: 15 } : { x: 10, y: 21 }
-                            return <SvgTree key={i} invert={this.props.invert} color="#73ab4f" position={propertyPosition} />
+                        propertyPosition = invert ? { x: 10, y: 15 } : { x: 10, y: 21 }
+                        return <SvgTree key={i} invert={invert} color="#73ab4f" position={propertyPosition} />
                     case "lantaarnpaal":
-                                propertyPosition = this.props.invert ? { x: 32, y: 12 } : { x: 32, y: 15 }
-                                return <SvgLight key={i} invert={this.props.invert} color="yellow" position={propertyPosition} />
+                        propertyPosition = invert ? { x: 32, y: 12 } : { x: 32, y: 15 }
+                        return <SvgLight key={i} invert={invert} color="yellow" position={propertyPosition} />
                     default:
                         return <></>
                 }
-            }) 
+            })
         }
         return <></>
     }
 
     renderBranches = () => {
+        const { stand, invert } = this.props
         let branchesPosition: { x: number, y: number } = { x: 23, y: 36 }
         let brancheColor = "#777"
-        if (this.props.invert) {
+        if (invert) {
             branchesPosition = { x: 23, y: 3 }
         }
         // Contains bak?
-        return <>{this.props.lot.branches && this.props.lot.branches.indexOf("bak") > -1 &&
+        return <>{stand.branches && stand.branches.indexOf("bak") > -1 &&
             <SvgBak color={brancheColor} position={branchesPosition} />
         }</>
     }
 
 
     getStrokeColor = () => {
-        if (this.props.classDef.indexOf("selected") > -1) {
+        const { classDef, branche } = this.props
+        if (classDef.indexOf("selected") > -1) {
             return "#1890ff"
         }
-        if (this.props.branche && this.props.branche.backGroundColor) {
-            return this.props.branche.backGroundColor
+        if (branche && branche.backGroundColor) {
+            return branche.backGroundColor
         }
         return "#fafafa"
     }
 
     getFillColor = () => {
-        if (this.props.branche && this.props.branche.backGroundColor) {
-            return this.props.branche.backGroundColor
+        const { branche } = this.props
+        if (branche && branche.backGroundColor) {
+            return branche.backGroundColor
         }
         return "#fafafa"
     }
 
     getTextColor = () => {
-        if (this.props.branche && this.props.branche.color) {
-            return this.props.branche.color
+        const { branche } = this.props
+        if (branche && branche.color) {
+            return branche.color
         }
         return "#000000"
     }
 
     render() {
+        const { invert, stand } = this.props
         let x = 0
         let y = 0
-        if(this.props.invert){
-            x= 0
-            y= 28
+        if (invert) {
+            x = 0
+            y = 28
         }
         const width = 50
         const height = 20
@@ -112,7 +118,7 @@ export default class SvgLot extends Component<{
 
         return <svg style={{ width: "50px" }} viewBox="0 0 50 50">
             <g>
-                
+
                 <rect x={x} y={y} width={width} height={height} style={{
                     fill: fillColor,
                     stroke: "none",
@@ -125,15 +131,22 @@ export default class SvgLot extends Component<{
                     dominantBaseline="middle"
                     textAnchor="middle"
                     fontSize="1em">
-                    {this.props.lot.plaatsId}
+                    {stand.plaatsId}
                 </text>
+                {/* <text x={x + width / 2}
+                    y={y + height / 2 + 5}
+                    style={{ fill: textColor }}
+                    dominantBaseline="middle"
+                    textAnchor="middle"
+                    fontSize="0.7em">
+                {stand.blockPosition && <>{`${stand.blockPosition[0]}-${stand.blockPosition[1]}`}</>}</text> */}
                 {this.renderBranches()}
                 <rect x={0} y={0} width={50} height={50} style={{
                     fill: "none",
                     stroke: strokeColor,
                     strokeWidth: "4px"
                 }} />
-                
+
             </g>
             {this.renderVerkoopinrichting()}
             {this.renderProperties()}

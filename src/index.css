@@ -243,7 +243,7 @@ textarea {
 .lot-row {
   display: flex;
   justify-content: left;
-  height: 50px;
+  height: 52px;
   margin-bottom: 6px;
 }
 
@@ -343,6 +343,7 @@ td {
 .market-button,
 .dynamic-button {
   margin: 0 8px;
+  padding: 8px 0;
   cursor: pointer;
   position: relative;
   top: 4px;
@@ -398,4 +399,21 @@ td {
 
 .ant-modal-content .ant-input {
   margin-bottom: 1em;
+}
+
+.block-start {
+  border-left: 1px solid #000;
+  margin-left: 2px;
+  
+}
+
+.block-end {
+  border-right: 1px solid #000;
+  margin-right: 2px;
+  
+}
+
+.stand {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
 }

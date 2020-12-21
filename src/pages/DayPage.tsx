@@ -61,13 +61,26 @@ export default class DayPage extends DynamicBase {
             })
         }).catch((e: Error) => {
             console.error(`Marktdag bestaat nog niet, ${this.id} wordt nieuw aangemaakt.`)
-            const _newM = {
+            const _newM: MarketEventDetails = {
                 branches: [],
-                pages: []
+                pages: [
+                    {
+                        title: "Nieuwe pagina",
+                        layout: [
+                            {
+                                title: "Nieuwe rij",
+                                class: "",
+                                landmarkBottom: "",
+                                landmarkTop: "",
+                                lots: []
+                            }
+                        ]
+                    }
+                ]
             }
             // No result
             this.setState({
-                marketEventDetails:  _newM,
+                marketEventDetails: _newM,
                 activeKey: "1"
             }, () => {
                 this.dayRef.current?.setState({
@@ -100,7 +113,7 @@ export default class DayPage extends DynamicBase {
             </Breadcrumb>
             {this.state.lookupBranches &&
                 <Tabs activeKey={this.state.activeKey} onTabClick={(key: string, e: MouseEvent | KeyboardEvent) => {
-                    this.setState({activeKey: key})
+                    this.setState({ activeKey: key })
                 }}>
                     <TabPane tab="Details" key="0">
                         <Day ref={this.dayRef} lookupBranches={this.state.lookupBranches} />

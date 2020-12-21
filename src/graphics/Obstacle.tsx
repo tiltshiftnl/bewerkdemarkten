@@ -8,7 +8,7 @@ import SvgWalkthrough from "./SvgWalkthrough";
 import SvgWalkWithClose from "./SvgWalkWithClose";
 import SvgWater from "./SvgWater";
 
-export default class SvgObstacle extends Component<{
+export default class Obstacle extends Component<{
     obstacle: Lot
     invert: boolean
     classDef: string
