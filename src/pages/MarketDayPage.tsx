@@ -5,14 +5,14 @@ import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb, Tabs } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
-import { Branche } from "../models"
+import { Branche, MarketEventDetails } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import MarketDayBrancheList from "../components/MarketDayBrancheList"
 
 const { TabPane } = Tabs
 
 export default class MarketDayPage extends DynamicBase {
-    readonly state: { lookupBranches?: Branche[] } = {}
+    readonly state: { lookupBranches?: Branche[], marketEventDetails?: MarketEventDetails } = {}
 
     marketDayBrancheListRef: RefObject<MarketDayBrancheList>
     marketDayRef: RefObject<MarketDay>
@@ -45,9 +45,7 @@ export default class MarketDayPage extends DynamicBase {
         }).catch((e: Error) => {
             console.error(`Marktdag bestaat nog niet, ${this.id} wordt nieuw aangemaakt.`)
             // No result
-            this.setState({
-                name: this.id
-            })
+            this.marketDayBrancheListRef.current?.updateAssignedBranches([])
         })
     }
 
