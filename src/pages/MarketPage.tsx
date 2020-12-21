@@ -69,7 +69,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
     }
 
 
-    addMarketDay = () => {
+    addDay = () => {
         if (this.state.day !== "" && this.state.selectedMarket) {
             const _events: Events = this.state.selectedMarket.events
             _events[this.state.day] = {}
@@ -177,7 +177,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
                                 shape="circle"
                                 icon={<PlusOutlined />}
                                 disabled={this.state.day !== "" ? false : true}
-                                onClick={() => this.addMarketDay()} />
+                                onClick={() => this.addDay()} />
                         </Tooltip>
                     </Descriptions.Item>
                 </Descriptions></>

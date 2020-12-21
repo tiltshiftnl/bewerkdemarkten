@@ -139,29 +139,34 @@ export default class LotEdit extends Component<LotEditProps> {
                             </Radio.Group>
                         </Col>
                     </Row>
-                    {this.state.lot.type === "obstacle" && 
-                    <>
-                    <Row gutter={formGutter}>
+                    {this.state.lot.type === "obstacle" &&
+                        <>
+                            <Row gutter={formGutter}>
                                 <Col {...firstColSpan}>Type</Col>
                                 <Col {...secondColSpan}>
-                                <Select
+                                    <Select
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een type"
-                                        value={!this.state.lot ? [] : this.state.lot.obstakel}
-                                        onChange={(e: string[]) => {
+                                        value={!this.state.lot ? "" : 
+                                        this.state.lot.obstakel ? this.state.lot.obstakel.length === -1 ? "" : this.state.lot.obstakel[0] : ""}
+                                        onChange={(e: string) => {
+                                            let _b = [e]
+                                            if (e === "") {
+                                                _b = []
+                                            }
                                             this.setState({
-                                                lot: { ...this.state.lot, obstakel: [e] }
+                                                lot: { ...this.state.lot, obstakel: _b }
                                             })
                                         }}
                                     >
-                                        <Select.Option key={"blanco"} value={""}><em><b>Niet toegewezen</b></em></Select.Option>
+                                        <Select.Option key={""} value={""}>{[]}</Select.Option>
                                         {this.state.obstacleTypes.map((br, i) => {
                                             return <Select.Option key={i} value={br}>{br}</Select.Option>
                                         })}
                                     </Select>
                                 </Col>
                             </Row>
-                    </>
+                        </>
                     }
                     {this.state.lot.type === "stand" &&
                         <>
@@ -184,14 +189,25 @@ export default class LotEdit extends Component<LotEditProps> {
                                     <Select
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een branche"
-                                        value={!this.state.lot ? [] : this.state.lot.branches?.filter(e => e !== "bak")}
-                                        onChange={(e: string[]) => {
+                                        value={!this.state.lot ? "" : this.state.lot.branches?.filter(e => e !== "bak")[0]}
+                                        onChange={(e: string) => {
+                                            let _b = [e]
+                                            if (e === "") {
+                                                _b = []
+                                            }
+                                            // Did it have "bak"? Then add bak back.
+                                            if (
+                                                this.state.lot && 
+                                                this.state.lot.branches && 
+                                                this.state.lot.branches.filter(e => e === "bak").length > 0){
+                                                _b.push("bak")
+                                            }
                                             this.setState({
-                                                lot: { ...this.state.lot, branches: [e] }
+                                                lot: { ...this.state.lot, branches: _b }
                                             })
                                         }}
                                     >
-                                        <Select.Option key={"blanco"} value={""}><em><b>Niet toegewezen</b></em></Select.Option>
+                                        <Select.Option key={""} value={""}>{[]}</Select.Option>
                                         {this.props.branches.filter((item: AssignedBranche) => item.brancheId !== "bak").map((br, i) => {
                                             return <Select.Option key={i} value={br.brancheId}>{br.brancheId}</Select.Option>
                                         })}
@@ -215,17 +231,17 @@ export default class LotEdit extends Component<LotEditProps> {
                         </>}
                     <Row gutter={formGutter}>
                         <Col>
-                        <Tooltip title="Nieuwe voor geselecteerd item invoegen">
-                        <Button type="primary" shape="circle"
-                                onClick={() => {
-                                    // Tell parent component to remove this lot.
-                                    if (this.props.prepend && this.state.currentPosition) {
-                                        this.props.prepend(this.state.currentPosition)
-                                    }
-                                }}
-                                style={{ marginTop: '20px' }}
-                                icon={<LeftOutlined />}
-                            />
+                            <Tooltip title="Nieuwe voor geselecteerd item invoegen">
+                                <Button type="primary" shape="circle"
+                                    onClick={() => {
+                                        // Tell parent component to remove this lot.
+                                        if (this.props.prepend && this.state.currentPosition) {
+                                            this.props.prepend(this.state.currentPosition)
+                                        }
+                                    }}
+                                    style={{ marginTop: '20px' }}
+                                    icon={<LeftOutlined />}
+                                />
                             </Tooltip>
                             <Button type="primary" danger
                                 onClick={() => {

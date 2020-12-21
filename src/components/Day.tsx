@@ -7,13 +7,13 @@ import LotBlock from "./LotBlock"
 import { PlusCircleOutlined } from '@ant-design/icons'
 const { TabPane } = Tabs
 
-interface MarketDayPageState {
+interface DayPageState {
     marketEventDetails: MarketEventDetails, currentPosition?: [number, number, number], activeKey: string
 }
 
-export default class MarketDay extends Component<{ lookupBranches: Branche[] }> {
+export default class Day extends Component<{ lookupBranches: Branche[] }> {
     lotEdit: RefObject<LotEdit>
-    readonly state: MarketDayPageState = {
+    readonly state: DayPageState = {
         marketEventDetails: {
             branches: [],
             pages: []

@@ -6,16 +6,17 @@ import CSS from 'csstype'
 import { getTextColor } from "../helpers/PresentationHelpers"
 
 
-export default class MarketDayBrancheList extends Component<{ id: string, lookupBranches: Branche[] }> {
-
+export default class Branches extends Component<{ id: string, lookupBranches: Branche[], changed?: (lookupBranches: AssignedBranche[]) => void }> {
     readonly state: { branches?: AssignedBranche[] } = {}
-
 
     updateAssignedBranches = (branches: AssignedBranche[]) => {
         localStorage.setItem(`bwdm_cache_${this.props.id}_branches`, JSON.stringify(branches))
         this.setState({
             branches
         })
+        if(this.props.changed){
+            this.props.changed(branches)
+        }
     }
 
     getStyle = (branche: AssignedBranche): CSS.Properties => {
