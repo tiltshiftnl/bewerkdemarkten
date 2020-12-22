@@ -2,7 +2,7 @@
   --button-default: #1890ff;
   --button-default-hover: rgba(24, 144, 255, .7);
   --graycolor: rgb(245, 245, 245);
-  --block-border: 1px solid var(--graycolor);
+  --block-border: 1px solid rgb(70, 70, 70);
   --row-height: 52px;
 }
 
