@@ -123,6 +123,49 @@ export default class LotEdit extends Component<LotEditProps> {
         return false
     }
 
+    getBlockState() {
+        if (this.state.lot) {
+            if (this.state.lot.blockStart && this.state.lot.blockEnd) {
+                return "single"
+            }
+            if (this.state.lot.blockStart) {
+                return "start"
+            }
+            if (this.state.lot.blockEnd) {
+                return "end"
+            }
+            return "none"
+        }
+        return "none"
+    }
+
+    setBlockState = (e: RadioChangeEvent) => {
+        if (this.state.lot) {
+            const _l: Lot = this.state.lot
+            switch (e.target.value) {
+                case "none":
+                    _l.blockEnd = false
+                    _l.blockStart = false
+                    break
+                case "start":
+                    _l.blockEnd = false
+                    _l.blockStart = true
+                    break
+                case "end":
+                    _l.blockEnd = true
+                    _l.blockStart = false
+                    break
+                case "single":
+                    _l.blockEnd = true
+                    _l.blockStart = true
+                    break
+            }
+            this.setState({
+                lot: _l
+            })
+        }
+    }
+
     render() {
         const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 4 }
         const secondColSpan = { xs: 16, sm: 16, md: 8, lg: 8 }
@@ -139,6 +182,7 @@ export default class LotEdit extends Component<LotEditProps> {
                             </Radio.Group>
                         </Col>
                     </Row>
+
                     {this.state.lot.type === "obstacle" &&
                         <>
                             <Row gutter={formGutter}>
@@ -170,6 +214,16 @@ export default class LotEdit extends Component<LotEditProps> {
                     }
                     {this.state.lot.type === "stand" &&
                         <>
+                            <Row align="middle">
+                                <Col>
+                                    <Radio.Group value={this.getBlockState()} onChange={this.setBlockState}>
+                                        <Radio value="start">Blok start</Radio>
+                                        <Radio value="end">Blok eind</Radio>
+                                        <Radio value="single">Losse kraam</Radio>
+                                        <Radio value="none">In blok</Radio>
+                                    </Radio.Group>
+                                </Col>
+                            </Row>
                             <Row gutter={formGutter}>
                                 <Col {...firstColSpan}>Kraam</Col>
                                 <Col {...secondColSpan}>
@@ -243,15 +297,15 @@ export default class LotEdit extends Component<LotEditProps> {
                                 />
                             </Tooltip>
                             <Tooltip title="Verwijderen">
-                            <MinusCircleOutlined
-                                className="dynamic-button"
-                                onClick={() => {
-                                    // Tell parent component to remove this lot.
-                                    if (this.props.delete && this.state.currentPosition) {
-                                        this.props.delete(this.state.currentPosition)
-                                    }
-                                }}
-                            />
+                                <MinusCircleOutlined
+                                    className="dynamic-button"
+                                    onClick={() => {
+                                        // Tell parent component to remove this lot.
+                                        if (this.props.delete && this.state.currentPosition) {
+                                            this.props.delete(this.state.currentPosition)
+                                        }
+                                    }}
+                                />
                             </Tooltip>
                             <Tooltip title="Nieuwe achter geselecteerd item invoegen">
                                 <RightCircleOutlined

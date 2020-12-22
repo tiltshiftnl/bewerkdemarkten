@@ -1,6 +1,8 @@
 :root {
   --button-default: #1890ff;
   --button-default-hover: rgba(24, 144, 255, .7);
+  --block-border:  1px solid rgb(212, 212, 212);
+  --row-height: 52px;
 }
 body {
   margin: 0;
@@ -243,7 +245,7 @@ textarea {
 .lot-row {
   display: flex;
   justify-content: left;
-  height: 52px;
+  height: var(--row-height);
   margin-bottom: 6px;
 }
 
@@ -402,18 +404,18 @@ td {
 }
 
 .block-start {
-  border-left: 1px solid #000;
+  border-left: var(--block-border);
   margin-left: 2px;
   
 }
 
 .block-end {
-  border-right: 1px solid #000;
+  border-right: var(--block-border);
   margin-right: 2px;
   
 }
 
 .stand {
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
+  border-top: var(--block-border);
+  border-bottom: var(--block-border);
 }
