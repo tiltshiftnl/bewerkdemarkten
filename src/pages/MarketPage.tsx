@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Component } from "react"
-import { Market, Markets, Events } from "../models"
+import { Market, Markets, Events, DayOfWeek } from "../models"
 import MarketsService from "../services/service_markets"
-import { Breadcrumb, Button, Descriptions, Dropdown, Input, Menu, Tag, Tooltip } from 'antd'
+import { Breadcrumb, Button, Descriptions, Dropdown, Input, Menu, Modal, Select, Tag } from 'antd'
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons'
 import { Link, RouteComponentProps } from "react-router-dom"
 
@@ -12,8 +12,22 @@ export default class MarketPage extends Component<RouteComponentProps> {
     router: any
     history: any
     markets: Markets = {}
-    readonly state: { selectedMarket?: Market, day: string } = {
-        day: ""
+    weekdays: DayOfWeek[] = [
+        {id: 0, name: "Maandag", abbreviation: "MA"},
+        {id: 1, name: "Dinsdag", abbreviation: "DI"},
+        {id: 2, name: "Woensdag", abbreviation: "WO"},
+        {id: 3, name: "Donderdag", abbreviation: "DO"},
+        {id: 4, name: "Vrijdag", abbreviation: "VR"},
+        {id: 5, name: "Zaterdag", abbreviation: "ZA"},
+        {id: 6, name: "Zondag", abbreviation: "ZO"}
+    ]
+    readonly state: { selectedMarket?: Market, day: DayOfWeek, showModal: boolean } = {
+        day: {
+            id: 0,
+            name: "",
+            abbreviation: ""
+        },
+        showModal: false
     }
 
     marketsService: MarketsService
@@ -37,7 +51,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
     }
 
     handleClose = (removedTag: any) => {
-        if (this.state.day !== "" && this.state.selectedMarket) {
+        if (this.state.day.name !== "" && this.state.selectedMarket) {
             const _events: Events = this.state.selectedMarket.events
             delete _events[removedTag]
             const _market: Market = { ...this.state.selectedMarket, events: _events }
@@ -70,16 +84,36 @@ export default class MarketPage extends Component<RouteComponentProps> {
 
 
     addDay = () => {
-        if (this.state.day !== "" && this.state.selectedMarket) {
+        if (this.state.day.name !== "" && this.state.selectedMarket) {
             const _events: Events = this.state.selectedMarket.events
-            _events[this.state.day] = {}
+            _events[this.state.day.name] = {}
             const _market: Market = { ...this.state.selectedMarket, events: _events }
             this.updateMarket(_market)
             this.setState({
-                day: ""
+                day: {id: 0, name: "", abbreviation: ""}
             })
         }
     }
+
+
+    handleOk = () => {
+        if (this.state.day.abbreviation !== "" && this.state.selectedMarket) {
+            const _events: Events = this.state.selectedMarket.events
+            _events[this.state.day.abbreviation] = {}
+            const _market: Market = { ...this.state.selectedMarket, events: _events }
+            this.updateMarket(_market)
+            this.setState({
+                day: {id: 0, name: "", abbreviation: ""},
+                showModal: false
+            })
+        }
+    };
+
+    handleCancel = () => {
+        this.setState({
+            showModal: false
+        })
+    };
 
     render() {
         const menu = (
@@ -163,22 +197,53 @@ export default class MarketPage extends Component<RouteComponentProps> {
                                 </Tag>
                             })
                         }
-                        <Input style={{ width: "60px", marginRight: "10px" }}
-                            value={this.state.day}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        <Button
+                            onClick={() => {
                                 this.setState({
-                                    day: e.target.value.toUpperCase()
+                                    showModal: true
                                 })
                             }}
-                        />
-                        <Tooltip title="Dag toevoegen">
-                            <Button
-                                type="primary"
-                                shape="circle"
-                                icon={<PlusOutlined />}
-                                disabled={this.state.day !== "" ? false : true}
-                                onClick={() => this.addDay()} />
-                        </Tooltip>
+                            style={{ marginTop: '20px' }}
+                            icon={<PlusOutlined />}
+                        >Toevoegen</Button>
+                        <Modal
+                            title="Nieuwe markt"
+                            visible={this.state.showModal}
+                            onOk={this.handleOk}
+                            onCancel={this.handleCancel}
+                            cancelText="Annuleren"
+                        >
+                            <Input value={this.state.day.abbreviation} placeholder="Dag" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                const _d = this.state.day
+                                _d.abbreviation = e.target.value.toUpperCase() || "" 
+                                this.setState({
+                                    day: _d
+                                })
+                            }} />
+                            <Select
+                                style={{ width: '100%' }}
+                                placeholder="Kies een dag"
+                                value={this.state.day.abbreviation || ""}
+                                onChange={(e: string) => {
+                                    const _selectedDay: DayOfWeek = this.weekdays.filter((item: DayOfWeek) => item.abbreviation === e)[0]
+                                    this.setState({
+                                        day: _selectedDay
+                                    })
+                                    // if (this.state.branches && _selectedBranche) {
+                                    //     const _branches = this.state.branches
+                                    //     _branches[i].brancheId = _selectedBranche.brancheId
+                                    //     _branches[i].backGroundColor = _selectedBranche.color
+                                    //     _branches[i].color = getTextColor(_selectedBranche.color)
+                                    //     // Find the color, set the foreground color with the function.
+                                    //     this.updateAssignedBranches(_branches)
+                                    // }
+                                }}
+                            >
+                                {this.weekdays.map((day, i) => {
+                                    return <Select.Option key={i} value={day.abbreviation}>{day.name}</Select.Option>
+                                })}
+                            </Select>
+                        </Modal>
                     </Descriptions.Item>
                 </Descriptions></>
             }</>

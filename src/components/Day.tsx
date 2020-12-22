@@ -1,4 +1,4 @@
-import { Input, Tabs } from "antd"
+import { Input, Tabs, Tooltip } from "antd"
 import React, { RefObject, Component, createRef, MouseEvent, KeyboardEvent, ChangeEvent } from "react"
 import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
 import LayoutEdit from "./LayoutEdit"
@@ -33,10 +33,10 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
 
     getClassname = (lot: Lot) => {
         let baseClass = []
-        if(lot.blockStart){
+        if (lot.blockStart) {
             baseClass.push("block-start")
         }
-        if(lot.blockEnd){
+        if (lot.blockEnd) {
             baseClass.push("block-end")
         }
         if (lot.selected) {
@@ -237,20 +237,6 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                             })
                         }} /></>} key={i}>
                         <div className="block-wrapper">
-                            <PlusCircleOutlined
-                                className="dynamic-button"
-                                onClick={() => {
-                                    const _newLayout: MarketLayout = {
-                                        title: "Nieuwe rij",
-                                        class: "block-left",
-                                        landmarkBottom: "",
-                                        landmarkTop: "",
-                                        lots: []
-                                    }
-                                    this.layoutChanged(_newLayout, [pageindex, 0], true)
-
-                                }}
-                            />
                             {page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
                                 return <div key={i} className={layout.class}>
@@ -277,12 +263,14 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                                                 }}
                                             />
                                         })}
+                                        <Tooltip title="Nieuw vak">
                                         <PlusCircleOutlined
                                             className="dynamic-button"
                                             onClick={() => {
                                                 this.lotAdd([pageindex, layoutindex])
                                             }}
                                         />
+                                        </Tooltip>
                                     </div>
                                     {layout.class === 'block-right' &&
                                         <LayoutEdit
@@ -292,7 +280,6 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                                             position={[pageindex, layoutindex]}
                                         />}
                                 </div>
-
                             })}
                         </div>
                     </TabPane>

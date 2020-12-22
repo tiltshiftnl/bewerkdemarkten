@@ -88,23 +88,12 @@ export default class MarketListPage extends Component {
                     this.setState({
                         showModal: true
                     })
-                    // const _branches = this.state.branches || []
-                    // _branches.push({
-                    //     brancheId: "",
-                    //     verplicht: false,
-                    //     color: "#000",
-                    //     backGroundColor: "#fff",
-                    //     allocated: 0
-                    // })
-                    // this.setState({
-                    //     branches: _branches
-                    // })
                 }}
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
             <Modal
-                title="Markt toevoegen"
+                title="Nieuwe markt"
                 visible={this.state.showModal}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}

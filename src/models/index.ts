@@ -126,3 +126,10 @@ export interface MarketEventDetails {
     branches: AssignedBranche[]
     pages: MarketPage[]
 }
+
+export interface DayOfWeek {
+    id: number
+    name: string
+    abbreviation: string
+
+}
