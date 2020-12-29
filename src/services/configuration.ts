@@ -1,3 +1,3 @@
 export default class Configuration {
-    API_BASE_URL = "/data"
+    API_BASE_URL = "/api/v1"
 } 

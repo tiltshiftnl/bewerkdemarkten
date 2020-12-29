@@ -228,7 +228,7 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                 {this.state.marketEventDetails.pages.map((page: MarketPage, i: number) => {
                     const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    return <TabPane tab={<><Input size="small" value={page.title || "<>"}
+                    return <TabPane tab={<><Input size="small" value={page.title || ""}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => {
                             const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
                             _marketEventDetails.pages[i].title = e.target.value
