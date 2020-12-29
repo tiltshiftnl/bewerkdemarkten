@@ -60,7 +60,7 @@ export default class AnnouncementListPage extends Component {
                     </Link>
                 </Breadcrumb.Item>
             </Breadcrumb>{
-                Object.keys(this.state.announcements).map((entry: string, i: number) => {
+                Object.keys(this.state.announcements).sort().map((entry: string, i: number) => {
 
                     const _acti: string = (this.state.announcements as any)[entry]["activatie"]
                     const _wenp: string = (this.state.announcements as any)[entry]["wenperiode"]

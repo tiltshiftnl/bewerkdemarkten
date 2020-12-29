@@ -55,6 +55,11 @@ export default class MarketListPage extends Component {
 
     componentDidMount = () => {
         this.marketsService.retrieve().then((markets: Markets) => {
+            // Sort
+            markets = Object.keys(markets).sort().reduce((result: any, key: string) => {
+                result[key] = markets[key];
+                return result;
+            },{})
             this.setState({
                 markets
             })
@@ -76,7 +81,7 @@ export default class MarketListPage extends Component {
                 </Breadcrumb.Item>
             </Breadcrumb>
             <Row gutter={[16, 16]}>
-                {Object.keys(this.state.markets).map((key: string, i: number) => {
+                {Object.keys(this.state.markets).sort().map((key: string, i: number) => {
                     const market: Market = this.state.markets[key]
                     return <Col key={key} style={{ margin: "0.5em" }}>
                         <MarketListItem marketId={key} market={market} />

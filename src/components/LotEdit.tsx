@@ -38,11 +38,21 @@ export default class LotEdit extends Component<LotEditProps> {
 
     componentDidMount = () => {
         this.propertyService.retrieve().then((properties: string[]) => {
+            properties.sort((a,b) =>{
+                if(a < b) { return -1}
+                if(a > b) { return 1}
+                return 0
+            })
             this.setState({
                 properties
             })
         })
         this.obstacleTypeService.retrieve().then((obstacleTypes: string[]) => {
+            obstacleTypes.sort((a,b) =>{
+                if(a < b) { return -1}
+                if(a > b) { return 1}
+                return 0
+            })
             this.setState({
                 obstacleTypes
             })

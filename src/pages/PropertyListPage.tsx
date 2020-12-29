@@ -21,6 +21,11 @@ export default class ObstacleListPage extends Component {
 
     componentDidMount = () => {
         this.propertyService.retrieve().then((properties: string[]) => {
+            properties.sort((a,b) =>{
+                if(a < b) { return -1}
+                if(a > b) { return 1}
+                return 0
+            })
             this.setState({
                 properties
             })

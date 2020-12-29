@@ -7,28 +7,33 @@ import { ObstacleTypeService } from "../services/service_lookup"
 //import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default class ObstacleListPage extends Component {
-    readonly state: { obstacles: string[] } = {
-        obstacles: []
+    readonly state: { obstacleTypes: string[] } = {
+        obstacleTypes: []
     }
 
-    brancheService: ObstacleTypeService
+    obstacleTypeService: ObstacleTypeService
 
     constructor(props: any) {
         super(props)
-        this.brancheService = new ObstacleTypeService()
+        this.obstacleTypeService = new ObstacleTypeService()
     }
 
 
     componentDidMount = () => {
-        this.brancheService.retrieve().then((obstacles: string[]) => {
+        this.obstacleTypeService.retrieve().then((obstacleTypes: string[]) => {
+            obstacleTypes.sort((a,b) =>{
+                if(a < b) { return -1}
+                if(a > b) { return 1}
+                return 0
+            })
             this.setState({
-                obstacles
+                obstacleTypes
             })
         })
     }
 
     add = () => {
-        const props: string[] = this.state.obstacles
+        const props: string[] = this.state.obstacleTypes
         props.push("")
         this.setState({
             properties: props
@@ -36,7 +41,7 @@ export default class ObstacleListPage extends Component {
     }
 
     remove = (property: string) => {
-        const props: string[] = this.state.obstacles
+        const props: string[] = this.state.obstacleTypes
         const _idx: number = props.indexOf(property)
         if (_idx > -1) {
             props.splice(_idx, 1)
@@ -59,7 +64,7 @@ export default class ObstacleListPage extends Component {
                 </Link>
             </Breadcrumb.Item>
         </Breadcrumb>
-            {this.state.obstacles.map((obstacle: string, i: number) => {
+            {this.state.obstacleTypes.map((obstacle: string, i: number) => {
                 return <Row key={i} gutter={[8, 8]}><Col><Input value={obstacle} disabled={true}/></Col><Col>
                 {/* <MinusCircleOutlined
                     className="dynamic-button"
