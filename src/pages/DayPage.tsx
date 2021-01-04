@@ -1,34 +1,79 @@
 import React, { createRef, MouseEvent, RefObject, KeyboardEvent } from "react"
 import Day from "../components/Day"
-import { MarketService } from "../services/service_markets"
+import MarketsService, { MarketService } from "../services/service_markets"
 import { DynamicBase } from "./DynamicBase"
-import { Breadcrumb, Tabs } from 'antd'
-import { HomeOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Tabs, Upload, message, Row, Col } from 'antd'
+import { HomeOutlined, UploadOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
-import { AssignedBranche, Branche, MarketEventDetails } from "../models"
+import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan, Event } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
+import Configuration from "../services/configuration"
 
 const { TabPane } = Tabs
 
 export default class DayPage extends DynamicBase {
-    readonly state: { lookupBranches?: Branche[], marketEventDetails?: MarketEventDetails, activeKey: string } = {
-        activeKey: "0"
-    }
+    readonly state: {
+        lookupBranches?: Branche[],
+        marketEventDetails?: MarketEventDetails,
+        activeKey: string,
+        plan?: Plan,
+        pfdReadyForUpload?: boolean
+        pdfSelected?: File
+    } = {
+            activeKey: "0"
+        }
     branchesRef: RefObject<Branches>
+    config: Configuration
     dayRef: RefObject<Day>
+    uploadProps: any
 
+    marketsService: MarketsService
     marketService: MarketService
 
     lookupBrancheService: BrancheService
 
     constructor(props: any) {
         super(props)
+        this.config = new Configuration()
+        this.uploadProps = {
+            name: 'file',
+            action: `${this.config.API_BASE_URL}/markt/${this.id}/upload/pdf`,
+            onChange(info: any) {
+                if (info.file.status !== 'Bezig met uploaden') {
+                    console.log(info.file, info.fileList);
+                }
+                if (info.file.status === 'done') {
+                    message.success(`${info.file.name} upload geslaagd.`);
+                    this.setState({
+                        plan: {
+                            name: `kaart-${this.id}`,
+                            pages: 0
+                        }
+                    })
+                } else if (info.file.status === 'error') {
+                    message.error(`${info.file.name} upload mislukt.`);
+                }
+            },
+        };
         this.marketService = new MarketService()
+        this.marketsService = new MarketsService()
         this.lookupBrancheService = new BrancheService()
 
         this.branchesRef = createRef()
         this.dayRef = createRef()
+    }
+
+
+
+    getPlan = () => {
+        this.marketsService.retrieve().then((markets: Markets) => {
+            const _arr: string[] = this.id.split("-")
+            const _event: Event = markets[_arr[0]].events[_arr[1]]
+            this.setState({
+                plan: _event.plan
+            })
+        })
     }
 
     updateAssignedBranches = (lookupBranches: AssignedBranche[]) => {
@@ -54,6 +99,7 @@ export default class DayPage extends DynamicBase {
                 lookupBranches
             })
         })
+        this.getPlan()
         this.marketService.constructRelationalStructure(this.id).then(result => {
             this.branchesRef.current?.updateAssignedBranches(result.branches)
             this.dayRef.current?.setState({
@@ -111,6 +157,17 @@ export default class DayPage extends DynamicBase {
                         <span>{this.id.split('-')[1]}</span>
                     </Breadcrumb.Item></>}
             </Breadcrumb>
+            <Row align="middle" gutter={[16,16]}>
+                <Col>
+                    <a target="_blank" rel="noreferrer" href={`${this.config.API_BASE_URL}/markt/${this.id}/download/pdf`}>
+                        {this.state.plan?.name}
+                    </a>
+                </Col><Col>
+                    <Upload {...this.uploadProps}>
+                        <Button icon={<UploadOutlined />}>Kaart uploaden/vervangen</Button>
+                    </Upload>
+                </Col>
+            </Row>
             {this.state.lookupBranches &&
                 <Tabs activeKey={this.state.activeKey} onTabClick={(key: string, e: MouseEvent | KeyboardEvent) => {
                     this.setState({ activeKey: key })
