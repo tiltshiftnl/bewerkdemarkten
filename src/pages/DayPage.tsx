@@ -48,6 +48,9 @@ export default class DayPage extends DynamicBase {
 
 
     getPlan = () => {
+        const that = this
+        const _file_id = this.id
+        const API_BASE_URL = this.config.API_BASE_URL
         this.marketsService.retrieve().then((markets: Markets) => {
             const _arr: string[] = this.id.split("-")
             const _event: Event = markets[_arr[0]].events[_arr[1]]
@@ -60,7 +63,7 @@ export default class DayPage extends DynamicBase {
                 uploadProps = {
                     name: 'file',
                     accept: '.pdf',
-                    action: `${this.config.API_BASE_URL}/markt/${this.id}/upload/pdf`,
+                    action: `${API_BASE_URL}/markt/${_file_id}/upload/pdf`,
                     defaultFileList: [],
                     onChange(info: any) {
                         if (info.file.status !== 'Bezig met uploaden') {
@@ -68,9 +71,9 @@ export default class DayPage extends DynamicBase {
                         }
                         if (info.file.status === 'done') {
                             message.success(`${info.file.name} upload geslaagd.`);
-                            this.setState({
+                            that.setState({
                                 plan: {
-                                    name: `kaart-${this.id}`,
+                                    name: `kaart-${_file_id}`,
                                     pages: 0
                                 }
                             })
@@ -79,8 +82,7 @@ export default class DayPage extends DynamicBase {
                         }
                     },
                     onRemove: (file: any) => {
-                        const _file_id = this.id
-                        const API_BASE_URL = this.config.API_BASE_URL
+                        
                         fetch(`${API_BASE_URL}/markt/${_file_id}/delete/pdf`, {
                             method: 'DELETE',
                         })
@@ -92,10 +94,10 @@ export default class DayPage extends DynamicBase {
                     uploadProps.defaultFileList = [
                         {
                             uid: '1',
-                            name: `kaart-${this.id}`,
+                            name: `kaart-${_file_id}`,
                             status: 'done',
-                            response: `Kan kaart-${this.id} niet downloaden`, // custom error message to show
-                            url: `${this.config.API_BASE_URL}/markt/${this.id}/download/pdf`,
+                            response: `Kan kaart-${_file_id} niet downloaden`, // custom error message to show
+                            url: `${API_BASE_URL}/markt/${_file_id}/download/pdf`,
                           }
                     ]
                 }
