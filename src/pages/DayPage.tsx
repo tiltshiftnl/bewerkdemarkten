@@ -20,13 +20,13 @@ export default class DayPage extends DynamicBase {
         plan?: Plan,
         pfdReadyForUpload?: boolean
         pdfSelected?: File
+        uploadProps?: any
     } = {
             activeKey: "0"
         }
     branchesRef: RefObject<Branches>
     config: Configuration
     dayRef: RefObject<Day>
-    uploadProps: any
 
     marketsService: MarketsService
     marketService: MarketService
@@ -36,26 +36,7 @@ export default class DayPage extends DynamicBase {
     constructor(props: any) {
         super(props)
         this.config = new Configuration()
-        this.uploadProps = {
-            name: 'file',
-            action: `${this.config.API_BASE_URL}/markt/${this.id}/upload/pdf`,
-            onChange(info: any) {
-                if (info.file.status !== 'Bezig met uploaden') {
-                    console.log(info.file, info.fileList);
-                }
-                if (info.file.status === 'done') {
-                    message.success(`${info.file.name} upload geslaagd.`);
-                    this.setState({
-                        plan: {
-                            name: `kaart-${this.id}`,
-                            pages: 0
-                        }
-                    })
-                } else if (info.file.status === 'error') {
-                    message.error(`${info.file.name} upload mislukt.`);
-                }
-            },
-        };
+        
         this.marketService = new MarketService()
         this.marketsService = new MarketsService()
         this.lookupBrancheService = new BrancheService()
@@ -70,18 +51,68 @@ export default class DayPage extends DynamicBase {
         this.marketsService.retrieve().then((markets: Markets) => {
             const _arr: string[] = this.id.split("-")
             const _event: Event = markets[_arr[0]].events[_arr[1]]
+
+            let uploadProps: any = {
+                defaultFileList: []
+            }
+
+            if(_event) {
+                uploadProps = {
+                    name: 'file',
+                    accept: '.pdf',
+                    action: `${this.config.API_BASE_URL}/markt/${this.id}/upload/pdf`,
+                    defaultFileList: [],
+                    onChange(info: any) {
+                        if (info.file.status !== 'Bezig met uploaden') {
+                            console.log(info.file, info.fileList);
+                        }
+                        if (info.file.status === 'done') {
+                            message.success(`${info.file.name} upload geslaagd.`);
+                            this.setState({
+                                plan: {
+                                    name: `kaart-${this.id}`,
+                                    pages: 0
+                                }
+                            })
+                        } else if (info.file.status === 'error') {
+                            message.error(`${info.file.name} upload mislukt.`);
+                        }
+                    },
+                    onRemove: (file: any) => {
+                        const _file_id = this.id
+                        const API_BASE_URL = this.config.API_BASE_URL
+                        fetch(`${API_BASE_URL}/markt/${_file_id}/delete/pdf`, {
+                            method: 'DELETE',
+                        })
+                        .then(res => res.text()) // or res.json()
+                        .then(res => console.log(res))
+                    }
+                }
+                if(_event.plan) {
+                    uploadProps.defaultFileList = [
+                        {
+                            uid: '1',
+                            name: `kaart-${this.id}`,
+                            status: 'done',
+                            response: `Kan kaart-${this.id} niet downloaden`, // custom error message to show
+                            url: `${this.config.API_BASE_URL}/markt/${this.id}/download/pdf`,
+                          }
+                    ]
+                }
+            }
+            
+
             this.setState({
-                plan: _event.plan
+                plan: _event.plan,
+                uploadProps
             })
         })
     }
 
     updateAssignedBranches = (lookupBranches: AssignedBranche[]) => {
-        console.log("updateAssignedBranches")
         const _m = this.state.marketEventDetails
         if (_m) {
             _m.branches = lookupBranches
-            console.log(_m)
             this.setState({
                 marketEventDetails: _m
             }, () => {
@@ -159,13 +190,11 @@ export default class DayPage extends DynamicBase {
             </Breadcrumb>
             <Row align="middle" gutter={[16,16]}>
                 <Col>
-                    <a target="_blank" rel="noreferrer" href={`${this.config.API_BASE_URL}/markt/${this.id}/download/pdf`}>
-                        {this.state.plan?.name}
-                    </a>
-                </Col><Col>
-                    <Upload {...this.uploadProps}>
+                {this.state.uploadProps &&
+                    <Upload {...this.state.uploadProps}>
                         <Button icon={<UploadOutlined />}>Kaart uploaden/vervangen</Button>
                     </Upload>
+                }
                 </Col>
             </Row>
             {this.state.lookupBranches &&

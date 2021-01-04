@@ -29,6 +29,7 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
     constructor(props: { lookupBranches: Branche[] }) {
         super(props)
         this.lotEdit = createRef()
+
     }
 
     getClassname = (lot: Lot) => {
@@ -208,11 +209,19 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
         } else {
             _marketEventDetails.pages.push({
                 title: "Nieuwe pagina",
-                layout: []
+                layout: [{
+                    title: "Nieuwe rij",
+                    lots: [],
+                    class: "block-left",
+                    landmarkBottom: "",
+                    landmarkTop: ""
+                }]
             })
         }
         this.setState({
-            marketEventDetails: _marketEventDetails
+            marketEventDetails: _marketEventDetails,
+        }, () => {
+            this.onTabChange("" +(_marketEventDetails.pages.length - 1))  
         })
     }
 
@@ -228,14 +237,15 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                 {this.state.marketEventDetails.pages.map((page: MarketPage, i: number) => {
                     const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    return <TabPane tab={<><Input size="small" value={page.title || ""}
+                    return <TabPane tab={page.title} key={i}>
+                        <><Input type="text" placeholder="Nieuwe pagina" value={page.title || ""}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => {
                             const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
                             _marketEventDetails.pages[i].title = e.target.value
                             this.setState({
                                 marketEventDetails: _marketEventDetails
                             })
-                        }} /></>} key={i}>
+                        }} /></>
                         <div className="block-wrapper">
                             {page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
@@ -264,12 +274,12 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                                             />
                                         })}
                                         <Tooltip title="Nieuw vak">
-                                        <PlusCircleOutlined
-                                            className="dynamic-button"
-                                            onClick={() => {
-                                                this.lotAdd([pageindex, layoutindex])
-                                            }}
-                                        />
+                                            <PlusCircleOutlined
+                                                className="dynamic-button"
+                                                onClick={() => {
+                                                    this.lotAdd([pageindex, layoutindex])
+                                                }}
+                                            />
                                         </Tooltip>
                                     </div>
                                     {layout.class === 'block-right' &&
