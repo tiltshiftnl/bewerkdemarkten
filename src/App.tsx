@@ -6,6 +6,7 @@ import DayPage from './pages/DayPage'
 import MarketListPage from './pages/MarketListPage'
 import MarketPage from './pages/MarketPage'
 import { Layout } from 'antd'
+import { SyncOutlined } from '@ant-design/icons';
 import BrancheListPage from './pages/BrancheListPage'
 import AnnouncementListPage from './pages/AnnouncementListPage'
 import ObstacleListPage from './pages/ObstacleListPage'
@@ -20,7 +21,11 @@ export default class App extends Component {
         <GlobalStyle />
         <div className="App">
           <BrowserRouter>
-            <Header tall={false} title="Bewerk de markten" fullWidth={false} homeLink="" />
+            <Header tall={false} title="Bewerk de markten" fullWidth={false} homeLink=""/>
+            <div className="refresh-button"><SyncOutlined title="Gegevens herladen" onClick={() => {
+              localStorage.clear()
+              window.location.reload()
+            }}/></div>
             <ul className="menu-item-ul">
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/markets">Markten</NavLink></li>
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/branches">Branches</NavLink></li>

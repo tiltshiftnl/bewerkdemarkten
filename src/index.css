@@ -426,3 +426,15 @@ td {
   border-top: var(--block-border);
   border-bottom: var(--block-border);
 }
+
+.refresh-button {
+  font-size: 24px;
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  z-index: 2000;
+  cursor: pointer;
+}
+.refresh-button:hover {
+  color: var(--button-default-hover)
+}
