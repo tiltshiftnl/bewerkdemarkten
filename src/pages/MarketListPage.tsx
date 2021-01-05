@@ -1,8 +1,8 @@
 import { HomeOutlined } from '@ant-design/icons'
 import { Button, Col, Row, Modal, Input } from "antd"
 import React, { ChangeEvent, Component } from "react"
-import { Market, Markets } from "../models"
-import MarketsService from "../services/service_markets"
+import { DayOfWeek, Events, Market, Markets, WeekDays } from "../models"
+import MarketsService, { PagesService } from "../services/service_markets"
 import MarketListItem from '../components/MarketListItem'
 import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
@@ -10,18 +10,24 @@ import { //MinusCircleOutlined,
     PlusOutlined
 } from '@ant-design/icons'
 export default class MarketListPage extends Component {
-
-    readonly state: { markets: Markets, showModal: boolean, newMarketId: string } = {
+    weekdays: DayOfWeek[] = WeekDays
+    readonly state: { markets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek } = {
         markets: {},
         showModal: false,
-        newMarketId: ""
+        newMarketId: "",
+        day: {
+            id: 0,
+            name: "",
+            abbreviation: ""
+        }
     }
 
     marketsService: MarketsService
-
+    pagesService: PagesService
     constructor(props: any) {
         super(props)
         this.marketsService = new MarketsService()
+        this.pagesService = new PagesService()
     }
 
     updateMarkets = (markets: Markets) => {
@@ -35,11 +41,21 @@ export default class MarketListPage extends Component {
         //Add the newMarket to the markets
         if (this.state.newMarketId !== "") {
             const _markets = this.state.markets
+            const _events: Events = {}
+            if (this.state.day.abbreviation !== "") {
+                _events[this.state.day.abbreviation] = {
+                    weekday: 0
+                }
+                // POST a new empty pagina's set to the backend
+                this.pagesService.update(`${this.state.newMarketId}-${this.state.day.abbreviation}`, [])
+            }
+
             _markets[this.state.newMarketId] = {
                 id: 0,
                 name: "",
-                events: {}
+                events: _events
             }
+
             this.updateMarkets(_markets)
             this.setState({
                 showModal: false
@@ -59,7 +75,7 @@ export default class MarketListPage extends Component {
             markets = Object.keys(markets).sort().reduce((result: any, key: string) => {
                 result[key] = markets[key];
                 return result;
-            },{})
+            }, {})
             this.setState({
                 markets
             })
@@ -107,6 +123,14 @@ export default class MarketListPage extends Component {
                 <Input value={this.state.newMarketId} placeholder="Code" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     this.setState({
                         newMarketId: e.target.value.toUpperCase() || ""
+                    })
+                }} />
+                <i>Maak een dag aan om de betreffende markt te initieren</i>
+                <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const _d = this.state.day
+                    _d.abbreviation = e.target.value.toUpperCase() || ""
+                    this.setState({
+                        day: _d
                     })
                 }} />
             </Modal>

@@ -133,3 +133,13 @@ export interface DayOfWeek {
     abbreviation: string
 
 }
+
+export const WeekDays: DayOfWeek[] = [
+    {id: 0, name: "Maandag", abbreviation: "MA"},
+    {id: 1, name: "Dinsdag", abbreviation: "DI"},
+    {id: 2, name: "Woensdag", abbreviation: "WO"},
+    {id: 3, name: "Donderdag", abbreviation: "DO"},
+    {id: 4, name: "Vrijdag", abbreviation: "VR"},
+    {id: 5, name: "Zaterdag", abbreviation: "ZA"},
+    {id: 6, name: "Zondag", abbreviation: "ZO"}
+]

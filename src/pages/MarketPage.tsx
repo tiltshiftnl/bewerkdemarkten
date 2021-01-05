@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from "react"
-import { Market, Markets, Events, DayOfWeek } from "../models"
+import { Market, Markets, Events, DayOfWeek, WeekDays } from "../models"
 import MarketsService from "../services/service_markets"
 import { Breadcrumb, Button, Descriptions, Dropdown, Input, Menu, Modal, Select, Tag } from 'antd'
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons'
@@ -12,15 +12,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
     router: any
     history: any
     markets: Markets = {}
-    weekdays: DayOfWeek[] = [
-        {id: 0, name: "Maandag", abbreviation: "MA"},
-        {id: 1, name: "Dinsdag", abbreviation: "DI"},
-        {id: 2, name: "Woensdag", abbreviation: "WO"},
-        {id: 3, name: "Donderdag", abbreviation: "DO"},
-        {id: 4, name: "Vrijdag", abbreviation: "VR"},
-        {id: 5, name: "Zaterdag", abbreviation: "ZA"},
-        {id: 6, name: "Zondag", abbreviation: "ZO"}
-    ]
+    weekdays: DayOfWeek[] = WeekDays
     readonly state: { selectedMarket?: Market, day: DayOfWeek, showModal: boolean } = {
         day: {
             id: 0,
@@ -207,13 +199,13 @@ export default class MarketPage extends Component<RouteComponentProps> {
                             icon={<PlusOutlined />}
                         >Toevoegen</Button>
                         <Modal
-                            title="Nieuwe markt"
+                            title="Nieuwe dag"
                             visible={this.state.showModal}
                             onOk={this.handleOk}
                             onCancel={this.handleCancel}
                             cancelText="Annuleren"
                         >
-                            <Input value={this.state.day.abbreviation} placeholder="Dag of afkorting" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const _d = this.state.day
                                 _d.abbreviation = e.target.value.toUpperCase() || "" 
                                 this.setState({
