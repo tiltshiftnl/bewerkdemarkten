@@ -199,6 +199,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                 <Col {...firstColSpan}>Type</Col>
                                 <Col {...secondColSpan}>
                                     <Select
+                                        showSearch
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een type"
                                         value={!this.state.lot ? "" :
@@ -214,7 +215,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                         }}
                                     >
                                         <Select.Option key={""} value={""}>{[]}</Select.Option>
-                                        {this.state.obstacleTypes.map((br, i) => {
+                                        {this.state.obstacleTypes.sort().map((br, i) => {
                                             return <Select.Option key={i} value={br}>{br}</Select.Option>
                                         })}
                                     </Select>
@@ -251,6 +252,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                 <Col {...firstColSpan}>Branche(s)</Col>
                                 <Col {...secondColSpan}>
                                     <Select
+                                        showSearch
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een branche"
                                         value={!this.state.lot ? "" : this.state.lot.branches?.filter(e => e !== "bak")[0]}
@@ -272,7 +274,11 @@ export default class LotEdit extends Component<LotEditProps> {
                                         }}
                                     >
                                         <Select.Option key={""} value={""}>{[]}</Select.Option>
-                                        {this.props.branches.filter((item: AssignedBranche) => item.brancheId !== "bak").map((br, i) => {
+                                        {this.props.branches.sort((a,b) =>{
+                                            if(a.brancheId < b.brancheId) { return -1}
+                                            if(a.brancheId > b.brancheId) { return 1}
+                                            return 0
+                                        }).filter((item: AssignedBranche) => item.brancheId !== "bak").map((br, i) => {
                                             return <Select.Option key={i} value={br.brancheId}>{br.brancheId}</Select.Option>
                                         })}
                                     </Select>

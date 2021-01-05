@@ -95,14 +95,13 @@ export interface Announcements {
     plaatsVoorkeuren: Announcement
 }
 
-// Branches assigned to Markets
 export interface AssignedBranche {
     brancheId: string
     verplicht: boolean
     maximumPlaatsen?: number
     allocated?: number
-    backGroundColor: string
-    color: string
+    backGroundColor?: string
+    color?: string
 }
 
 export interface Markets {

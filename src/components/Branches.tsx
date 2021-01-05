@@ -4,10 +4,17 @@ import { AssignedBranche, Branche } from "../models"
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import CSS from 'csstype'
 import { getTextColor } from "../helpers/PresentationHelpers"
+import { BranchesService } from "../services/service_markets"
 
 
 export default class Branches extends Component<{ id: string, lookupBranches: Branche[], changed?: (lookupBranches: AssignedBranche[]) => void }> {
     readonly state: { branches?: AssignedBranche[] } = {}
+    branchesService: BranchesService
+
+    constructor(props: any) {
+        super(props)
+        this.branchesService = new BranchesService()
+    }
 
     updateAssignedBranches = (branches: AssignedBranche[]) => {
         localStorage.setItem(`bwdm_cache_${this.props.id}_branches`, JSON.stringify(branches))
@@ -121,8 +128,9 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                             className="dynamic-button"
                             onClick={() => {
                                 if (this.state.branches) {
-                                    const _branches = this.state.branches
+                                    let _branches = this.state.branches
                                     delete _branches[i]
+                                    _branches = _branches.filter(() => true)
                                     this.updateAssignedBranches(_branches)
                                 }
                             }}
@@ -145,6 +153,27 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
+            <Button type="primary"
+                onClick={() => {
+                    const _export = this.state.branches?.map((e: AssignedBranche)=> {
+                        let _e: AssignedBranche = {
+                            brancheId: e.brancheId,
+                            verplicht: e.verplicht
+                        }
+                        if(e.maximumPlaatsen) {
+                            _e.maximumPlaatsen = e.maximumPlaatsen
+                        }
+                        return _e
+                    })
+                    if(_export) {
+                        this.branchesService.update(`${this.props.id}`, _export)
+                    }
+                    //console.log(this.props.id)
+                    //console.log(_export)
+                    
+                }}
+                style={{ margin: '20px' }}
+            >Opslaan</Button>
             </>}</>
     }
 }

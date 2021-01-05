@@ -53,7 +53,7 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
             if (_lotbranches.length === 1) {
                 const _activeBranche = this.state.marketEventDetails.branches.filter(b => b.brancheId === _lotbranches[0])
                 if (_activeBranche) {
-                    return _activeBranche[0]
+                    return _activeBranche[0] as AssignedBranche
                 }
             }
         }
