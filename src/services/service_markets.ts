@@ -6,7 +6,7 @@ import { BrancheService } from './service_lookup'
 
 
 export default class MarketsService extends Service<Markets> {
-    
+
     async retrieve(): Promise<Markets> {
         // Retrieve from Cache
         const cachedMarkets = localStorage.getItem(`bwdm_cache_markets`)
@@ -63,7 +63,6 @@ export class MarketService extends Service<Rows> {
         const _r = await new RowsService().retrieve(route).then(result => result) // markt.json
         const _p = await new PagesService().retrieve(route).then(result => result) // paginas.json
         const _bb = await new BrancheService().retrieve().then(result => result)
-
         // replace row items with locations
         const rowSets: (Lot | Obstacle)[] = []
         _r.rows.forEach((row: string[], rowsetindex: number) => {
@@ -113,29 +112,31 @@ export class MarketService extends Service<Rows> {
         // Now I have rows with obstacles, lets paste them into the pages at the right positions,
         // replace the plaatsList with the given rows and stitch them together with the obstacles.
         const newPages: any = []
-        _p.forEach((page: Page) => {
-            const newListGroupArray: any = []
-            page.indelingslijstGroup.forEach((group: Assignment) => {
-                const firstLotId: string = group.plaatsList[0]
-                const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
-                //find the first
-                const firstLot = rowSets.find(e => (e as Lot).plaatsId === firstLotId)
-                //find the last
-                const lastLot = rowSets.find(e => (e as Lot).plaatsId === lastLotId)
-                if (lastLot && firstLot) {
-                    const firstLotPosition = rowSets.indexOf(firstLot)
-                    const lastLotPosition = rowSets.indexOf(lastLot)
-                    //grab the part of the array that is between (and including) first and last
-                    const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
-                    delete (group as any).plaatsList
-                    const newListGroup = { ...group, lots: pageLotsAndObstacles }
-                    newListGroupArray.push(newListGroup)
-                }
+        if (_p) {
+            _p.forEach((page: Page) => {
+                const newListGroupArray: any = []
+                page.indelingslijstGroup.forEach((group: Assignment) => {
+                    const firstLotId: string = group.plaatsList[0]
+                    const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
+                    //find the first
+                    const firstLot = rowSets.find(e => (e as Lot).plaatsId === firstLotId)
+                    //find the last
+                    const lastLot = rowSets.find(e => (e as Lot).plaatsId === lastLotId)
+                    if (lastLot && firstLot) {
+                        const firstLotPosition = rowSets.indexOf(firstLot)
+                        const lastLotPosition = rowSets.indexOf(lastLot)
+                        //grab the part of the array that is between (and including) first and last
+                        const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                        delete (group as any).plaatsList
+                        const newListGroup = { ...group, lots: pageLotsAndObstacles }
+                        newListGroupArray.push(newListGroup)
+                    }
+                })
+                delete (page as any).indelingslijstGroup
+                const newPage = { ...page, layout: newListGroupArray }
+                newPages.push(newPage)
             })
-            delete (page as any).indelingslijstGroup
-            const newPage = { ...page, layout: newListGroupArray }
-            newPages.push(newPage)
-        })
+        }
 
         return { branches: _b, pages: newPages }
     }

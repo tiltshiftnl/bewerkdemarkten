@@ -53,7 +53,7 @@ export default class DayPage extends DynamicBase {
         const API_BASE_URL = this.config.API_BASE_URL
         this.marketsService.retrieve().then((markets: Markets) => {
             const _arr: string[] = this.id.split("-")
-            const _event: Event = markets[_arr[0]].events[_arr[1]]
+            const _event: Event = markets[_arr[0]]?.events[_arr[1]]
 
             let uploadProps: any = {
                 defaultFileList: []
@@ -105,7 +105,6 @@ export default class DayPage extends DynamicBase {
             
 
             this.setState({
-                plan: _event.plan,
                 uploadProps
             })
         })
@@ -135,6 +134,10 @@ export default class DayPage extends DynamicBase {
         this.getPlan()
         this.marketService.get(this.id).then(result => {
             this.branchesRef.current?.updateAssignedBranches(result.branches)
+            this.setState({
+                marketEventDetails: result,
+                activeKey: result.pages.length === 0 ? "1" : "0"
+            })
             this.dayRef.current?.setState({
                 marketEventDetails: result
             })
