@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Component } from "react"
 import { Market, Markets, Events, DayOfWeek, WeekDays } from "../models"
-import MarketsService from "../services/service_markets"
-import { Breadcrumb, Button, Descriptions, Dropdown, Input, Menu, Modal, Select, Tag } from 'antd'
+import MarketsService, { PagesService } from "../services/service_markets"
+import { Breadcrumb, Button, Descriptions, Dropdown, Input, Menu, Modal, Tag } from 'antd'
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons'
 import { Link, RouteComponentProps } from "react-router-dom"
 
@@ -23,10 +23,12 @@ export default class MarketPage extends Component<RouteComponentProps> {
     }
 
     marketsService: MarketsService
+    pagesService: PagesService
 
     constructor(props: any) {
         super(props)
         this.marketsService = new MarketsService()
+        this.pagesService = new PagesService()
     }
 
     updateMarket = (market: Market) => {
@@ -76,10 +78,11 @@ export default class MarketPage extends Component<RouteComponentProps> {
 
 
     addDay = () => {
-        if (this.state.day.name !== "" && this.state.selectedMarket) {
+        if (this.state.day.abbreviation !== "" && this.state.selectedMarket) {
             const _events: Events = this.state.selectedMarket.events
-            _events[this.state.day.name] = {}
+            _events[this.state.day.abbreviation] = {}
             const _market: Market = { ...this.state.selectedMarket, events: _events }
+
             this.updateMarket(_market)
             this.setState({
                 day: {id: 0, name: "", abbreviation: ""}
@@ -93,6 +96,8 @@ export default class MarketPage extends Component<RouteComponentProps> {
             const _events: Events = this.state.selectedMarket.events
             _events[this.state.day.abbreviation] = {}
             const _market: Market = { ...this.state.selectedMarket, events: _events }
+            // POST a new empty pagina's set to the backend
+            this.pagesService.update(`${this.id}-${this.state.day.abbreviation}`, [])
             this.updateMarket(_market)
             this.setState({
                 day: {id: 0, name: "", abbreviation: ""},
@@ -212,7 +217,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
                                     day: _d
                                 })
                             }} />
-                            <i style={{color: "#ccc"}}>Optioneel, selecteer een weekdag indien van toepassing</i>
+                            {/* <i style={{color: "#ccc"}}>Optioneel, selecteer een weekdag indien van toepassing</i>
                             <Select
                                 style={{ width: '100%' }}
                                 placeholder="Kies een dag"
@@ -235,7 +240,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
                                 {this.weekdays.map((day, i) => {
                                     return <Select.Option key={i} value={day.abbreviation}>{day.name}</Select.Option>
                                 })}
-                            </Select>
+                            </Select> */}
                         </Modal>
                     </Descriptions.Item>
                 </Descriptions></>

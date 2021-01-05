@@ -11,7 +11,7 @@ import { //MinusCircleOutlined,
 } from '@ant-design/icons'
 export default class MarketListPage extends Component {
     weekdays: DayOfWeek[] = WeekDays
-    readonly state: { markets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek } = {
+    readonly state: { markets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
         markets: {},
         showModal: false,
         newMarketId: "",
@@ -82,6 +82,13 @@ export default class MarketListPage extends Component {
         })
     }
 
+    checkAbbreviation = (): boolean => {
+        if (this.state.newMarketInvalid === "") {
+            return false
+        }
+        return true
+    }
+
     render() {
         return <>
             <Breadcrumb>
@@ -116,23 +123,45 @@ export default class MarketListPage extends Component {
             <Modal
                 title="Nieuwe markt"
                 visible={this.state.showModal}
+                okButtonProps={{ disabled: this.checkAbbreviation() }}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
                 cancelText="Annuleren"
             >
+
                 <Input value={this.state.newMarketId} placeholder="Code" onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    this.setState({
-                        newMarketId: e.target.value.toUpperCase() || ""
-                    })
+                    if (e.target.value !== "") {
+                        if (Object.keys(this.state.markets).find((key: string) => key.toLowerCase() === e.target.value.toLowerCase())) {
+                            this.setState({
+                                newMarketId: e.target.value,
+                                newMarketInvalid: "Markt bestaat al"
+                            })
+                        } else {
+                            this.setState({
+                                newMarketId: e.target.value,
+                                newMarketInvalid: ""
+                            })
+                        }
+                    } else {
+                        this.setState({
+                            newMarketId: "",
+                            newMarketInvalid: "Code is vereist"
+                        })
+                    }
+
                 }} />
-                <i>Maak een dag aan om de betreffende markt te initieren</i>
-                <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    const _d = this.state.day
-                    _d.abbreviation = e.target.value.toUpperCase() || ""
-                    this.setState({
-                        day: _d
-                    })
-                }} />
+                {this.state.newMarketInvalid !== "" && <div className="input-error">{this.state.newMarketInvalid}</div>}
+                {!this.checkAbbreviation() && <>
+                    <i>Maak een dag aan om de betreffende markt te initieren</i>
+                    <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        const _d = this.state.day
+                        _d.abbreviation = e.target.value.toUpperCase() || ""
+                        this.setState({
+                            day: _d
+                        })
+                    }} /></>
+                }
+
             </Modal>
         </>
     }
