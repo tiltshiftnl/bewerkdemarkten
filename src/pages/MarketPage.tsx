@@ -213,13 +213,14 @@ export default class MarketPage extends Component<RouteComponentProps> {
                             onCancel={this.handleCancel}
                             cancelText="Annuleren"
                         >
-                            <Input value={this.state.day.abbreviation} placeholder="Dag" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            <Input value={this.state.day.abbreviation} placeholder="Dag of afkorting" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const _d = this.state.day
                                 _d.abbreviation = e.target.value.toUpperCase() || "" 
                                 this.setState({
                                     day: _d
                                 })
                             }} />
+                            <i style={{color: "#ccc"}}>Optioneel, selecteer een weekdag indien van toepassing</i>
                             <Select
                                 style={{ width: '100%' }}
                                 placeholder="Kies een dag"
