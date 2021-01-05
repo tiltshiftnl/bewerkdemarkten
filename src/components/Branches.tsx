@@ -36,6 +36,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
         }
 
         return <Select
+            showSearch
             style={{ width: '100%' }}
             placeholder="Selecteer een branche"
             value={branche.brancheId || ""}
