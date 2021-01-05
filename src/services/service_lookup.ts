@@ -1,7 +1,7 @@
 import { Announcements, Branche } from '../models'
 import { Service } from './service'
 
-export class BrancheService extends Service {
+export class BrancheService extends Service<Branche[]> {
     async retrieve(): Promise<Branche[]> {
         // Retrieve from Cache
         const cachedBranches = localStorage.getItem('bwdm_lookup_branches')
@@ -31,7 +31,7 @@ export class BrancheService extends Service {
     }
 }
 
-export class DaysClosedService extends Service {
+export class DaysClosedService extends Service<string[]> {
     async retrieve(): Promise<string[]> {
         // Retrieve from Cache
         const cachedDaysClosed = localStorage.getItem('bwdm_lookup_daysclosed')
@@ -61,7 +61,7 @@ export class DaysClosedService extends Service {
     }
 }
 
-export class AnnouncementService extends Service {
+export class AnnouncementService extends Service<Announcements> {
     async retrieve(): Promise<Announcements> {
         // Retrieve from Cache
         const cachedAnnouncements = localStorage.getItem('bwdm_lookup_announcements')
@@ -91,7 +91,7 @@ export class AnnouncementService extends Service {
     }
 }
 
-export class ObstacleTypeService extends Service {
+export class ObstacleTypeService extends Service<string[]> {
     async retrieve(): Promise<string[]> {
         // Retrieve from Cache
         const cachedObstacleTypes = localStorage.getItem('bwdm_lookup_obstacletypes')
@@ -121,7 +121,7 @@ export class ObstacleTypeService extends Service {
     }
 }
 
-export class LotPropertyService extends Service {
+export class LotPropertyService extends Service<string[]> {
     async retrieve(): Promise<string[]> {
         // Retrieve from Cache
         const cachedProperties = localStorage.getItem('bwdm_lookup_properties')

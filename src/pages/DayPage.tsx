@@ -133,7 +133,7 @@ export default class DayPage extends DynamicBase {
             })
         })
         this.getPlan()
-        this.marketService.constructRelationalStructure(this.id).then(result => {
+        this.marketService.get(this.id).then(result => {
             this.branchesRef.current?.updateAssignedBranches(result.branches)
             this.dayRef.current?.setState({
                 marketEventDetails: result

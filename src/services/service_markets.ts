@@ -3,7 +3,10 @@ import { AssignedBranche, Geography, Markets, Page, Rows, Lot, Obstacle, Assignm
 import { Service } from './service'
 import { BrancheService } from './service_lookup'
 
-export default class MarketsService extends Service {
+
+
+export default class MarketsService extends Service<Markets> {
+    
     async retrieve(): Promise<Markets> {
         // Retrieve from Cache
         const cachedMarkets = localStorage.getItem(`bwdm_cache_markets`)
@@ -31,35 +34,17 @@ export default class MarketsService extends Service {
     }
 }
 
-export class MarketService extends Service {
-    async retrieve(route: string): Promise<Rows> {
-        // Retrieve from Cache
-        const cachedMarket = localStorage.getItem(`bwdm_cache_${route}_market`)
-        if (cachedMarket) {
-            console.debug(`Market for ${route} is cached`)
-            return JSON.parse(cachedMarket)
-        }
-        console.debug(`Market for ${route} not cached`)
-
-        // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/markt.json")
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                // Cache
-                localStorage.setItem(`bwdm_cache_${route}_market`, JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+export class RowsService extends Service<Rows> {
+    async update(route: string, data: Rows) {
+        return this.postData(route, "rows", data)
     }
 
+    async retrieve(route: string): Promise<Rows> {
+        return this.getData(route, "rows")
+    }
+}
+
+export class MarketService extends Service<Rows> {
     getRow(obstacle: Obstacle, matrix: any[]): [number, number] {
         // Object Before Obstacle
         const oStart = matrix.find(e => e.plaatsId === obstacle.kraamA)
@@ -71,22 +56,22 @@ export class MarketService extends Service {
         return [oStartPosition, oEndPosition]
     }
 
-    async constructRelationalStructure(route: string): Promise<MarketEventDetails> {
+    async get(route: string): Promise<MarketEventDetails> {
         const _b = await new BranchesService().retrieve(route).then(result => result) // branches.json
         const _g = await new GeographyService().retrieve(route).then(result => result) // geografie.json
         const _l = await new LotsService().retrieve(route).then(result => result) // locaties.json
-        const _m = await this.retrieve(route).then(result => result) // markt.json
+        const _r = await new RowsService().retrieve(route).then(result => result) // markt.json
         const _p = await new PagesService().retrieve(route).then(result => result) // paginas.json
         const _bb = await new BrancheService().retrieve().then(result => result)
 
         // replace row items with locations
         const rowSets: (Lot | Obstacle)[] = []
-        _m.rows.forEach((row: string[], rowsetindex: number) => {
+        _r.rows.forEach((row: string[], rowsetindex: number) => {
             row.forEach((lot: string, rowindex: number) => {
                 const _Lot: Lot | undefined = _l.find(e => e.plaatsId === lot)
                 if (_Lot) {
                     _Lot.blockPosition = [rowsetindex, rowindex]
-                    if(rowindex === 0) {
+                    if (rowindex === 0) {
                         _Lot.blockStart = true
                     }
                     if (rowindex === row.length - 1) {
@@ -156,122 +141,42 @@ export class MarketService extends Service {
     }
 }
 
-export class BranchesService extends Service {
+export class BranchesService extends Service<AssignedBranche[]> {
+    async update(route: string, data: AssignedBranche[]) {
+        return this.postData(route, "branches", data)
+    }
+
     async retrieve(route: string): Promise<AssignedBranche[]> {
-        // Retrieve from Cache
-        const cachedBranches = localStorage.getItem(`bwdm_cache_${route}_branches`)
-        if (cachedBranches) {
-            console.debug(`Branches for ${route} are cached`)
-            return JSON.parse(cachedBranches)
-        }
-        console.debug(`Branches for ${route} not cached`)
-
-        // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/branches.json")
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                // Cache
-                localStorage.setItem(`bwdm_cache_${route}_branches`, JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        return this.getData(route, "branches")
     }
 }
 
-export class GeographyService extends Service {
+export class GeographyService extends Service<Geography> {
+    async update(route: string, data: Geography) {
+        return this.postData(route, "geography", data)
+    }
+
     async retrieve(route: string): Promise<Geography> {
-        // Retrieve from Cache
-        const cachedGeography = localStorage.getItem(`bwdm_cache_${route}_geography`)
-        if (cachedGeography) {
-            console.debug(`Geography for ${route} are cached`)
-            return JSON.parse(cachedGeography)
-        }
-        console.debug(`Geography for ${route} not cached`)
-
-        // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/geografie.json")
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                // Cache
-                localStorage.setItem(`bwdm_cache_${route}_geography`, JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        return this.getData(route, "geography")
     }
 }
 
-export class LotsService extends Service {
+export class LotsService extends Service<Lot[]> {
+    async update(route: string, data: Lot[]) {
+        return this.postData(route, "lots", data)
+    }
+
     async retrieve(route: string): Promise<Lot[]> {
-        // Retrieve from Cache
-        const cachedLots = localStorage.getItem(`bwdm_cache_${route}_lots`)
-        if (cachedLots) {
-            console.debug(`Lots for ${route} are cached`)
-            return JSON.parse(cachedLots)
-        }
-        console.debug(`Lots for ${route} not cached`)
-
-        // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/locaties.json")
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                // Cache
-                localStorage.setItem(`bwdm_cache_${route}_lots`, JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        return this.getData(route, "lots")
     }
 }
 
-export class PagesService extends Service {
-    async retrieve(route: string): Promise<Page[]> {
-        // Retrieve from Cache
-        const cachedPages = localStorage.getItem(`bwdm_cache_${route}_pages`)
-        if (cachedPages) {
-            console.debug(`Pages for ${route} are cached`)
-            return JSON.parse(cachedPages)
-        }
-        console.debug(`Pages for ${route} not cached`)
+export class PagesService extends Service<Page[]> {
+    async update(route: string, data: Page[]) {
+        return this.postData(route, "pages", data)
+    }
 
-        // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/" + route + "/paginas.json")
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                // Cache
-                localStorage.setItem(`bwdm_cache_${route}_pages`, JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+    async retrieve(route: string): Promise<Page[]> {
+        return this.getData(route, "pages")
     }
 }
