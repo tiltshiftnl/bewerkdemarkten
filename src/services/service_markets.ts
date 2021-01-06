@@ -44,6 +44,46 @@ export class RowsService extends Service<Rows> {
     }
 }
 
+export class BranchesService extends Service<AssignedBranche[]> {
+    async update(route: string, data: AssignedBranche[]) {
+        return this.postData(route, "branches", data)
+    }
+
+    async retrieve(route: string): Promise<AssignedBranche[]> {
+        return this.getData(route, "branches")
+    }
+}
+
+export class GeographyService extends Service<Geography> {
+    async update(route: string, data: Geography) {
+        return this.postData(route, "geography", data)
+    }
+
+    async retrieve(route: string): Promise<Geography> {
+        return this.getData(route, "geography")
+    }
+}
+
+export class LotsService extends Service<Lot[]> {
+    async update(route: string, data: Lot[]) {
+        return this.postData(route, "lots", data)
+    }
+
+    async retrieve(route: string): Promise<Lot[]> {
+        return this.getData(route, "lots")
+    }
+}
+
+export class PagesService extends Service<Page[]> {
+    async update(route: string, data: Page[]) {
+        return this.postData(route, "pages", data)
+    }
+
+    async retrieve(route: string): Promise<Page[]> {
+        return this.getData(route, "pages")
+    }
+}
+
 export class MarketService extends Service<Rows> {
     getRow(obstacle: Obstacle, matrix: any[]): [number, number] {
         // Object Before Obstacle
@@ -154,45 +194,5 @@ export class MarketService extends Service<Rows> {
             })
         }
         return { branches: newBranches, pages: newPages }
-    }
-}
-
-export class BranchesService extends Service<AssignedBranche[]> {
-    async update(route: string, data: AssignedBranche[]) {
-        return this.postData(route, "branches", data)
-    }
-
-    async retrieve(route: string): Promise<AssignedBranche[]> {
-        return this.getData(route, "branches")
-    }
-}
-
-export class GeographyService extends Service<Geography> {
-    async update(route: string, data: Geography) {
-        return this.postData(route, "geography", data)
-    }
-
-    async retrieve(route: string): Promise<Geography> {
-        return this.getData(route, "geography")
-    }
-}
-
-export class LotsService extends Service<Lot[]> {
-    async update(route: string, data: Lot[]) {
-        return this.postData(route, "lots", data)
-    }
-
-    async retrieve(route: string): Promise<Lot[]> {
-        return this.getData(route, "lots")
-    }
-}
-
-export class PagesService extends Service<Page[]> {
-    async update(route: string, data: Page[]) {
-        return this.postData(route, "pages", data)
-    }
-
-    async retrieve(route: string): Promise<Page[]> {
-        return this.getData(route, "pages")
     }
 }

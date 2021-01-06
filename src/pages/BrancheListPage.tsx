@@ -128,6 +128,14 @@ export default class BrancheListPage extends Component {
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
+            <Button type="primary"
+                onClick={() => {
+                    if(this.state.branches){
+                        this.brancheService.update(this.state.branches)
+                    }
+                }}
+                style={{ margin: '20px' }}
+            >Opslaan</Button>
             </>
     }
 }

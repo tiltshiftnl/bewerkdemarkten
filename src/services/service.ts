@@ -15,20 +15,31 @@ export class Service<T> {
         throw error
     }
 
-    getFilename(dataset: datasetType) {
-        switch (dataset) {
-            case "pages":
-                return "paginas.json"
-            case "lots":
-                return "locaties.json"
-            case "geography":
-                return "geografie.json"
-            case "branches":
-                return "branches.json"
-                case "rows":
-                    return "markt.json"
-            default:
-                return ""
+    getFilename(route: string, dataset: datasetType) {
+        if (route !== "generic") {
+            switch (dataset) {
+                case "pages":
+                    return `${this.config.API_BASE_URL}/markt/${route}/paginas.json`
+                case "lots":
+                    return `${this.config.API_BASE_URL}/markt/${route}/locaties.json`
+                case "geography":
+                    return `${this.config.API_BASE_URL}/markt/${route}/geografie.json`
+                case "branches":
+                    return `${this.config.API_BASE_URL}/markt/${route}/branches.json`
+                    case "rows":
+                        return `${this.config.API_BASE_URL}/markt/${route}/markt.json`
+                default:
+                    return ""
+            }
+        } else if (route === "generic") {
+            switch (dataset) {
+                case "branches":
+                    return `${this.config.API_BASE_URL}/markt/branches.json`
+                default:
+                    return ""
+            }
+        } else {
+            return ""
         }
     }
 
@@ -42,7 +53,7 @@ export class Service<T> {
         console.debug(`${dataset} for ${route} not cached`)
 
         // Fetch
-        return fetch(`${this.config.API_BASE_URL}/markt/${route}/${this.getFilename(dataset)}`)
+        return fetch(this.getFilename(route, dataset))
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -64,7 +75,7 @@ export class Service<T> {
         // Update Cache
         localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(data))
         // Post
-        return fetch(`${this.config.API_BASE_URL}/markt/${route}/${this.getFilename(dataset)}`,
+        return fetch(this.getFilename(route, dataset),
             {
                 method: "POST",
                 body: JSON.stringify(data),

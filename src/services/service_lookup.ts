@@ -29,6 +29,10 @@ export class BrancheService extends Service<Branche[]> {
                 this.handleError(error)
             })
     }
+
+    async update(data: Branche[]) {
+        return this.postData("generic", "branches", data)
+    }
 }
 
 export class DaysClosedService extends Service<string[]> {
