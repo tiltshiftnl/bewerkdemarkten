@@ -133,6 +133,7 @@ export default class DayPage extends DynamicBase {
         })
         this.getPlan()
         this.marketService.get(this.id).then(result => {
+            console.log(result.branches)
             this.branchesRef.current?.updateAssignedBranches(result.branches)
             this.setState({
                 marketEventDetails: result,

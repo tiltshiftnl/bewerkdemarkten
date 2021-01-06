@@ -168,9 +168,6 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                     if(_export) {
                         this.branchesService.update(`${this.props.id}`, _export)
                     }
-                    //console.log(this.props.id)
-                    //console.log(_export)
-                    
                 }}
                 style={{ margin: '20px' }}
             >Opslaan</Button>
