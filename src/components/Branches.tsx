@@ -1,7 +1,7 @@
 import { Button, InputNumber, Select, Switch } from "antd"
 import React, { Component } from "react"
 import { AssignedBranche, Branche } from "../models"
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import CSS from 'csstype'
 import { getTextColor } from "../helpers/PresentationHelpers"
 import { BranchesService } from "../services/service_markets"
@@ -118,14 +118,16 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                                 onChange={(value: string | number | undefined) => {
                                     if (value && this.state.branches) {
                                         const _branches = this.state.branches
-                                        _branches[i].maximumPlaatsen = value as number
+                                        _branches[i].maximumPlaatsen = parseInt(value.toString())
                                         this.updateAssignedBranches(_branches)
                                     }
                                 }} />
                         </td>
                         <td>{branche.allocated && <>{branche.allocated}</>}</td>
-                        <td><MinusCircleOutlined
-                            className="dynamic-button"
+                        <td><Button
+                            danger
+                            type="primary"
+                            icon={<DeleteOutlined/>}
                             onClick={() => {
                                 if (this.state.branches) {
                                     let _branches = this.state.branches
@@ -168,6 +170,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                     if(_export) {
                         this.branchesService.update(`${this.props.id}`, _export)
                     }
+                    // TODO: Transport the branches to the marketDetail
                 }}
                 style={{ margin: '20px' }}
             >Opslaan</Button>

@@ -110,10 +110,11 @@ export default class DayPage extends DynamicBase {
         })
     }
 
-    updateAssignedBranches = (lookupBranches: AssignedBranche[]) => {
+    updateAssignedBranches = (branches: AssignedBranche[]) => {
+        console.log("updateAssignedBranches")
         const _m = this.state.marketEventDetails
         if (_m) {
-            _m.branches = lookupBranches
+            _m.branches = branches
             this.setState({
                 marketEventDetails: _m
             }, () => {

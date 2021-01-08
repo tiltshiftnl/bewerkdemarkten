@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { HomeOutlined } from '@ant-design/icons'
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
-import { MinusCircleOutlined, PlusOutlined, BgColorsOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, BgColorsOutlined } from '@ant-design/icons';
 import { getTextColor } from '../helpers/PresentationHelpers'
 import CSS from 'csstype'
 import { ChromePicker } from 'react-color'
@@ -101,8 +101,10 @@ export default class BrancheListPage extends Component {
                                     <BgColorsOutlined style={{ color: getTextColor(branche.color) }} className="market-button" />
                                 </Popover>
                             </td>
-                            <td><MinusCircleOutlined
-                                className="dynamic-button"
+                            <td><Button
+                    danger
+                    type="primary"
+                    icon={<DeleteOutlined />}
                                 onClick={() => {
                                     if (this.state.branches) {
                                         const _branches = this.state.branches

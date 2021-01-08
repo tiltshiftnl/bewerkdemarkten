@@ -64,8 +64,10 @@ export default class ObstacleListPage extends Component {
         </Breadcrumb>
             {this.state.properties.map((obstacle: string, i: number) => {
                 return <Row key={i} gutter={[8, 8]}><Col><Input value={obstacle} disabled={true}/></Col><Col>
-                {/* <MinusCircleOutlined
-                    className="dynamic-button"
+                {/* <Button
+                    danger
+                    type="primary"
+                    icon={<DeleteOutlined />}
                     onClick={() => this.remove(obstacle)}
                 /> */}
                 </Col></Row>

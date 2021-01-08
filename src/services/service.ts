@@ -71,9 +71,15 @@ export class Service<T> {
             })
     }
 
-    async postData(route: string, dataset: datasetType, data: T) {
+    async postData(route: string, dataset: datasetType, data: T, persistent: boolean = false) {
+        console.log(data)
         // Update Cache
         localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(data))
+
+        if(!persistent) {
+            return localStorage.getItem(`bwdm_cache_${route}_${dataset}`)
+        }
+
         // Post
         return fetch(this.getFilename(route, dataset),
             {

@@ -1,10 +1,10 @@
-import { Input, Tabs, Tooltip } from "antd"
+import { Button, Input, Tabs } from "antd"
 import React, { RefObject, Component, createRef, MouseEvent, KeyboardEvent, ChangeEvent } from "react"
 import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
-import { PlusCircleOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 const { TabPane } = Tabs
 
 interface DayPageState {
@@ -221,7 +221,7 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
         this.setState({
             marketEventDetails: _marketEventDetails,
         }, () => {
-            this.onTabChange("" +(_marketEventDetails.pages.length - 1))  
+            this.onTabChange("" + (_marketEventDetails.pages.length - 1))
         })
     }
 
@@ -239,13 +239,13 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                     // Need a way to group panel content by title for the upper and lower blocks.
                     return <TabPane tab={page.title} key={i}>
                         <><Input type="text" placeholder="Nieuwe pagina" value={page.title || ""}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                            const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
-                            _marketEventDetails.pages[i].title = e.target.value
-                            this.setState({
-                                marketEventDetails: _marketEventDetails
-                            })
-                        }} /></>
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+                                _marketEventDetails.pages[i].title = e.target.value
+                                this.setState({
+                                    marketEventDetails: _marketEventDetails
+                                })
+                            }} /></>
                         <div className="block-wrapper">
                             {page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
@@ -273,14 +273,16 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                                                 }}
                                             />
                                         })}
-                                        <Tooltip title="Nieuw vak">
-                                            <PlusCircleOutlined
-                                                className="dynamic-button"
-                                                onClick={() => {
-                                                    this.lotAdd([pageindex, layoutindex])
-                                                }}
-                                            />
-                                        </Tooltip>
+                                        <Button
+                                            title="Kraam of obstakel toevoegen"
+                                            type="dashed"
+                                            className="add-lot"
+                                            icon={<PlusOutlined />}
+                                            onClick={() => {
+                                                this.lotAdd([pageindex, layoutindex])
+                                            }}
+                                        />
+
                                     </div>
                                     {layout.class === 'block-right' &&
                                         <LayoutEdit
@@ -299,6 +301,12 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                 ref={this.lotEdit}
                 branches={this.state.marketEventDetails.branches}
                 changed={this.lotChanged} delete={this.lotDelete} prepend={this.lotPrepend} append={this.lotAppend} />
+            <Button type="primary"
+                onClick={() => {
+                    console.log(this.state.marketEventDetails)
+                }}
+                style={{ margin: '20px' }}
+            >Opslaan</Button>
         </>
     }
 }

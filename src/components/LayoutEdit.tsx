@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Col, Input, Row, Select } from "antd"
+import { Button, Col, Input, Row, Select } from "antd"
 import { MarketLayout } from "../models";
-import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout | undefined, position: [number, number], add?: boolean) => void, position: [number, number] }> {
     readonly state: { layout: MarketLayout } = {
         layout: {
@@ -74,16 +74,20 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                 </Select>
             </Col>
             <Col>
-                <MinusCircleOutlined
-                    className="dynamic-button"
+                <Button
+                    danger
+                    type="primary"
+                    icon={<DeleteOutlined />}
                     onClick={() => {
                         if (this.props.changed) {
                             this.props.changed(undefined, this.props.position)
                         }
                     }}
                 />
-                <PlusCircleOutlined
-                    className="dynamic-button"
+                <Button
+
+                    type="primary"
+                    icon={<PlusOutlined />}
                     onClick={() => {
                         if (this.props.changed) {
                             const _newLayout: MarketLayout = {

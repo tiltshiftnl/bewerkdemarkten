@@ -1,9 +1,9 @@
-import { Col, Input, Row, Select, Checkbox, Radio, Tooltip } from "antd"
+import { Col, Input, Row, Select, Checkbox, Radio, Button } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
-import { LeftCircleOutlined, RightCircleOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { LeftOutlined, RightOutlined, DeleteOutlined } from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
@@ -38,9 +38,9 @@ export default class LotEdit extends Component<LotEditProps> {
 
     componentDidMount = () => {
         this.propertyService.retrieve().then((properties: string[]) => {
-            properties.sort((a,b) =>{
-                if(a < b) { return -1}
-                if(a > b) { return 1}
+            properties.sort((a, b) => {
+                if (a < b) { return -1 }
+                if (a > b) { return 1 }
                 return 0
             })
             this.setState({
@@ -48,9 +48,9 @@ export default class LotEdit extends Component<LotEditProps> {
             })
         })
         this.obstacleTypeService.retrieve().then((obstacleTypes: string[]) => {
-            obstacleTypes.sort((a,b) =>{
-                if(a < b) { return -1}
-                if(a > b) { return 1}
+            obstacleTypes.sort((a, b) => {
+                if (a < b) { return -1 }
+                if (a > b) { return 1 }
                 return 0
             })
             this.setState({
@@ -274,9 +274,9 @@ export default class LotEdit extends Component<LotEditProps> {
                                         }}
                                     >
                                         <Select.Option key={""} value={""}>{[]}</Select.Option>
-                                        {this.props.branches.sort((a,b) =>{
-                                            if(a.brancheId < b.brancheId) { return -1}
-                                            if(a.brancheId > b.brancheId) { return 1}
+                                        {this.props.branches.sort((a, b) => {
+                                            if (a.brancheId < b.brancheId) { return -1 }
+                                            if (a.brancheId > b.brancheId) { return 1 }
                                             return 0
                                         }).filter((item: AssignedBranche) => item.brancheId !== "bak").map((br, i) => {
                                             return <Select.Option key={i} value={br.brancheId}>{br.brancheId}</Select.Option>
@@ -301,39 +301,40 @@ export default class LotEdit extends Component<LotEditProps> {
                         </>}
                     <Row gutter={formGutter}>
                         <Col>
-                            <Tooltip title="Nieuwe voor geselecteerd item invoegen">
-                                <LeftCircleOutlined
-                                    className="dynamic-button"
-                                    onClick={() => {
-                                        // Tell parent component to remove this lot.
-                                        if (this.props.prepend && this.state.currentPosition) {
-                                            this.props.prepend(this.state.currentPosition)
-                                        }
-                                    }}
-                                />
-                            </Tooltip>
-                            <Tooltip title="Verwijderen">
-                                <MinusCircleOutlined
-                                    className="dynamic-button"
-                                    onClick={() => {
-                                        // Tell parent component to remove this lot.
-                                        if (this.props.delete && this.state.currentPosition) {
-                                            this.props.delete(this.state.currentPosition)
-                                        }
-                                    }}
-                                />
-                            </Tooltip>
-                            <Tooltip title="Nieuwe achter geselecteerd item invoegen">
-                                <RightCircleOutlined
-                                    className="dynamic-button"
-                                    onClick={() => {
-                                        // Tell parent component to remove this lot.
-                                        if (this.props.append && this.state.currentPosition) {
-                                            this.props.append(this.state.currentPosition)
-                                        }
-                                    }}
-                                />
-                            </Tooltip>
+                            <Button
+                                title="Nieuwe voor geselecteerd item invoegen"
+                                type="primary"
+                                icon={<LeftOutlined />}
+                                onClick={() => {
+                                    // Tell parent component to remove this lot.
+                                    if (this.props.prepend && this.state.currentPosition) {
+                                        this.props.prepend(this.state.currentPosition)
+                                    }
+                                }}
+                            />
+                            <Button
+                                title="Verwijderen"
+                                danger
+                                type="primary"
+                                icon={<DeleteOutlined />}
+                                onClick={() => {
+                                    // Tell parent component to remove this lot.
+                                    if (this.props.delete && this.state.currentPosition) {
+                                        this.props.delete(this.state.currentPosition)
+                                    }
+                                }}
+                            />
+                            <Button
+                                title="Nieuwe achter geselecteerd item invoegen"
+                                type="primary"
+                                icon={<RightOutlined />}
+                                onClick={() => {
+                                    // Tell parent component to remove this lot.
+                                    if (this.props.append && this.state.currentPosition) {
+                                        this.props.append(this.state.currentPosition)
+                                    }
+                                }}
+                            />
                         </Col>
                     </Row>
                 </>}
