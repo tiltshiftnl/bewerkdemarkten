@@ -184,10 +184,14 @@ export default class MarketPage extends Component<RouteComponentProps> {
 
                         {
                             Object.keys(this.state.selectedMarket.events).map((key: string, i: number) => {
+                                let color = "blue"
+                                if(this.state.selectedMarket && !this.state.selectedMarket.events[key].weekday) {
+                                    color = "purple"
+                                }
                                 return <Tag
                                     onClick={() => this.props.history.push({ pathname: `/market/day/${this.id}-${key}` })}
                                     onClose={() => this.handleClose(key)}
-                                    color="blue"
+                                    color={color}
                                     key={key}
                                     closable={true}>
                                     <span key={key} className="event">{key}</span>

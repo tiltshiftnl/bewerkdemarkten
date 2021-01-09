@@ -2,8 +2,6 @@ import React from "react"
 import { Component } from "react"
 import { Market } from "../models"
 import { Link } from "react-router-dom"
-//import { List } from "antd"
-//import { RightOutlined } from '@ant-design/icons'
 
 export default class MarketListItem extends Component<{ market: Market, marketId: string }> {
     readonly state: { market: Market } = {
@@ -27,7 +25,12 @@ export default class MarketListItem extends Component<{ market: Market, marketId
             }}>
                 <span style={{fontWeight: "bold", fontSize: "1.2em"}}>{marketId} </span>
                 <span style={{color: "rgba(0, 0, 0, 0.45)"}}> {this.state.market.name || ""}</span>
-                {/* <span style={{ color: "rgba(0,0,0,0.20"}}> Amsterdam</span> */}
+                {/* {this.state.market && <>{Object.keys(this.state.market.events).map((key: string) => {
+                    if(this.state.market.events[key].weekday){
+                        return <div key={key}>{key}</div>
+                    }
+                    return <div key={key}>{key}*</div>
+                })}</>} */}
         </Link>
     }
 }

@@ -1,6 +1,7 @@
 import React, { createRef, MouseEvent, RefObject, KeyboardEvent } from "react"
 import Day from "../components/Day"
-import MarketsService, { MarketService } from "../services/service_markets"
+import MarketsService from "../services/service_markets"
+import {Transformer} from "../services/transformer"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb, Button, Tabs, Upload, message, Row, Col } from 'antd'
 import { HomeOutlined, UploadOutlined } from '@ant-design/icons'
@@ -29,7 +30,7 @@ export default class DayPage extends DynamicBase {
     dayRef: RefObject<Day>
 
     marketsService: MarketsService
-    marketService: MarketService
+    transformer: Transformer
 
     lookupBrancheService: BrancheService
 
@@ -37,15 +38,13 @@ export default class DayPage extends DynamicBase {
         super(props)
         this.config = new Configuration()
         
-        this.marketService = new MarketService()
+        this.transformer = new Transformer()
         this.marketsService = new MarketsService()
         this.lookupBrancheService = new BrancheService()
 
         this.branchesRef = createRef()
         this.dayRef = createRef()
     }
-
-
 
     getPlan = () => {
         const that = this
@@ -133,7 +132,7 @@ export default class DayPage extends DynamicBase {
             })
         })
         this.getPlan()
-        this.marketService.get(this.id).then(result => {
+        this.transformer.encode(this.id).then(result => {
             console.log(result.branches)
             this.branchesRef.current?.updateAssignedBranches(result.branches)
             this.setState({
