@@ -9,6 +9,23 @@ export const getTextColor = (hexcolor: string): string => {
     return (yiq < 40) ? '#2980b9' : "black"
 }
 
+
+export const getFileName = (key: string) => {
+    switch (key) {
+        case "pages":
+            return "paginas.json"
+        case "lots":
+            return "locaties.json"
+        case "geography":
+            return "geografie.json"
+        case "branches":
+            return "branches.json"
+        case "rows":
+            return "markt.json"
+        default:
+            return ""
+    }
+}
 export const zipMarket = (marketDayId: string) => {
     const zip = new JSZip();
 
@@ -16,7 +33,7 @@ export const zipMarket = (marketDayId: string) => {
     ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_cache_${marketDayId}_${key}`)
         if (data) {
-            zip.file(`${key}.json`, data)
+            zip.file(`${getFileName(key)}.json`, data)
         }
     })
 
@@ -25,16 +42,6 @@ export const zipMarket = (marketDayId: string) => {
             downloadObjectAsZip("data:application/zip;base64," + content, `${marketDayId}.zip`)
         });
 }
-
-// export const downloadObjectAsJson = (exportObj: any, exportName: string) => {
-//     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-//     var downloadAnchorNode = document.createElement('a');
-//     downloadAnchorNode.setAttribute("href", dataStr);
-//     downloadAnchorNode.setAttribute("download", exportName);
-//     document.body.appendChild(downloadAnchorNode); // required for firefox
-//     downloadAnchorNode.click();
-//     downloadAnchorNode.remove();
-// }
 
 export const downloadObjectAsZip = (base64: string, filename: string) => {
     let downloadAnchorNode = document.createElement('a');
