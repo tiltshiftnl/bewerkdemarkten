@@ -33,7 +33,7 @@ export const zipMarket = (marketDayId: string) => {
     ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_cache_${marketDayId}_${key}`)
         if (data) {
-            zip.file(`${getFileName(key)}.json`, data)
+            zip.file(getFileName(key), data)
         }
     })
 
