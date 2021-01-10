@@ -301,12 +301,12 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
                 ref={this.lotEdit}
                 branches={this.state.marketEventDetails.branches}
                 changed={this.lotChanged} delete={this.lotDelete} prepend={this.lotPrepend} append={this.lotAppend} />
-            <Button type="primary"
+            {/* <Button type="primary"
                 onClick={() => {
                     console.log(this.state.marketEventDetails)
                 }}
                 style={{ margin: '20px' }}
-            >Opslaan</Button>
+            >Opslaan</Button> */}
         </>
     }
 }

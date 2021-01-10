@@ -4,7 +4,7 @@ import MarketsService from "../services/service_markets"
 import { Transformer } from "../services/transformer"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb, Button, Tabs, Upload, message, Row, Col } from 'antd'
-import { HomeOutlined, UploadOutlined } from '@ant-design/icons'
+import { HomeOutlined, UploadOutlined, FileZipOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom"
 import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan, Event } from "../models"
 import { BrancheService } from "../services/service_lookup"
@@ -195,13 +195,27 @@ export default class DayPage extends DynamicBase {
                         <span>{this.id.split('-')[1]}</span>
                     </Breadcrumb.Item></>}
             </Breadcrumb>
-            <Row align="middle" gutter={[16, 16]}>
+            <Row align="top" gutter={[16, 16]}>
                 <Col>
                     {this.state.uploadProps &&
                         <Upload {...this.state.uploadProps}>
                             <Button icon={<UploadOutlined />}>Kaart uploaden/vervangen</Button>
                         </Upload>
                     }
+
+                </Col>
+                <Col>
+                    <Button
+                    title={`Download de JSON bestanden voor ${this.id}`}
+                    icon={<FileZipOutlined />}
+                    type="primary"
+                        onClick={() => {
+                            if (this.id) {
+                                zipMarket(this.id)
+                            }
+                        }}
+
+                    >Download</Button>
                 </Col>
             </Row>
             {this.state.lookupBranches &&
@@ -215,14 +229,7 @@ export default class DayPage extends DynamicBase {
                         <Branches id={this.id} ref={this.branchesRef} lookupBranches={this.state.lookupBranches} changed={this.updateAssignedBranches} />
                     </TabPane>
                 </Tabs>}
-            <Button type="primary"
-                onClick={() => {
-                    if (this.id) {
-                        zipMarket(this.id)
-                    }
-                }}
-                style={{ margin: '20px' }}
-            >Download</Button>
+
         </>
     }
 }
