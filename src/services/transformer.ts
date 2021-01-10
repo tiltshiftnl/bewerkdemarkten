@@ -1,4 +1,4 @@
-import { getTextColor } from "../helpers/PresentationHelpers"
+import { getTextColor } from "../common/generic"
 import { AssignedBranche, Assignment, Lot, MarketEventDetails, MarketPage, Obstacle, Page } from "../models"
 import { BrancheService } from "./service_lookup"
 import { BranchesService, GeographyService, LotsService, PagesService, RowsService } from "./service_markets"

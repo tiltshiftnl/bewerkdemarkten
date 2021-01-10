@@ -5,7 +5,7 @@ import { HomeOutlined } from '@ant-design/icons'
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import { DeleteOutlined, PlusOutlined, BgColorsOutlined } from '@ant-design/icons';
-import { getTextColor } from '../helpers/PresentationHelpers'
+import { getTextColor } from '../common/generic'
 import CSS from 'csstype'
 import { ChromePicker } from 'react-color'
 
@@ -134,6 +134,7 @@ export default class BrancheListPage extends Component {
                 onClick={() => {
                     if(this.state.branches){
                         this.brancheService.update(this.state.branches)
+                        //downloadObjectAsJson(this.state.branches, "test")
                     }
                 }}
                 style={{ margin: '20px' }}

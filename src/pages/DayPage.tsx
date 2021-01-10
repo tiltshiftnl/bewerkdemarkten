@@ -1,7 +1,7 @@
 import React, { createRef, MouseEvent, RefObject, KeyboardEvent } from "react"
 import Day from "../components/Day"
 import MarketsService from "../services/service_markets"
-import {Transformer} from "../services/transformer"
+import { Transformer } from "../services/transformer"
 import { DynamicBase } from "./DynamicBase"
 import { Breadcrumb, Button, Tabs, Upload, message, Row, Col } from 'antd'
 import { HomeOutlined, UploadOutlined } from '@ant-design/icons'
@@ -10,6 +10,7 @@ import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan, Event } fr
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
 import Configuration from "../services/configuration"
+import { zipMarket } from "../common/generic"
 
 const { TabPane } = Tabs
 
@@ -37,7 +38,7 @@ export default class DayPage extends DynamicBase {
     constructor(props: any) {
         super(props)
         this.config = new Configuration()
-        
+
         this.transformer = new Transformer()
         this.marketsService = new MarketsService()
         this.lookupBrancheService = new BrancheService()
@@ -58,7 +59,7 @@ export default class DayPage extends DynamicBase {
                 defaultFileList: []
             }
 
-            if(_event) {
+            if (_event) {
                 uploadProps = {
                     name: 'file',
                     accept: '.pdf',
@@ -81,15 +82,15 @@ export default class DayPage extends DynamicBase {
                         }
                     },
                     onRemove: (file: any) => {
-                        
+
                         fetch(`${API_BASE_URL}/markt/${_file_id}/delete/pdf`, {
                             method: 'DELETE',
                         })
-                        .then(res => res.text()) // or res.json()
-                        .then(res => console.log(res))
+                            .then(res => res.text()) // or res.json()
+                            .then(res => console.log(res))
                     }
                 }
-                if(_event.plan) {
+                if (_event.plan) {
                     uploadProps.defaultFileList = [
                         {
                             uid: '1',
@@ -97,11 +98,11 @@ export default class DayPage extends DynamicBase {
                             status: 'done',
                             response: `Kan kaart-${_file_id} niet downloaden`, // custom error message to show
                             url: `${API_BASE_URL}/markt/${_file_id}/download/pdf`,
-                          }
+                        }
                     ]
                 }
             }
-            
+
 
             this.setState({
                 uploadProps
@@ -194,13 +195,13 @@ export default class DayPage extends DynamicBase {
                         <span>{this.id.split('-')[1]}</span>
                     </Breadcrumb.Item></>}
             </Breadcrumb>
-            <Row align="middle" gutter={[16,16]}>
+            <Row align="middle" gutter={[16, 16]}>
                 <Col>
-                {this.state.uploadProps &&
-                    <Upload {...this.state.uploadProps}>
-                        <Button icon={<UploadOutlined />}>Kaart uploaden/vervangen</Button>
-                    </Upload>
-                }
+                    {this.state.uploadProps &&
+                        <Upload {...this.state.uploadProps}>
+                            <Button icon={<UploadOutlined />}>Kaart uploaden/vervangen</Button>
+                        </Upload>
+                    }
                 </Col>
             </Row>
             {this.state.lookupBranches &&
@@ -214,6 +215,14 @@ export default class DayPage extends DynamicBase {
                         <Branches id={this.id} ref={this.branchesRef} lookupBranches={this.state.lookupBranches} changed={this.updateAssignedBranches} />
                     </TabPane>
                 </Tabs>}
+            <Button type="primary"
+                onClick={() => {
+                    if (this.id) {
+                        zipMarket(this.id)
+                    }
+                }}
+                style={{ margin: '20px' }}
+            >Download</Button>
         </>
     }
 }

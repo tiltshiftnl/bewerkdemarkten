@@ -3,7 +3,7 @@ import React, { Component } from "react"
 import { AssignedBranche, Branche } from "../models"
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import CSS from 'csstype'
-import { getTextColor } from "../helpers/PresentationHelpers"
+import { getTextColor } from "../common/generic"
 import { BranchesService } from "../services/service_markets"
 
 
@@ -171,6 +171,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                         this.branchesService.update(`${this.props.id}`, _export)
                     }
                     // TODO: Transport the branches to the marketDetail
+                    
                 }}
                 style={{ margin: '20px' }}
             >Opslaan</Button>
