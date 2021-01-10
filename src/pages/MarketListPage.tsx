@@ -110,16 +110,19 @@ export default class MarketListPage extends Component {
                         <MarketListItem marketId={key} market={market} />
                     </Col>
                 })}
+                <Col key="add-market" style={{ margin: "0.5em" }}>
+                    <Button
+                    type="dashed"
+                        onClick={() => {
+                            this.setState({
+                                showModal: true
+                            })
+                        }}
+                        icon={<PlusOutlined />}
+                    >Toevoegen</Button>
+                </Col>
             </Row>
-            <Button
-                onClick={() => {
-                    this.setState({
-                        showModal: true
-                    })
-                }}
-                style={{ marginTop: '20px' }}
-                icon={<PlusOutlined />}
-            >Toevoegen</Button>
+
             <Modal
                 title="Nieuwe markt"
                 visible={this.state.showModal}

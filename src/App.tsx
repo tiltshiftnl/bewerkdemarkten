@@ -29,10 +29,10 @@ export default class App extends Component {
             <ul className="menu-item-ul">
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/markets">Markten</NavLink></li>
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/branches">Branches</NavLink></li>
-              <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/calendar">Kalender</NavLink></li>
-              <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/announcements">Mededelingen</NavLink></li>
-              <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/obstacles">Obstakels</NavLink></li>
-              <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/properties">Plaatseigenschappen</NavLink></li>
+              {/* <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/calendar">Kalender</NavLink></li> */}
+              {/* <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/announcements">Mededelingen</NavLink></li> */}
+              {/* <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/obstacles">Obstakels</NavLink></li> */}
+              {/* <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/properties">Plaatseigenschappen</NavLink></li> */}
             </ul>
             <div className="site-layout-content">
               <Switch>

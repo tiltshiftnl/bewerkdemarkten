@@ -31,6 +31,7 @@ export default class BrancheListPage extends Component {
 
     updateBranches = (branches: Branche[]) => {
         localStorage.setItem('bwdm_lookup_branches', JSON.stringify(branches))
+        this.brancheService.update(this.state.branches)
         this.setState({
             branches
         })
@@ -71,7 +72,7 @@ export default class BrancheListPage extends Component {
                                             _branches[i].brancheId = e.target.value
                                             _branches[i].number = parseInt(e.target.value.split('-')[0])
                                             this.updateBranches(_branches)
-                                            
+
                                         }
                                     }}
                                 />
@@ -86,7 +87,7 @@ export default class BrancheListPage extends Component {
                                         }
                                     }}
                                 />
-                                </td>
+                            </td>
                             <td>
 
                                 <Popover content={<ChromePicker color={branche.color} disableAlpha={true} onChange={(color: any, event: any) => {
@@ -98,13 +99,17 @@ export default class BrancheListPage extends Component {
 
 
                                 }} />} trigger="click">
-                                    <BgColorsOutlined style={{ color: getTextColor(branche.color) }} className="market-button" />
+                                    <Button
+                                        title="Kleur veranderen"
+                                        icon={<BgColorsOutlined />}
+                                    />
                                 </Popover>
                             </td>
                             <td><Button
-                    danger
-                    type="primary"
-                    icon={<DeleteOutlined />}
+                                danger
+                                title="Branche verwijderen"
+                                type="primary"
+                                icon={<DeleteOutlined />}
                                 onClick={() => {
                                     if (this.state.branches) {
                                         const _branches = this.state.branches
@@ -130,15 +135,6 @@ export default class BrancheListPage extends Component {
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            <Button type="primary"
-                onClick={() => {
-                    if(this.state.branches){
-                        this.brancheService.update(this.state.branches)
-                        //downloadObjectAsJson(this.state.branches, "test")
-                    }
-                }}
-                style={{ margin: '20px' }}
-            >Opslaan</Button>
-            </>
+        </>
     }
 }
