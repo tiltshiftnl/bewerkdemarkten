@@ -199,6 +199,7 @@ export default class MarketPage extends Component<RouteComponentProps> {
                             })
                         }
                         <Button
+                            type="dashed"
                             onClick={() => {
                                 this.setState({
                                     showModal: true
