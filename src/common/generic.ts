@@ -1,6 +1,7 @@
 import JSZip from "jszip"
 import { AssignedBranche, Geography, Lot, Page, Rows } from "../models"
 import { BranchesService, GeographyService, LotsService, PagesService, RowsService } from "../services/service_markets"
+import { message } from 'antd'
 
 export const getTextColor = (hexcolor: string): string => {
     var r = parseInt(hexcolor.substr(1, 2), 16)
@@ -53,35 +54,49 @@ export const uploadMarket = (marketDayId: string) => {
     const _rowsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_rows`)
     if(_branchesFromStorage) {
         new BranchesService().update("branches", JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) =>{
-            console.log("Branches uploaded?")
+            if(result === "ok") {
+                message.success(`Upload branches.json voor ${marketDayId} gelukt.`)
+            } else {
+                message.error(`Upload branches.json voor ${marketDayId} mislukt.`)
+            }
         })
     }
     if(_geographyFromStorage) {
         new GeographyService().update("geography", JSON.parse(_geographyFromStorage) as Geography).then((result) =>{
-            console.log(result)
-            console.log("Geography uploaded?")
+            if(result === "ok") {
+                message.success(`Upload geografie.json voor ${marketDayId} gelukt.`)
+            } else {
+                message.error(`Upload geografie.json voor ${marketDayId} mislukt.`)
+            }
         })
     }
     if(_lotsFromStorage) {
         new LotsService().update("lots", JSON.parse(_lotsFromStorage) as Lot[]).then((result) =>{
-            console.log(result)
-            console.log("Lots uploaded?")
+            if(result === "ok") {
+                message.success(`Upload locaties.json voor ${marketDayId} gelukt.`)
+            } else {
+                message.error(`Upload locaties.json voor ${marketDayId} mislukt.`)
+            }
         })
     }
     if(_pagesFromStorage) {
         new PagesService().update("pages", JSON.parse(_pagesFromStorage) as Page[]).then((result) =>{
-            console.log(result)
-            console.log("Pages uploaded?")
+            if(result === "ok") {
+                message.success(`Upload paginas.json voor ${marketDayId} gelukt.`)
+            } else {
+                message.error(`Upload paginas.json voor ${marketDayId} mislukt.`)
+            }
         })
     }
     if(_rowsFromStorage) {
         new RowsService().update("rows", JSON.parse(_rowsFromStorage) as Rows).then((result) =>{
-            console.log(result)
-            console.log("Rows uploaded?")
+            if(result === "ok") {
+                message.success(`Upload markt.json voor ${marketDayId} gelukt.`)
+            } else {
+                message.error(`Upload markt.json voor ${marketDayId} mislukt.`)
+            }
         })
     }
-    console.log("Upload finished?")   
-
 }
 
 export const downloadObjectAsZip = (base64: string, filename: string) => {
