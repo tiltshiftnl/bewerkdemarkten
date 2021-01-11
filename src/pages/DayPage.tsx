@@ -10,7 +10,7 @@ import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan, Event } fr
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
 import Configuration from "../services/configuration"
-import { zipMarket } from "../common/generic"
+import { uploadMarket, zipMarket } from "../common/generic"
 
 const { TabPane } = Tabs
 
@@ -208,14 +208,27 @@ export default class DayPage extends DynamicBase {
                     <Button
                     title={`Download de JSON bestanden voor ${this.id}`}
                     icon={<FileZipOutlined />}
-                    type="primary"
+                    type="link"
                         onClick={() => {
                             if (this.id) {
                                 zipMarket(this.id)
                             }
                         }}
 
-                    >Download</Button>
+                    >Download JSON</Button>
+                    <Button
+                    title={`Upload de JSON bestanden voor ${this.id} naar de centrale server`}
+                    style={{marginLeft: "1em"}}
+                    icon={<UploadOutlined />}
+                    type="primary"
+                        onClick={() => {
+                            if (this.id) {
+                                uploadMarket(this.id)
+                                console.log(this.id)
+                            }
+                        }}
+
+                    >{this.id} opslaan</Button>
                 </Col>
             </Row>
             {this.state.lookupBranches &&

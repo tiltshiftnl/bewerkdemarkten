@@ -96,10 +96,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                     .layout[this.state.currentPosition[1]]
                     .lots[this.state.currentPosition[2]] = lot
 
-                // Now we need to refresh the props.
-                this.setState({
-                    marketEventDetails: _marketEventDetails
-                })
+                //Update local storage
+                this.updateStorage(_marketEventDetails)
             }
         }
     }
@@ -130,11 +128,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         }
         // Put one lot in front of...
         _cm.pages[position[0]].layout[position[1]].lots.splice(position[2] + 1, 0, _newLot)
-        this.setState({
-            marketEventDetails: _cm
-        }, () => {
-            this.lotToggle(position[0], position[1], position[2])
-        })
+        this.updateStorage(_cm)         
+        this.lotToggle(position[0], position[1], position[2])
     }
 
     lotPrepend = (position: [number, number, number]) => {
@@ -149,11 +144,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
             }
             // Put one lot after...
             _cm.pages[position[0]].layout[position[1]].lots.splice(position[2], 0, _newLot)
-            this.setState({
-                marketEventDetails: _cm
-            }, () => {
-                this.lotToggle(position[0], position[1], position[2] + 1)
-            })
+            this.updateStorage(_cm)
+            this.lotToggle(position[0], position[1], position[2] + 1)
         }
     }
 
@@ -161,9 +153,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         const _cm: MarketEventDetails = this.state.marketEventDetails
         if (_cm.pages[position[0]].layout[position[1]].lots[position[2]]) {
             delete _cm.pages[position[0]].layout[position[1]].lots[position[2]]
-            this.setState({
-                marketEventDetails: _cm
-            })
+            //Update local storage
+            this.updateStorage(_cm)
         }
     }
 
@@ -177,11 +168,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
             type: "stand"
         }
         const newLotPosition = _cm.pages[position[0]].layout[position[1]].lots.push(_newLot)
-        this.setState({
-            marketEventDetails: _cm
-        }, () => {
-            this.lotToggle(position[0], position[1], newLotPosition - 1)
-        })
+        this.updateStorage(_cm)
+        this.lotToggle(position[0], position[1], newLotPosition - 1)
     }
 
     layoutChanged = (layout: MarketLayout | undefined, position: [number, number], add?: boolean) => {
@@ -195,15 +183,16 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         } else {
             _marketEventDetails.pages[position[0]].layout.splice(position[1], 1)
         }
-        this.setState({
-            marketEventDetails: _marketEventDetails
-        })
-        
+
         //Update local storage
-        this.updateStorage(_marketEventDetails.pages)
+        this.updateStorage(_marketEventDetails)
     }
 
-    updateStorage(pages: MarketPage[]) {
+    updateStorage(newMarketState: MarketEventDetails) {
+        this.setState({
+            marketEventDetails: newMarketState
+        })
+        const { pages } = newMarketState
         localStorage.setItem(`bwdm_cache_${this.props.id}_lots`, JSON.stringify(this.transformer.layoutToStands(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_rows`, JSON.stringify(this.transformer.layoutToRows(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_geography`, JSON.stringify(this.transformer.layoutToGeography(pages)))
@@ -218,9 +207,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
         if (typeof e === "string") {
             _marketEventDetails.pages.splice(parseInt(e), 1)
-            this.setState({
-                marketEventDetails: _marketEventDetails
-            })
+            //Update local storage
+            this.updateStorage(_marketEventDetails)
         } else {
             _marketEventDetails.pages.push({
                 title: "Nieuwe pagina",
@@ -233,11 +221,9 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                 }]
             })
         }
-        this.setState({
-            marketEventDetails: _marketEventDetails,
-        }, () => {
-            this.onTabChange("" + (_marketEventDetails.pages.length - 1))
-        })
+        //Update local storage
+        this.updateStorage(_marketEventDetails)
+        this.onTabChange("" + (_marketEventDetails.pages.length - 1))
     }
 
     render() {
@@ -257,9 +243,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
                                 _marketEventDetails.pages[i].title = e.target.value
-                                this.setState({
-                                    marketEventDetails: _marketEventDetails
-                                })
+                                this.updateStorage(_marketEventDetails)
                             }} /></>
                         <div className="block-wrapper">
                             {page.layout.map((layout: MarketLayout, i: number) => {
@@ -316,12 +300,6 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                 ref={this.lotEdit}
                 branches={this.state.marketEventDetails.branches}
                 changed={this.lotChanged} delete={this.lotDelete} prepend={this.lotPrepend} append={this.lotAppend} />
-            {/* <Button type="primary"
-                onClick={() => {
-                    console.log(this.state.marketEventDetails)
-                }}
-                style={{ margin: '20px' }}
-            >Opslaan</Button> */}
         </>
     }
 }

@@ -1,4 +1,6 @@
 import JSZip from "jszip"
+import { AssignedBranche, Geography, Lot, Page, Rows } from "../models"
+import { BranchesService, GeographyService, LotsService, PagesService, RowsService } from "../services/service_markets"
 
 export const getTextColor = (hexcolor: string): string => {
     var r = parseInt(hexcolor.substr(1, 2), 16)
@@ -40,6 +42,46 @@ export const zipMarket = (marketDayId: string) => {
         .then(function (content) {
             downloadObjectAsZip("data:application/zip;base64," + content, `${marketDayId}.zip`)
         });
+}
+
+
+export const uploadMarket = (marketDayId: string) => {
+    const _branchesFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_branches`)
+    const _geographyFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_geography`)
+    const _lotsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_lots`)
+    const _pagesFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_pages`)
+    const _rowsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_rows`)
+    if(_branchesFromStorage) {
+        new BranchesService().update("branches", JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) =>{
+            console.log("Branches uploaded?")
+        })
+    }
+    if(_geographyFromStorage) {
+        new GeographyService().update("geography", JSON.parse(_geographyFromStorage) as Geography).then((result) =>{
+            console.log(result)
+            console.log("Geography uploaded?")
+        })
+    }
+    if(_lotsFromStorage) {
+        new LotsService().update("lots", JSON.parse(_lotsFromStorage) as Lot[]).then((result) =>{
+            console.log(result)
+            console.log("Lots uploaded?")
+        })
+    }
+    if(_pagesFromStorage) {
+        new PagesService().update("pages", JSON.parse(_pagesFromStorage) as Page[]).then((result) =>{
+            console.log(result)
+            console.log("Pages uploaded?")
+        })
+    }
+    if(_rowsFromStorage) {
+        new RowsService().update("rows", JSON.parse(_rowsFromStorage) as Rows).then((result) =>{
+            console.log(result)
+            console.log("Rows uploaded?")
+        })
+    }
+    console.log("Upload finished?")   
+
 }
 
 export const downloadObjectAsZip = (base64: string, filename: string) => {
