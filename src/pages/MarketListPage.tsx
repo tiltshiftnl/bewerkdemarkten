@@ -141,7 +141,7 @@ export default class MarketListPage extends Component {
                             })
                         } else {
                             this.setState({
-                                newMarketId: e.target.value,
+                                newMarketId: e.target.value.replace("-", "_"),
                                 newMarketInvalid: ""
                             })
                         }
