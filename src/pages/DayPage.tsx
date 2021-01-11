@@ -135,7 +135,7 @@ export default class DayPage extends DynamicBase {
         this.getPlan()
         this.transformer.encode(this.id).then(result => {
             console.log(result.branches)
-            this.branchesRef.current?.updateAssignedBranches(result.branches)
+            this.branchesRef.current?.updateBranches(result.branches)
             this.setState({
                 marketEventDetails: result,
                 activeKey: result.pages.length === 0 ? "1" : "0"
@@ -171,7 +171,7 @@ export default class DayPage extends DynamicBase {
                     marketEventDetails: _newM
                 })
             })
-            this.branchesRef.current?.updateAssignedBranches([])
+            this.branchesRef.current?.updateBranches([])
         })
     }
 
@@ -223,7 +223,7 @@ export default class DayPage extends DynamicBase {
                     this.setState({ activeKey: key })
                 }}>
                     <TabPane tab="Details" key="0">
-                        <Day ref={this.dayRef} lookupBranches={this.state.lookupBranches} />
+                        <Day id={this.id} ref={this.dayRef} lookupBranches={this.state.lookupBranches} />
                     </TabPane>
                     <TabPane tab="Branchelijst" key="1" forceRender={true}>
                         <Branches id={this.id} ref={this.branchesRef} lookupBranches={this.state.lookupBranches} changed={this.updateAssignedBranches} />

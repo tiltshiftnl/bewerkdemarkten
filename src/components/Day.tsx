@@ -5,14 +5,18 @@ import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
 import { PlusOutlined } from '@ant-design/icons'
+import { Transformer } from "../services/transformer"
 const { TabPane } = Tabs
 
 interface DayPageState {
-    marketEventDetails: MarketEventDetails, currentPosition?: [number, number, number], activeKey: string
+    marketEventDetails: MarketEventDetails,
+    currentPosition?: [number, number, number],
+    activeKey: string
 }
 
-export default class Day extends Component<{ lookupBranches: Branche[] }> {
+export default class Day extends Component<{ id: string, lookupBranches: Branche[] }> {
     lotEdit: RefObject<LotEdit>
+    transformer: Transformer
     readonly state: DayPageState = {
         marketEventDetails: {
             branches: [],
@@ -26,9 +30,10 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
         activeKey: "0"
     }
 
-    constructor(props: { lookupBranches: Branche[] }) {
+    constructor(props: { id: string, lookupBranches: Branche[] }) {
         super(props)
         this.lotEdit = createRef()
+        this.transformer = new Transformer()
 
     }
 
@@ -193,6 +198,16 @@ export default class Day extends Component<{ lookupBranches: Branche[] }> {
         this.setState({
             marketEventDetails: _marketEventDetails
         })
+        
+        //Update local storage
+        this.updateStorage(_marketEventDetails.pages)
+    }
+
+    updateStorage(pages: MarketPage[]) {
+        localStorage.setItem(`bwdm_cache_${this.props.id}_lots`, JSON.stringify(this.transformer.layoutToStands(pages)))
+        localStorage.setItem(`bwdm_cache_${this.props.id}_rows`, JSON.stringify(this.transformer.layoutToRows(pages)))
+        localStorage.setItem(`bwdm_cache_${this.props.id}_geography`, JSON.stringify(this.transformer.layoutToGeography(pages)))
+        localStorage.setItem(`bwdm_cache_${this.props.id}_pages`, JSON.stringify(this.transformer.layoutToPages(pages)))
     }
 
     onTabChange = (activeKey: string) => {

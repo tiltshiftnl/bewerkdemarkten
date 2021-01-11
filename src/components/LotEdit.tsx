@@ -200,6 +200,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                 <Col {...secondColSpan}>
                                     <Select
                                         showSearch
+                                        mode="tags"
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een type"
                                         value={!this.state.lot ? "" :

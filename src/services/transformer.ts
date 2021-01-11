@@ -1,5 +1,5 @@
 import { getTextColor } from "../common/generic"
-import { AssignedBranche, Assignment, Lot, MarketEventDetails, MarketPage, Obstacle, Page } from "../models"
+import { AssignedBranche, Assignment, Geography, Lot, MarketEventDetails, MarketLayout, MarketPage, Obstacle, Page, Rows, Stand } from "../models"
 import { BrancheService } from "./service_lookup"
 import { BranchesService, GeographyService, LotsService, PagesService, RowsService } from "./service_markets"
 
@@ -123,5 +123,105 @@ export class Transformer {
             })
         }
         return { branches: newBranches, pages: newPages }
+    }
+
+    layoutToGeography(pages: MarketPage[]): Geography {
+        const obstacles: Obstacle[] = []
+
+        pages.forEach((page: MarketPage) => {
+            page.layout.forEach((layout: MarketLayout) => {
+                layout.lots.forEach((element: Lot | Obstacle) => {
+                    if (element.type === "obstacle") {
+                        obstacles.push({
+                            kraamA: element.kraamA || "",
+                            kraamB: element.kraamB || "",
+                            obstakel: element.obstakel || []
+                        })
+                    }
+
+                })
+            })
+        })
+        return {
+            obstakels: obstacles
+        }
+    }
+
+
+    layoutToStands(pages: MarketPage[]): Stand[] {
+        const stands: Stand[] = []
+
+        pages.forEach((page: MarketPage) => {
+            page.layout.forEach((layout: MarketLayout) => {
+                layout.lots.forEach((element: Lot | Obstacle) => {
+                    if (element.type === "stand") {
+                        let _stand: Stand = {
+                            plaatsId: element.plaatsId || "",
+                        }
+                        if (element.branches) {
+                            _stand.branches = element.branches
+                        }
+                        if (element.verkoopinrichting) {
+                            _stand.verkoopinrichting = element.verkoopinrichting
+                        }
+                        if (element.properties) {
+                            _stand.properties = element.properties
+                        }
+                        stands.push(_stand)
+                    }
+                })
+            })
+        })
+        return stands
+    }
+
+    layoutToRows(pages: MarketPage[]): Rows {
+        const _blocks: string[][] = []
+        pages.forEach((page: MarketPage) => {
+            page.layout.forEach((layout: MarketLayout) => {
+                let _block: string[] = []
+                layout.lots.forEach((element: Lot | Obstacle, i: number) => {
+                    // Loop until the next object would be an obstacle or until blockEnd is true
+                    if (element.type === "stand") {
+                        _block.push(element.plaatsId || "")
+                        if (element.blockEnd || layout.lots[i + 1].type === "obstacle") {
+                            _blocks.push(_block)
+                            _block = []
+                        }
+                    }
+                })
+            })
+        })
+        return {
+            rows: _blocks
+        }
+    }
+
+    layoutToPages(pages: MarketPage[]): Page[] {
+        const final: Page[] = []
+        pages.forEach((page: MarketPage) => {
+            const indelingsLijst = page.layout.map((layout: MarketLayout) => {
+                const plaatsList: string[] = []
+
+                layout.lots.forEach((element: Lot | Obstacle) => {
+                    if (element.type === "stand") {
+                        plaatsList.push(element.plaatsId || "?")
+                    }
+                })
+
+                return {
+                    class: layout.class,
+                    title: layout.title,
+                    landmarkTop: layout.landmarkTop,
+                    landmarkBottom: layout.landmarkBottom,
+                    plaatsList: plaatsList
+                }
+            })
+            final.push({
+                title: page.title,
+                indelingslijstGroup: indelingsLijst
+            })
+        })
+        return final
     }
 }

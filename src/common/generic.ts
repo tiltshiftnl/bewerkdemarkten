@@ -9,7 +9,6 @@ export const getTextColor = (hexcolor: string): string => {
     return (yiq < 40) ? '#2980b9' : "black"
 }
 
-
 export const getFileName = (key: string) => {
     switch (key) {
         case "pages":

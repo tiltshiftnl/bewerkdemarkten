@@ -14,10 +14,20 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
 
     }
 
-    componentDidMount() {
+    updatePage(layout: MarketLayout) {
+        // Tell the parent component this page has changed.
+
+        if (this.props.changed) {
+            this.props.changed(layout, this.props.position)
+        }
+
         this.setState({
-            layout: this.props.layout,
+            layout
         })
+    }
+
+    componentDidMount() {
+        this.setState({layout: this.props.layout})
     }
 
     render() {
@@ -29,12 +39,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     placeholder="Vul titel in"
                     value={this.state.layout.title}
                     onChange={(e: any) => {
-                        if (this.props.changed) {
-                            this.props.changed({ ...this.state.layout, title: e.target.value }, this.props.position)
-                        }
-                        this.setState({
-                            layout: { ...this.state.layout, title: e.target.value }
-                        })
+                        this.updatePage({ ...this.state.layout, title: e.target.value })
                     }} />
             </Col>
             <Col>
@@ -43,9 +48,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     placeholder="Herkeningspunt start"
                     value={this.state.layout.landmarkTop}
                     onChange={(e: any) => {
-                        this.setState({
-                            layout: { ...this.state.layout, landmarkTop: e.target.value }
-                        })
+                        this.updatePage({ ...this.state.layout, landmarkTop: e.target.value })
                     }} />
             </Col>
             <Col>
@@ -54,20 +57,13 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     placeholder="Herkenningspunt eind"
                     value={this.state.layout.landmarkBottom}
                     onChange={(e: any) => {
-                        this.setState({
-                            layout: { ...this.state.layout, landmarkBottom: e.target.value }
-                        })
+                        this.updatePage({ ...this.state.layout, landmarkBottom: e.target.value })
                     }} />
             </Col>
             <Col>
 
                 <Select value={this.state.layout.class || "block-left"} onChange={(e: string) => {
-                    if (this.props.changed) {
-                        this.props.changed({ ...this.state.layout, class: e }, this.props.position)
-                    }
-                    this.setState({
-                        layout: { ...this.state.layout, class: e }
-                    })
+                    this.updatePage({ ...this.state.layout, class: e })
                 }}>
                     <Select.Option key="0" value="block-left">Links</Select.Option>
                     <Select.Option key="1" value="block-right">Rechts</Select.Option>
@@ -85,7 +81,6 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     }}
                 />
                 <Button
-
                     type="primary"
                     icon={<PlusOutlined />}
                     onClick={() => {
