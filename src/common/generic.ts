@@ -59,10 +59,8 @@ export const uploadMarket = async (marketDayId: string) => {
         await new BranchesService().update(marketDayId, JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) => {
             if (result === "ok") {
                 success.push("branches")
-                //message.success(`Upload branches.json voor ${marketDayId} gelukt.`)
             } else {
                 errors.push("branches")
-                //message.error(`Upload branches.json voor ${marketDayId} mislukt.`)
             }
         })
     }
@@ -70,10 +68,8 @@ export const uploadMarket = async (marketDayId: string) => {
         await new GeographyService().update(marketDayId, JSON.parse(_geographyFromStorage) as Geography).then((result) => {
             if (result === "ok") {
                 success.push("geografie")
-                //message.success(`Upload geografie.json voor ${marketDayId} gelukt.`)
             } else {
                 errors.push("geografie")
-                //message.error(`Upload geografie.json voor ${marketDayId} mislukt.`)
             }
         })
     }
@@ -81,10 +77,8 @@ export const uploadMarket = async (marketDayId: string) => {
         await new LotsService().update(marketDayId, JSON.parse(_lotsFromStorage) as Lot[]).then((result) => {
             if (result === "ok") {
                 success.push("locaties")
-                //message.success(`Upload locaties.json voor ${marketDayId} gelukt.`)
             } else {
                 errors.push("locaties")
-                //message.error(`Upload locaties.json voor ${marketDayId} mislukt.`)
             }
         })
     }
@@ -92,10 +86,8 @@ export const uploadMarket = async (marketDayId: string) => {
         await new PagesService().update(marketDayId, JSON.parse(_pagesFromStorage) as Page[]).then((result) => {
             if (result === "ok") {
                 success.push("pagina's")
-                //message.success(`Upload paginas.json voor ${marketDayId} gelukt.`)
             } else {
                 errors.push("pagina's")
-                //message.error(`Upload paginas.json voor ${marketDayId} mislukt.`)
             }
         })
     }
@@ -103,10 +95,8 @@ export const uploadMarket = async (marketDayId: string) => {
         await new RowsService().update(marketDayId, JSON.parse(_rowsFromStorage) as Rows).then((result) => {
             if (result === "ok") {
                 success.push("markt")
-                //message.success(`Upload markt.json voor ${marketDayId} gelukt.`)
             } else {
                 errors.push("markt")
-                //message.error(`Upload markt.json voor ${marketDayId} mislukt.`)
             }
         })
     }
