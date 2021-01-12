@@ -53,7 +53,7 @@ export const uploadMarket = (marketDayId: string) => {
     const _pagesFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_pages`)
     const _rowsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_rows`)
     if(_branchesFromStorage) {
-        new BranchesService().update("branches", JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) =>{
+        new BranchesService().update(marketDayId, JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) =>{
             if(result === "ok") {
                 message.success(`Upload branches.json voor ${marketDayId} gelukt.`)
             } else {
@@ -62,7 +62,7 @@ export const uploadMarket = (marketDayId: string) => {
         })
     }
     if(_geographyFromStorage) {
-        new GeographyService().update("geography", JSON.parse(_geographyFromStorage) as Geography).then((result) =>{
+        new GeographyService().update(marketDayId, JSON.parse(_geographyFromStorage) as Geography).then((result) =>{
             if(result === "ok") {
                 message.success(`Upload geografie.json voor ${marketDayId} gelukt.`)
             } else {
@@ -71,7 +71,7 @@ export const uploadMarket = (marketDayId: string) => {
         })
     }
     if(_lotsFromStorage) {
-        new LotsService().update("lots", JSON.parse(_lotsFromStorage) as Lot[]).then((result) =>{
+        new LotsService().update(marketDayId, JSON.parse(_lotsFromStorage) as Lot[]).then((result) =>{
             if(result === "ok") {
                 message.success(`Upload locaties.json voor ${marketDayId} gelukt.`)
             } else {
@@ -80,7 +80,7 @@ export const uploadMarket = (marketDayId: string) => {
         })
     }
     if(_pagesFromStorage) {
-        new PagesService().update("pages", JSON.parse(_pagesFromStorage) as Page[]).then((result) =>{
+        new PagesService().update(marketDayId, JSON.parse(_pagesFromStorage) as Page[]).then((result) =>{
             if(result === "ok") {
                 message.success(`Upload paginas.json voor ${marketDayId} gelukt.`)
             } else {
@@ -89,7 +89,7 @@ export const uploadMarket = (marketDayId: string) => {
         })
     }
     if(_rowsFromStorage) {
-        new RowsService().update("rows", JSON.parse(_rowsFromStorage) as Rows).then((result) =>{
+        new RowsService().update(marketDayId, JSON.parse(_rowsFromStorage) as Rows).then((result) =>{
             if(result === "ok") {
                 message.success(`Upload markt.json voor ${marketDayId} gelukt.`)
             } else {
