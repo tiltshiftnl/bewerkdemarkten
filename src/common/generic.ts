@@ -46,56 +46,75 @@ export const zipMarket = (marketDayId: string) => {
 }
 
 
-export const uploadMarket = (marketDayId: string) => {
+export const uploadMarket = async (marketDayId: string) => {
+    let success: string[] = []
+    let errors: string[] = []
+
     const _branchesFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_branches`)
     const _geographyFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_geography`)
     const _lotsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_lots`)
     const _pagesFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_pages`)
     const _rowsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_rows`)
-    if(_branchesFromStorage) {
-        new BranchesService().update(marketDayId, JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) =>{
-            if(result === "ok") {
-                message.success(`Upload branches.json voor ${marketDayId} gelukt.`)
+    if (_branchesFromStorage) {
+        await new BranchesService().update(marketDayId, JSON.parse(_branchesFromStorage) as AssignedBranche[]).then((result) => {
+            if (result === "ok") {
+                success.push("branches")
+                //message.success(`Upload branches.json voor ${marketDayId} gelukt.`)
             } else {
-                message.error(`Upload branches.json voor ${marketDayId} mislukt.`)
+                errors.push("branches")
+                //message.error(`Upload branches.json voor ${marketDayId} mislukt.`)
             }
         })
     }
-    if(_geographyFromStorage) {
-        new GeographyService().update(marketDayId, JSON.parse(_geographyFromStorage) as Geography).then((result) =>{
-            if(result === "ok") {
-                message.success(`Upload geografie.json voor ${marketDayId} gelukt.`)
+    if (_geographyFromStorage) {
+        await new GeographyService().update(marketDayId, JSON.parse(_geographyFromStorage) as Geography).then((result) => {
+            if (result === "ok") {
+                success.push("geografie")
+                //message.success(`Upload geografie.json voor ${marketDayId} gelukt.`)
             } else {
-                message.error(`Upload geografie.json voor ${marketDayId} mislukt.`)
+                errors.push("geografie")
+                //message.error(`Upload geografie.json voor ${marketDayId} mislukt.`)
             }
         })
     }
-    if(_lotsFromStorage) {
-        new LotsService().update(marketDayId, JSON.parse(_lotsFromStorage) as Lot[]).then((result) =>{
-            if(result === "ok") {
-                message.success(`Upload locaties.json voor ${marketDayId} gelukt.`)
+    if (_lotsFromStorage) {
+        await new LotsService().update(marketDayId, JSON.parse(_lotsFromStorage) as Lot[]).then((result) => {
+            if (result === "ok") {
+                success.push("locaties")
+                //message.success(`Upload locaties.json voor ${marketDayId} gelukt.`)
             } else {
-                message.error(`Upload locaties.json voor ${marketDayId} mislukt.`)
+                errors.push("locaties")
+                //message.error(`Upload locaties.json voor ${marketDayId} mislukt.`)
             }
         })
     }
-    if(_pagesFromStorage) {
-        new PagesService().update(marketDayId, JSON.parse(_pagesFromStorage) as Page[]).then((result) =>{
-            if(result === "ok") {
-                message.success(`Upload paginas.json voor ${marketDayId} gelukt.`)
+    if (_pagesFromStorage) {
+        await new PagesService().update(marketDayId, JSON.parse(_pagesFromStorage) as Page[]).then((result) => {
+            if (result === "ok") {
+                success.push("pagina's")
+                //message.success(`Upload paginas.json voor ${marketDayId} gelukt.`)
             } else {
-                message.error(`Upload paginas.json voor ${marketDayId} mislukt.`)
+                errors.push("pagina's")
+                //message.error(`Upload paginas.json voor ${marketDayId} mislukt.`)
             }
         })
     }
-    if(_rowsFromStorage) {
-        new RowsService().update(marketDayId, JSON.parse(_rowsFromStorage) as Rows).then((result) =>{
-            if(result === "ok") {
-                message.success(`Upload markt.json voor ${marketDayId} gelukt.`)
+    if (_rowsFromStorage) {
+        await new RowsService().update(marketDayId, JSON.parse(_rowsFromStorage) as Rows).then((result) => {
+            if (result === "ok") {
+                success.push("markt")
+                //message.success(`Upload markt.json voor ${marketDayId} gelukt.`)
             } else {
-                message.error(`Upload markt.json voor ${marketDayId} mislukt.`)
+                errors.push("markt")
+                //message.error(`Upload markt.json voor ${marketDayId} mislukt.`)
             }
         })
+    }
+    if (success.length > 0) {
+        message.success(`Upload ${success.join(", ")} voor ${marketDayId} geslaagd.`)
+    }
+    if (errors.length > 0) {
+        message.error(`Upload ${errors.join(", ")} voor ${marketDayId} mislukt.`)
     }
 }
 
