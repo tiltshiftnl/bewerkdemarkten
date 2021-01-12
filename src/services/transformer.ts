@@ -184,7 +184,7 @@ export class Transformer {
                     // Loop until the next object would be an obstacle or until blockEnd is true
                     if (element.type === "stand") {
                         _block.push(element.plaatsId || "")
-                        if (element.blockEnd || layout.lots[i + 1].type === "obstacle") {
+                        if (element.blockEnd || (layout.lots[i + 1] && layout.lots[i + 1].type === "obstacle")) {
                             _blocks.push(_block)
                             _block = []
                         }

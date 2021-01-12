@@ -15,12 +15,13 @@ import PropertyListPage from './pages/PropertyListPage'
 const {Footer } = Layout
 
 export default class App extends Component {
+
   render() {
     return (
       <ThemeProvider>
         <GlobalStyle />
         <div className="App">
-          <BrowserRouter>
+          <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header tall={false} title="Bewerk de markten" fullWidth={false} homeLink=""/>
             <div className="refresh-button"><SyncOutlined title="Gegevens herladen" onClick={() => {
               localStorage.clear()
