@@ -47,7 +47,7 @@ export default class MarketsService extends Service<Markets> {
             return {}
         }
         console.debug(`Markets not cached`)
-        return fetch(this.config.API_BASE_URL + "/markets.json")
+        return fetch(this.config.API_BASE_URL + "/markets.json", {credentials: 'include'})
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)

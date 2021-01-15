@@ -12,7 +12,7 @@ export class BrancheService extends Service<Branche[]> {
         console.debug("Branches not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/branches.json")
+        return fetch(this.config.API_BASE_URL + "/markt/branches.json", { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -31,7 +31,7 @@ export class BrancheService extends Service<Branche[]> {
     }
 
     async update(data: Branche[]) {
-        return this.postData("generic", "branches", data)
+            return this.postData("generic", "branches", data)
     }
 }
 
@@ -46,7 +46,7 @@ export class DaysClosedService extends Service<string[]> {
         console.debug("DaysClosed not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/daysClosed.json")
+        return fetch(this.config.API_BASE_URL + "/markt/daysClosed.json", { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -76,7 +76,7 @@ export class AnnouncementService extends Service<Announcements> {
         console.debug("Announcements not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/mededelingen.json")
+        return fetch(this.config.API_BASE_URL + "/markt/mededelingen.json", { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -106,7 +106,7 @@ export class ObstacleTypeService extends Service<string[]> {
         console.debug("ObstacleTypes not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/obstakeltypes.json")
+        return fetch(this.config.API_BASE_URL + "/markt/obstakeltypes.json", { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -136,7 +136,7 @@ export class LotPropertyService extends Service<string[]> {
         console.debug("Properties not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json")
+        return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json", { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)

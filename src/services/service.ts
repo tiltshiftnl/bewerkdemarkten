@@ -8,7 +8,7 @@ export class Service<T> {
         this.config = new Configuration()
     }
     handleResponseError(response: Response) {
-        throw new Error("HTTP error, status = " + response.status)
+        throw new Error(`(${response.status}) de wijzigingen zijn niet verwerkt`)
     }
 
     handleError(error: Error) {
@@ -26,8 +26,8 @@ export class Service<T> {
                     return `${this.config.API_BASE_URL}/markt/${route}/geografie.json`
                 case "branches":
                     return `${this.config.API_BASE_URL}/markt/${route}/branches.json`
-                    case "rows":
-                        return `${this.config.API_BASE_URL}/markt/${route}/markt.json`
+                case "rows":
+                    return `${this.config.API_BASE_URL}/markt/${route}/markt.json`
                 default:
                     return ""
             }
@@ -53,7 +53,7 @@ export class Service<T> {
         console.debug(`${dataset} for ${route} not cached`)
 
         // Fetch
-        return fetch(this.getFilename(route, dataset))
+        return fetch(this.getFilename(route, dataset), { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
                     this.handleResponseError(response)
@@ -76,13 +76,14 @@ export class Service<T> {
         localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(data))
 
         // Post
-        return fetch(this.getFilename(route, dataset),
+        return await fetch(this.getFilename(route, dataset),
             {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {
                     "Content-type": "application/json"
-                }
+                },
+                credentials: 'include'
             })
             .then(response => {
                 if (!response.ok) {

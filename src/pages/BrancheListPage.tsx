@@ -4,14 +4,16 @@ import { Link } from "react-router-dom"
 import { HomeOutlined } from '@ant-design/icons'
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
-import { DeleteOutlined, PlusOutlined, BgColorsOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, BgColorsOutlined, UploadOutlined } from '@ant-design/icons';
 import { getTextColor } from '../common/generic'
 import CSS from 'csstype'
 import { ChromePicker } from 'react-color'
+import { message } from 'antd'
 
 export default class BrancheListPage extends Component {
 
-    readonly state: { branches: Branche[], displayColorPicker: boolean } = {
+    readonly state: { dirtybits: boolean, branches: Branche[], displayColorPicker: boolean } = {
+        dirtybits: false,
         displayColorPicker: false,
         branches: []
     }
@@ -29,17 +31,35 @@ export default class BrancheListPage extends Component {
         this.brancheService = new BrancheService()
     }
 
-    updateBranches = (branches: Branche[]) => {
-        localStorage.setItem('bwdm_lookup_branches', JSON.stringify(branches))
-        this.brancheService.update(this.state.branches)
-        this.setState({
-            branches
-        })
+    updateBranches = (branches: Branche[], dirty: boolean = false) => {
+        // Do not updateBranches when the branches length is 0.
+        if (branches.length > 0) {
+            localStorage.setItem('bwdm_lookup_branches', JSON.stringify(branches))
+            // We need to trigger the remote update with a dirty parameter. 
+            // Do not update to often as this will send more requests
+            // then necessary to the backend.
+            if (dirty) {
+                const _branches = this.state.branches.filter((b: Branche) => b !== null)
+                this.brancheService.update(_branches).catch((e: any)=> {
+                    message.error('Er is iets fout gegaan')
+                })
+                this.setState({dirtybits: false})
+            } else {
+                this.setState({dirtybits: true})
+            }
+            this.setState({
+                branches
+            })
+        }
     }
 
     componentDidMount = () => {
         this.brancheService.retrieve().then((branches: Branche[]) => {
-            this.updateBranches(branches)
+            const _branches = branches.filter((b: Branche) => b !== null)
+            // Make sure there are no empty elements in the branches.
+            this.setState({
+                branches: _branches
+            })
         })
     }
 
@@ -135,6 +155,17 @@ export default class BrancheListPage extends Component {
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
+            <Button
+                disabled={!this.state.dirtybits}
+                title={`Upload branches.json naar de centrale server`}
+                style={{ marginLeft: "1em" }}
+                icon={<UploadOutlined />}
+                type="primary"
+                onClick={() => {
+                    this.updateBranches(this.state.branches, true)
+                }}
+
+            >Branches opslaan</Button>
         </>
     }
 }

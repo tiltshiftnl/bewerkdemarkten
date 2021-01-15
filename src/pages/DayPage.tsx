@@ -63,6 +63,7 @@ export default class DayPage extends DynamicBase {
                 uploadProps = {
                     name: 'file',
                     accept: '.pdf',
+                    withCredentials: true,
                     action: `${API_BASE_URL}/markt/${_file_id}/upload/pdf`,
                     defaultFileList: [],
                     onChange(info: any) {
@@ -85,6 +86,7 @@ export default class DayPage extends DynamicBase {
 
                         fetch(`${API_BASE_URL}/markt/${_file_id}/delete/pdf`, {
                             method: 'DELETE',
+                            credentials: 'include'
                         })
                             .then(res => res.text()) // or res.json()
                             .then(res => console.log(res))
