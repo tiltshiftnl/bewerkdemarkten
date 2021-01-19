@@ -203,19 +203,16 @@ export default class LotEdit extends Component<LotEditProps> {
                                         mode="tags"
                                         style={{ width: '100%' }}
                                         placeholder="Selecteer een type"
-                                        value={!this.state.lot ? "" :
-                                            this.state.lot.obstakel ? this.state.lot.obstakel.length === -1 ? "" : this.state.lot.obstakel[0] : ""}
-                                        onChange={(e: string) => {
-                                            let _b = [e]
-                                            if (e === "") {
-                                                _b = []
-                                            }
+                                        value={!this.state.lot ? [] :
+                                            this.state.lot.obstakel ? this.state.lot.obstakel.length === -1 ? [] : this.state.lot.obstakel : []}
+                                        onChange={(e: string[]) => {
+                                            let _b = e
+                                            
                                             this.setState({
                                                 lot: { ...this.state.lot, obstakel: _b }
                                             })
                                         }}
                                     >
-                                        <Select.Option key={""} value={""}>{[]}</Select.Option>
                                         {this.state.obstacleTypes.sort().map((br, i) => {
                                             return <Select.Option key={i} value={br}>{br}</Select.Option>
                                         })}

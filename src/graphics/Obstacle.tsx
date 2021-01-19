@@ -21,28 +21,37 @@ export default class Obstacle extends Component<{
     }
 
     getGraphic = () => {
+        console.log(this.props.obstacle.obstakel)
+        const obstacleProperties = []
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("loopje") > -1) {
-            return <SvgLoopje color="red"/>
+            obstacleProperties.push(<SvgLoopje key="loopje" color="red"/>)
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("doorloop") > -1) {
-            return <SvgWalkthrough color="red"/>
+            obstacleProperties.push(<SvgWalkthrough key="doorloop" color="red"/>)
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("loopjediedichtmag") > -1) {
-            return <SvgWalkWithClose color="red"/>
+            obstacleProperties.push(<SvgWalkWithClose key="loopjedatdichtmag" color="red"/>)
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("electra") > -1) {
-            return <SvgElectra color="red" position={{x:18,y:18}}/>
+            obstacleProperties.push(<SvgElectra key="electra" position={{x:2,y:18}}/>)
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("water") > -1) {
-            return <SvgWater color="red" position={{x:18,y:18}}/>
+            obstacleProperties.push(<SvgWater key="water" position={{x:35,y:20}}/>)
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("bankje") > -1) {
-            return <SvgBench color="red" position={{x:18,y:18}}/>
+            obstacleProperties.push(<SvgBench key="bankje" position={{x:3,y:2}}/>)
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("lantaarnpaal") > -1) {
-            return <SvgLight color="red" position={{x:15,y:16}}/>
+            obstacleProperties.push(<SvgLight key="lantaarnpaal" position={{x:31,y:0}}/>)
         }
-        return <></>
+
+        console.log(obstacleProperties)
+        return <>
+            {obstacleProperties.map((elem: any) => {
+                return elem
+            })}
+        </>
+        
     }
 
     render() {

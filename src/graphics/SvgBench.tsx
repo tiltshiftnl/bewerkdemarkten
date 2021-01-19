@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class SvgBench extends Component<{ color: string, invert?: boolean, position: { x: number, y: number } }> {
+export default class SvgBench extends Component<{ color?: string, invert?: boolean, position: { x: number, y: number } }> {
     render() {
         return <svg
             x={this.props.position.x}
@@ -16,8 +16,8 @@ export default class SvgBench extends Component<{ color: string, invert?: boolea
             <g id="bench-group">
                 <path
                     style={{
-                        fill: this.props.color,
-                        stroke: this.props.color,
+                        fill: this.props.color || "#c75819",
+                        stroke: this.props.color || "#c75819",
                         strokeWidth: 0.4,
                         strokeLinecap: "round",
                         strokeLinejoin: "round",

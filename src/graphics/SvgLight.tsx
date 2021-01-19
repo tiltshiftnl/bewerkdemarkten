@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class SvgLight extends Component<{ color: string, invert?: boolean, position: { x: number, y: number } }> {
+export default class SvgLight extends Component<{ color?: string, invert?: boolean, position: { x: number, y: number } }> {
     render() {
         return <svg
             x={this.props.position.x}
@@ -16,8 +16,8 @@ export default class SvgLight extends Component<{ color: string, invert?: boolea
             <g id="light-group">
                 <circle cx={10} cy={10} r={5}
                     style={{
-                        fill: this.props.color,
-                        stroke: this.props.color,
+                        fill: this.props.color || "yellow",
+                        stroke: this.props.color || "black",
                         strokeWidth: 0.4,
                         strokeLinecap: "round",
                         strokeLinejoin: "round",
