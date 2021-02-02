@@ -6,11 +6,11 @@ import DayPage from './pages/DayPage'
 import MarketListPage from './pages/MarketListPage'
 import MarketPage from './pages/MarketPage'
 import { Layout } from 'antd'
-import { SyncOutlined } from '@ant-design/icons';
 import BrancheListPage from './pages/BrancheListPage'
 import AnnouncementListPage from './pages/AnnouncementListPage'
 import ObstacleListPage from './pages/ObstacleListPage'
 import PropertyListPage from './pages/PropertyListPage'
+import HomePage from './pages/HomePage'
 
 const {Footer } = Layout
 
@@ -23,10 +23,10 @@ export default class App extends Component {
         <div className="App">
           <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header tall={false} title="Bewerk de markten" fullWidth={false} homeLink=""/>
-            <div className="refresh-button"><SyncOutlined title="Gegevens herladen" onClick={() => {
+            {/* <div className="refresh-button"><SyncOutlined title="Gegevens herladen" onClick={() => {
               localStorage.clear()
               window.location.reload()
-            }}/></div>
+            }}/></div> */}
             <ul className="menu-item-ul">
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/markets">Markten</NavLink></li>
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/branches">Branches</NavLink></li>
@@ -45,7 +45,7 @@ export default class App extends Component {
                 <Route path="/properties" component={PropertyListPage} />
                 <Route path="/market/day/:id" exact component={DayPage} />
                 <Route path="/market/:id" exact component={MarketPage} />
-                <Route path="/" exact component={MarketListPage} />
+                <Route path="/" exact component={HomePage} />
               </Switch>
             </div>
           </BrowserRouter>

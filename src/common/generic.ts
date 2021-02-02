@@ -1,7 +1,16 @@
 import JSZip from "jszip"
-import { AssignedBranche, Geography, Lot, Page, Rows } from "../models"
+import { AssignedBranche, Geography, Lot, Markets, Page, Rows } from "../models"
 import { BranchesService, GeographyService, LotsService, PagesService, RowsService } from "../services/service_markets"
 import { message } from 'antd'
+
+
+export const getDatePart = () => {
+    const _date = new Date()
+    const month = _date.getUTCMonth() + 1
+    const day = _date.getUTCDate()
+    const year = _date.getUTCFullYear()
+    return year + "" + month + "" + day
+}
 
 export const getTextColor = (hexcolor: string): string => {
     var r = parseInt(hexcolor.substr(1, 2), 16)
@@ -24,10 +33,52 @@ export const getFileName = (key: string) => {
             return "branches.json"
         case "rows":
             return "markt.json"
+        case "daysclosed":
+            return "daysClosed.json"
+        case "announcements":
+            return "mededelingen.json"
+        case "obstacletypes":
+            return "obstakeltypes.json"
+        case "properties":
+            return "plaatseigenschappen.json"
         default:
             return ""
     }
 }
+
+export const zipAll = () => {
+    const zip = new JSZip();
+    // Get the generics first
+    ["branches", "daysclosed", "announcements", "obstacletypes", "properties"].forEach((key: string) => {
+        const data = localStorage.getItem(`bwdm_lookup_${key}`)
+        if (data) {
+            zip.file(`config/markt/${getFileName(key)}`, data)
+        }
+    })
+
+    // // Grab all the localstorage objects and put them in a single zipfile for download!
+    const _marketCache: string | null = localStorage.getItem("bwdm_cache_markets")
+    if (_marketCache) {
+        const _markets: Markets = JSON.parse(_marketCache)
+        Object.keys(_markets).forEach((_m: string) => {
+            //each day
+            Object.keys(_markets[_m].events).forEach((_d: string) => {
+                ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
+                    const data = localStorage.getItem(`bwdm_cache_${_m}-${_d}_${key}`)
+                    if (data) {
+                        zip.file(`config/markt/${_m}-${_d}/${getFileName(key)}`, data)
+                    }
+                })
+            })
+        })
+    }
+
+    zip.generateAsync({ type: "base64" })
+        .then(function (content) {
+            downloadObjectAsZip("data:application/zip;base64," + content, `${getDatePart()}_bewerkdemarkten.zip`)
+        });
+}
+
 export const zipMarket = (marketDayId: string) => {
     const zip = new JSZip();
 
@@ -35,13 +86,13 @@ export const zipMarket = (marketDayId: string) => {
     ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_cache_${marketDayId}_${key}`)
         if (data) {
-            zip.file(getFileName(key), data)
+            zip.file(`config/markt/${marketDayId}/${getFileName(key)}`, data)
         }
     })
 
     zip.generateAsync({ type: "base64" })
         .then(function (content) {
-            downloadObjectAsZip("data:application/zip;base64," + content, `${marketDayId}.zip`)
+            downloadObjectAsZip("data:application/zip;base64," + content, `${getDatePart()}_${marketDayId}.zip`)
         });
 }
 

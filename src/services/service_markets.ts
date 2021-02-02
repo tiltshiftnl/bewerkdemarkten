@@ -45,29 +45,9 @@ export default class MarketsService extends Service<Markets> {
                 return this.sortEvents(items)
             }
             return {}
+        } else {
+            return {}
         }
-        console.debug(`Markets not cached`)
-        return fetch(this.config.API_BASE_URL + "/markets.json", {credentials: 'include'})
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                let items = json
-                if (items) {
-                    items = this.sortEvents(items)
-                    // Cache
-                    localStorage.setItem(`bwdm_cache_markets`, JSON.stringify(items))
-                    return items
-                } else {
-                    return {}
-                }
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
     }
 }
 
@@ -77,7 +57,7 @@ export class RowsService extends Service<Rows> {
     }
 
     async retrieve(route: string): Promise<Rows> {
-        return this.getData(route, "rows")
+        return this.getData(route, "rows", { rows: [] })
     }
 }
 
@@ -87,7 +67,7 @@ export class BranchesService extends Service<AssignedBranche[]> {
     }
 
     async retrieve(route: string): Promise<AssignedBranche[]> {
-        return this.getData(route, "branches")
+        return this.getData(route, "branches", [])
     }
 }
 
@@ -97,7 +77,7 @@ export class GeographyService extends Service<Geography> {
     }
 
     async retrieve(route: string): Promise<Geography> {
-        return this.getData(route, "geography")
+        return this.getData(route, "geography", { obstakels: [] })
     }
 }
 
@@ -107,7 +87,7 @@ export class LotsService extends Service<Lot[]> {
     }
 
     async retrieve(route: string): Promise<Lot[]> {
-        return this.getData(route, "lots")
+        return this.getData(route, "lots", [])
     }
 }
 
@@ -117,7 +97,7 @@ export class PagesService extends Service<Page[]> {
     }
 
     async retrieve(route: string): Promise<Page[]> {
-        return this.getData(route, "pages")
+        return this.getData(route, "pages", [])
     }
 }
 

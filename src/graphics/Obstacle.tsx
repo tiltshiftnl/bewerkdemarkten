@@ -21,7 +21,6 @@ export default class Obstacle extends Component<{
     }
 
     getGraphic = () => {
-        console.log(this.props.obstacle.obstakel)
         const obstacleProperties = []
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("loopje") > -1) {
             obstacleProperties.push(<SvgLoopje key="loopje" color="red"/>)
@@ -45,7 +44,6 @@ export default class Obstacle extends Component<{
             obstacleProperties.push(<SvgLight key="lantaarnpaal" position={{x:31,y:0}}/>)
         }
 
-        console.log(obstacleProperties)
         return <>
             {obstacleProperties.map((elem: any) => {
                 return elem

@@ -12,26 +12,33 @@ export class BrancheService extends Service<Branche[]> {
         console.debug("Branches not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/branches.json", { credentials: 'include' })
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
+        if (this.config.ONLINE) {
+            return fetch(this.config.API_BASE_URL + "/markt/branches.json", { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) {
+                        this.handleResponseError(response)
+                    }
+                    return response.json()
+                })
+                .then(json => {
+                    const item = json
+                    // Add to Cache
+                    localStorage.setItem('bwdm_lookup_branches', JSON.stringify(item))
+                    return item
+                })
+                .catch(error => {
+                    this.handleError(error)
+                })
+        } else {
+            return new Promise((resolve) => {
+                localStorage.setItem('bwdm_lookup_branches', JSON.stringify([]))
+                resolve([]);
             })
-            .then(json => {
-                const item = json
-                // Add to Cache
-                localStorage.setItem('bwdm_lookup_branches', JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        }
     }
 
     async update(data: Branche[]) {
-            return this.postData("generic", "branches", data)
+        return this.postData("generic", "branches", data)
     }
 }
 
@@ -46,22 +53,29 @@ export class DaysClosedService extends Service<string[]> {
         console.debug("DaysClosed not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/daysClosed.json", { credentials: 'include' })
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
+        if (this.config.ONLINE) {
+            return fetch(this.config.API_BASE_URL + "/markt/daysClosed.json", { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) {
+                        this.handleResponseError(response)
+                    }
+                    return response.json()
+                })
+                .then(json => {
+                    const item = json
+                    // Add to Cache
+                    localStorage.setItem('bwdm_lookup_daysclosed', JSON.stringify(item))
+                    return item
+                })
+                .catch(error => {
+                    this.handleError(error)
+                })
+        } else {
+            return new Promise((resolve) => {
+                localStorage.setItem('bwdm_lookup_daysclosed', JSON.stringify([]))
+                resolve([]);
             })
-            .then(json => {
-                const item = json
-                // Add to Cache
-                localStorage.setItem('bwdm_lookup_daysclosed', JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        }
     }
 }
 
@@ -76,26 +90,64 @@ export class AnnouncementService extends Service<Announcements> {
         console.debug("Announcements not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/mededelingen.json", { credentials: 'include' })
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
+        if (this.config.ONLINE) {
+            return fetch(this.config.API_BASE_URL + "/markt/mededelingen.json", { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) {
+                        this.handleResponseError(response)
+                    }
+                    return response.json()
+                })
+                .then(json => {
+                    const item = json
+                    // Add to Cache
+                    localStorage.setItem('bwdm_lookup_announcements', JSON.stringify(item))
+                    return item
+                })
+                .catch(error => {
+                    this.handleError(error)
+                })
+        } else {
+            return new Promise((resolve) => {
+                const emptyAnnouncements: Announcements = {
+                    marktDetail: {
+                        activatie: "",
+                        wenperiode: "",
+                        live: ""
+                    },
+                    marktDetailPlaatsvoorkeuren: {
+                        activatie: "",
+                        wenperiode: "",
+                        live: ""
+                    },
+                    aanwezigheid: {
+                        activatie: "",
+                        wenperiode: "",
+                        live: ""
+                    },
+                    plaatsVoorkeuren: {
+                        activatie: "",
+                        wenperiode: "",
+                        live: ""
+                    }
                 }
-                return response.json()
+                localStorage.setItem('bwdm_lookup_announcements', JSON.stringify(emptyAnnouncements))
+                resolve(emptyAnnouncements)
             })
-            .then(json => {
-                const item = json
-                // Add to Cache
-                localStorage.setItem('bwdm_lookup_announcements', JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        }
     }
 }
 
 export class ObstacleTypeService extends Service<string[]> {
+    defaultTypes: string[] = [
+        "electra",
+        "water",
+        "bankje",
+        "doorloop",
+        "lantaarnpaal",
+        "loopje",
+        "loopjediedichtmag"
+    ]
     async retrieve(): Promise<string[]> {
         // Retrieve from Cache
         const cachedObstacleTypes = localStorage.getItem('bwdm_lookup_obstacletypes')
@@ -106,26 +158,40 @@ export class ObstacleTypeService extends Service<string[]> {
         console.debug("ObstacleTypes not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/obstakeltypes.json", { credentials: 'include' })
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
+        if (this.config.ONLINE) {
+            return fetch(this.config.API_BASE_URL + "/markt/obstakeltypes.json", { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) {
+                        this.handleResponseError(response)
+                    }
+                    return response.json()
+                })
+                .then(json => {
+                    const item = json
+                    // Add to Cache
+                    localStorage.setItem('bwdm_lookup_obstacletypes', JSON.stringify(item))
+                    return item
+                })
+                .catch(error => {
+                    this.handleError(error)
+                })
+        } else {
+            return new Promise((resolve) => {
+                localStorage.setItem('bwdm_lookup_obstacletypes', JSON.stringify(this.defaultTypes))
+                resolve(this.defaultTypes);
             })
-            .then(json => {
-                const item = json
-                // Add to Cache
-                localStorage.setItem('bwdm_lookup_obstacletypes', JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        }
     }
 }
 
 export class LotPropertyService extends Service<string[]> {
+    defaultTypes: string[] = [
+        "bankje",
+  "boom",
+  "electra",
+  "lantaarnpaal",
+  "water"
+    ]
     async retrieve(): Promise<string[]> {
         // Retrieve from Cache
         const cachedProperties = localStorage.getItem('bwdm_lookup_properties')
@@ -136,21 +202,28 @@ export class LotPropertyService extends Service<string[]> {
         console.debug("Properties not cached")
 
         // Fetch
-        return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json", { credentials: 'include' })
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
+        if (this.config.ONLINE) {
+            return fetch(this.config.API_BASE_URL + "/markt/plaatseigenschappen.json", { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) {
+                        this.handleResponseError(response)
+                    }
+                    return response.json()
+                })
+                .then(json => {
+                    const item = json
+                    // Add to Cache
+                    localStorage.setItem('bwdm_lookup_properties', JSON.stringify(item))
+                    return item
+                })
+                .catch(error => {
+                    this.handleError(error)
+                })
+        } else {
+            return new Promise((resolve) => {
+                localStorage.setItem('bwdm_lookup_properties', JSON.stringify(this.defaultTypes))
+                resolve(this.defaultTypes);
             })
-            .then(json => {
-                const item = json
-                // Add to Cache
-                localStorage.setItem('bwdm_lookup_properties', JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+        }
     }
 }

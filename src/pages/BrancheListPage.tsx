@@ -4,7 +4,9 @@ import { Link } from "react-router-dom"
 import { HomeOutlined } from '@ant-design/icons'
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
-import { DeleteOutlined, PlusOutlined, BgColorsOutlined, UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, BgColorsOutlined,
+    // UploadOutlined 
+} from '@ant-design/icons'
 import { getTextColor } from '../common/generic'
 import CSS from 'csstype'
 import { ChromePicker } from 'react-color'
@@ -155,7 +157,7 @@ export default class BrancheListPage extends Component {
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            <Button
+            {/* <Button
                 disabled={!this.state.dirtybits}
                 title={`Upload branches.json naar de centrale server`}
                 style={{ marginLeft: "1em" }}
@@ -165,7 +167,7 @@ export default class BrancheListPage extends Component {
                     this.updateBranches(this.state.branches, true)
                 }}
 
-            >Branches opslaan</Button>
+            >Branches opslaan</Button> */}
         </>
     }
 }

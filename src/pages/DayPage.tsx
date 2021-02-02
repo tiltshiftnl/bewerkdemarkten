@@ -10,7 +10,7 @@ import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan, Event } fr
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
 import Configuration from "../services/configuration"
-import { uploadMarket, zipMarket } from "../common/generic"
+import { zipMarket } from "../common/generic"
 
 const { TabPane } = Tabs
 
@@ -113,7 +113,6 @@ export default class DayPage extends DynamicBase {
     }
 
     updateAssignedBranches = (branches: AssignedBranche[]) => {
-        console.log("updateAssignedBranches")
         const _m = this.state.marketEventDetails
         if (_m) {
             _m.branches = branches
@@ -136,7 +135,6 @@ export default class DayPage extends DynamicBase {
         })
         this.getPlan()
         this.transformer.encode(this.id).then(result => {
-            console.log(result.branches)
             this.branchesRef.current?.updateBranches(result.branches)
             this.setState({
                 marketEventDetails: result,
@@ -217,8 +215,8 @@ export default class DayPage extends DynamicBase {
                             }
                         }}
 
-                    >Download JSON</Button>
-                    <Button
+                    >Download {this.id}</Button>
+                    {/* <Button
                     title={`Upload de JSON bestanden voor ${this.id} naar de centrale server`}
                     style={{marginLeft: "1em"}}
                     icon={<UploadOutlined />}
@@ -226,11 +224,10 @@ export default class DayPage extends DynamicBase {
                         onClick={() => {
                             if (this.id) {
                                 uploadMarket(this.id)
-                                console.log(this.id)
                             }
                         }}
 
-                    >{this.id} opslaan</Button>
+                    >{this.id} opslaan</Button> */}
                 </Col>
             </Row>
             {this.state.lookupBranches &&

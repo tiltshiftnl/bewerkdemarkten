@@ -43,7 +43,7 @@ export class Service<T> {
         }
     }
 
-    async getData(route: string, dataset: datasetType): Promise<T> {
+    async getData(route: string, dataset: datasetType, empty: T): Promise<T> {
         // Retrieve from Cache
         const cached = localStorage.getItem(`bwdm_cache_${route}_${dataset}`)
         if (cached) {
@@ -53,6 +53,7 @@ export class Service<T> {
         console.debug(`${dataset} for ${route} not cached`)
 
         // Fetch
+        if (this.config.ONLINE) {
         return fetch(this.getFilename(route, dataset), { credentials: 'include' })
             .then(response => {
                 if (!response.ok) {
@@ -69,6 +70,12 @@ export class Service<T> {
             .catch(error => {
                 this.handleError(error)
             })
+        } else {
+            return new Promise((resolve) => {
+                localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(empty))
+                resolve(empty);
+            })
+        }
     }
 
     async postData(route: string, dataset: datasetType, data: T) {

@@ -157,7 +157,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            <Button type="primary"
+            {/* <Button type="primary"
                 onClick={() => {
                     const _export = this.state.branches?.map((e: AssignedBranche)=> {
                         let _e: AssignedBranche = {
@@ -176,7 +176,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                     
                 }}
                 style={{ margin: '20px' }}
-            >Opslaan</Button>
+            >Opslaan</Button> */}
             </>}</>
     }
 }
