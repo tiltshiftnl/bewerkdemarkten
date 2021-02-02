@@ -1,4 +1,4 @@
-/public/data/mmarkt.json
+**/data/*.json
 # dependencies
 /node_modules
 /.pnp
