@@ -460,3 +460,26 @@ td {
   width: 48px !important;
   height: 52px !important;
 }
+
+.tag-flex {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.tag {
+  border: 1px solid #00f;
+  margin: 1em;
+}
+
+.inactive {
+  border: 1px solid #fff;
+  color: #ccc;
+  margin: 1em;
+}
+
+.ugly {
+  border: 1px solid #f00;
+  color: #ccc;
+  margin: 1em;
+}

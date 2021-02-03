@@ -1,7 +1,7 @@
 import { HomeOutlined } from '@ant-design/icons'
 import { Button, Col, Row, Modal, Input } from "antd"
 import React, { ChangeEvent, Component } from "react"
-import { DayOfWeek, Events, Market, Markets, WeekDays } from "../models"
+import { DayOfWeek, Market, Markets, WeekDays } from "../models"
 import MarketsService, { PagesService } from "../services/service_markets"
 import MarketListItem from '../components/MarketListItem'
 import { Breadcrumb } from 'antd'
@@ -9,10 +9,14 @@ import { Link } from 'react-router-dom'
 import { //MinusCircleOutlined, 
     PlusOutlined
 } from '@ant-design/icons'
+
+const { Search } = Input;
+
 export default class MarketListPage extends Component {
     weekdays: DayOfWeek[] = WeekDays
-    readonly state: { markets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
+    readonly state: { markets: Markets, filteredMarkets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
         markets: {},
+        filteredMarkets: {},
         showModal: false,
         newMarketId: "",
         day: {
@@ -41,11 +45,11 @@ export default class MarketListPage extends Component {
         //Add the newMarket to the markets
         if (this.state.newMarketId !== "") {
             const _markets = this.state.markets
-            const _events: Events = {}
+            //const _events: Events = {}
             if (this.state.day.abbreviation !== "") {
-                _events[this.state.day.abbreviation] = {
-                    weekday: 0
-                }
+                // _events[this.state.day.abbreviation] = {
+                //     weekday: 0
+                // }
                 // POST a new empty pagina's set to the backend
                 this.pagesService.update(`${this.state.newMarketId}-${this.state.day.abbreviation}`, [])
             }
@@ -53,7 +57,7 @@ export default class MarketListPage extends Component {
             _markets[this.state.newMarketId] = {
                 id: 0,
                 name: "",
-                events: _events
+                //events: _events
             }
 
             this.updateMarkets(_markets)
@@ -77,7 +81,8 @@ export default class MarketListPage extends Component {
                 return result;
             }, {})
             this.setState({
-                markets
+                markets,
+                filteredMarkets: markets
             })
         })
     }
@@ -87,6 +92,29 @@ export default class MarketListPage extends Component {
             return false
         }
         return true
+    }
+
+    onSearch = (value: string, e: any) => {
+        console.log(value)
+    }
+
+    onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const _filteredMarkets: Markets = {}
+        if (e.target.value === '') {
+            this.setState({
+                filteredMarkets: this.state.markets
+            })
+        } else {
+            Object.keys(this.state.markets)
+                .filter(hit => hit.toLocaleLowerCase()
+                    .includes(e.target.value.toLowerCase()))
+                .forEach((key: string) => {
+                    _filteredMarkets[key] = this.state.markets[key]
+                })
+            this.setState({
+                filteredMarkets: _filteredMarkets
+            })
+        }
     }
 
     render() {
@@ -104,15 +132,12 @@ export default class MarketListPage extends Component {
                 </Breadcrumb.Item>
             </Breadcrumb>
             <Row gutter={[16, 16]}>
-                {Object.keys(this.state.markets).sort().map((key: string, i: number) => {
-                    const market: Market = this.state.markets[key]
-                    return <Col key={key} style={{ margin: "0.5em" }}>
-                        <MarketListItem marketId={key} market={market} />
-                    </Col>
-                })}
-                <Col key="add-market" style={{ margin: "0.5em" }}>
+                <Col>
+                    <Search placeholder="Filter markten" onChange={this.onChange} onSearch={this.onSearch} style={{ width: 200 }} />
+                </Col>
+                <Col key="add-market">
                     <Button
-                    type="dashed"
+                        type="dashed"
                         onClick={() => {
                             this.setState({
                                 showModal: true
@@ -121,6 +146,14 @@ export default class MarketListPage extends Component {
                         icon={<PlusOutlined />}
                     >Toevoegen</Button>
                 </Col>
+            </Row><Row gutter={[16, 16]}>
+                {Object.keys(this.state.filteredMarkets).sort().map((key: string, i: number) => {
+                    const market: Market = this.state.markets[key]
+                    return <Col key={key} style={{ margin: "0.5em" }}>
+                        <MarketListItem marketId={key} market={market} />
+                    </Col>
+                })}
+
             </Row>
 
             <Modal

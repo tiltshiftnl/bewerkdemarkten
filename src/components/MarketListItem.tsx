@@ -8,7 +8,7 @@ export default class MarketListItem extends Component<{ market: Market, marketId
         market: {
             name: "onbekend",
             id: 0,
-            events: {}
+            //events: {}
         }
     }
 

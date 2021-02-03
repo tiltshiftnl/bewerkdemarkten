@@ -2,9 +2,8 @@ import { GlobalStyle, Header, ThemeProvider } from '@amsterdam/asc-ui'
 import React, { Component } from 'react'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 import CalendarPage from './pages/CalendarPage'
-import DayPage from './pages/DayPage'
-import MarketListPage from './pages/MarketListPage'
 import MarketPage from './pages/MarketPage'
+import MarketListPage from './pages/MarketListPage'
 import { Layout } from 'antd'
 import BrancheListPage from './pages/BrancheListPage'
 import AnnouncementListPage from './pages/AnnouncementListPage'
@@ -43,7 +42,6 @@ export default class App extends Component {
                 <Route path="/announcements" component={AnnouncementListPage} />
                 <Route path="/obstacles" component={ObstacleListPage} />
                 <Route path="/properties" component={PropertyListPage} />
-                <Route path="/market/day/:id" exact component={DayPage} />
                 <Route path="/market/:id" exact component={MarketPage} />
                 <Route path="/" exact component={HomePage} />
               </Switch>

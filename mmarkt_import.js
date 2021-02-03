@@ -1,13 +1,13 @@
 var https = require('https');
 var fs = require('fs');
 
-if (process.env.MMARKT_API_KEY) {
+if (process.env.MMAP_API_KEY) {
 
 var options = {
     host: 'makkelijkemarkt-api.amsterdam.nl',
     port: 443,
     headers: {
-        'MmAppKey': process.env.MMARKT_API_KEY || "replaceme"
+        'MmAppKey': process.env.MMAP_API_KEY
     },
     path: '/api/1.1.0/markt/',
     method: 'GET'
@@ -35,5 +35,5 @@ req.on('error', function (e) {
 });
 req.end()
 } else {
-    console.error("MMARKT_API_KEY not set")
+    console.error("MMAP_API_KEY not set")
 }

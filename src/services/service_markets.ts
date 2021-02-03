@@ -1,40 +1,7 @@
-import { AssignedBranche, Geography, Markets, Page, Rows, Lot, Events, Event } from '../models'
+import { AssignedBranche, Geography, Markets, Page, Rows, Lot } from '../models'
 import { Service } from './service'
 
 export default class MarketsService extends Service<Markets> {
-
-    sortEvents(items: Markets): Markets {
-        Object.keys(items).forEach((item: any) => {
-            //Sort the events
-            if (items[item].events) {
-
-                const _sortedKeys: string[] = Object.keys(items[item].events).sort((a: string, b: string) => {
-                    const first: Event = items[item].events[a]
-                    const second: Event = items[item].events[b]
-                    if (first.weekday && second.weekday) {
-                        return first.weekday < second.weekday ? -1 : first.weekday > second.weekday ? 1 : 0
-                    }
-                    else if (first.weekday) {
-                        return -1
-                    }
-                    else if (second.weekday) {
-                        return 1
-                    } else {
-                        return 0
-                    }
-                })
-
-                // loop me baby one more time.
-                const _sortedEvents: Events = {}
-                _sortedKeys.forEach((key: string) => {
-                    _sortedEvents[key] = items[item].events[key]
-                })
-                items[item].events = _sortedEvents
-            }
-        });
-        return items
-    }
-
     async retrieve(): Promise<Markets> {
         // Retrieve from Cache
         const cachedMarkets = localStorage.getItem(`bwdm_cache_markets`)
@@ -42,7 +9,7 @@ export default class MarketsService extends Service<Markets> {
             console.debug(`Markets cached`)
             let items = JSON.parse(cachedMarkets)
             if (items) {
-                return this.sortEvents(items)
+                return items
             }
             return {}
         } else {

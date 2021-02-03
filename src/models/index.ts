@@ -2,14 +2,6 @@ export interface Plan {
     name: string
     pages: number
 }
-export interface Event {
-    plan?: Plan
-    weekday?: number
-}
-
-export interface Events {
-    [key: string]: Event
-}
 
 export interface Assignment {
     class: string
@@ -33,8 +25,6 @@ export interface Market {
     name: string
     phase?: string
     plan?: Plan
-    events: Events
-    
 }
 
 // Kraam

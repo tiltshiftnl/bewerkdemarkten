@@ -62,11 +62,11 @@ export const zipAll = () => {
         const _markets: Markets = JSON.parse(_marketCache)
         Object.keys(_markets).forEach((_m: string) => {
             //each day
-            Object.keys(_markets[_m].events).forEach((_d: string) => {
+            Object.keys(_markets[_m]).forEach((_d: string) => {
                 ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
-                    const data = localStorage.getItem(`bwdm_cache_${_m}-${_d}_${key}`)
+                    const data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
                     if (data) {
-                        zip.file(`config/markt/${_m}-${_d}/${getFileName(key)}`, data)
+                        zip.file(`config/markt/${_m}/${getFileName(key)}`, data)
                     }
                 })
             })
