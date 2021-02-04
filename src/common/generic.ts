@@ -76,7 +76,7 @@ export const zipAll = () => {
     zip.generateAsync({ type: "base64" })
         .then(function (content) {
             downloadObjectAsZip("data:application/zip;base64," + content, `${getDatePart()}_bewerkdemarkten.zip`)
-        });
+        })
 }
 
 export const zipMarket = (marketDayId: string) => {
@@ -93,7 +93,7 @@ export const zipMarket = (marketDayId: string) => {
     zip.generateAsync({ type: "base64" })
         .then(function (content) {
             downloadObjectAsZip("data:application/zip;base64," + content, `${getDatePart()}_${marketDayId}.zip`)
-        });
+        })
 }
 
 
@@ -160,10 +160,10 @@ export const uploadMarket = async (marketDayId: string) => {
 }
 
 export const downloadObjectAsZip = (base64: string, filename: string) => {
-    let downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", base64);
-    downloadAnchorNode.setAttribute("download", filename);
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    let downloadAnchorNode = document.createElement('a')
+    downloadAnchorNode.setAttribute("href", base64)
+    downloadAnchorNode.setAttribute("download", filename)
+    document.body.appendChild(downloadAnchorNode) // required for firefox
+    downloadAnchorNode.click()
+    downloadAnchorNode.remove()
 }

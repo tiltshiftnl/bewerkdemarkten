@@ -54,26 +54,26 @@ export class Service<T> {
 
         // Fetch
         if (this.config.ONLINE) {
-        return fetch(this.getFilename(route, dataset), { credentials: 'include' })
-            .then(response => {
-                if (!response.ok) {
-                    this.handleResponseError(response)
-                }
-                return response.json()
-            })
-            .then(json => {
-                const item = json
-                // Cache
-                localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(item))
-                return item
-            })
-            .catch(error => {
-                this.handleError(error)
-            })
+            return fetch(this.getFilename(route, dataset), { credentials: 'include' })
+                .then(response => {
+                    if (!response.ok) {
+                        this.handleResponseError(response)
+                    }
+                    return response.json()
+                })
+                .then(json => {
+                    const item = json
+                    // Cache
+                    localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(item))
+                    return item
+                })
+                .catch(error => {
+                    this.handleError(error)
+                })
         } else {
             return new Promise((resolve) => {
                 localStorage.setItem(`bwdm_cache_${route}_${dataset}`, JSON.stringify(empty))
-                resolve(empty);
+                resolve(empty)
             })
         }
     }

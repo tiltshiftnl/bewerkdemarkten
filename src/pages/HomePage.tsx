@@ -38,7 +38,9 @@ export default class HomePage extends Component {
             const _marketsCache = localStorage.getItem('bwdm_cache_markets')
             if (_marketsCache) {
                 const _markets = JSON.parse(_marketsCache)
-                console.log(_markets)
+                this.setState({
+                    markets: _markets
+                })
             }
             this.setState({
                 progress: 100,
@@ -201,18 +203,7 @@ export default class HomePage extends Component {
             })
     }
 
-    getMmarktClass = (m: MMarkt) => {
-        //console.log(m)
-        if (this.state.markets[m.afkorting] && !m.kiesJeKraamActief) {
-            return "ugly"
-        } else if (m.kiesJeKraamActief) {
-            return "tag"
-        } else {
-            return "inactive"
-        }
-
-
-    }
+    
 
     render() {
         let myDate
@@ -230,14 +221,23 @@ export default class HomePage extends Component {
             </Breadcrumb>
             <Progress percent={this.state.progress} status={this.state.progressStatus} />
             <Row gutter={[16, 16]}>
-
+                <Col>
+                <p>Importeer een markten zip bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.</p>
+                </Col>
+            </Row>
+            {/* <Row gutter={[16, 16]}>
                 <Col key="init-app" style={{ margin: "0.5em" }}>
-                    <div className="tag-flex">
-                        {this.state.mmarkets && this.state.mmarkets.map((m: MMarkt) => {
-                            return <div key={m.id} className={this.getMmarktClass(m)}>{m.afkorting}</div>
-                        })}
-                    </div>
-                    <br />
+                    <h1>Markten in Amsterdam:</h1>
+                    <p>Onderstaand overzicht toont alle markten in Amsterdam en de status die ze hebben. Indien een zip bestand is ingeladen, dan wordt dit vergeleken met de amsterdamse markten</p>
+                </Col>
+            </Row> */}
+            {/* <Row gutter={[16, 16]}>
+                {this.state.mmarkets && this.state.mmarkets.map((m: MMarkt) => {
+                    return <Col key={m.afkorting}><MarketItem key={m.afkorting} market={m}></MarketItem></Col>
+                })}
+            </Row> */}
+            <Row gutter={[16, 16]}>
+                <Col key="init-app" style={{ margin: "0.5em" }}>
                     {myDate && <>
                         <i>Bestand:</i> {this.state.systemState.zipName}<br />
                         <i>Geladen op:</i> {myDate}<br />
@@ -255,9 +255,6 @@ export default class HomePage extends Component {
 
                     </>}
                     <br />
-                    {/* {this.state.files && Object.keys(this.state.files).map((f: string) => {
-                        return <div key={f}>{f}</div>
-                    })}<br /> */}
                     <input type="file" id="file" name="file" onChange={this.handleFile} />
                 </Col>
             </Row>

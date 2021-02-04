@@ -1,41 +1,41 @@
 export interface MMarkt {
-    id:                              number;
-    afkorting:                       string;
-    naam:                            string;
-    soort:                           Soort;
-    geoArea:                         null;
-    marktDagen:                      MarktDagen[];
-    standaardKraamAfmeting:          number;
-    extraMetersMogelijk:             boolean;
-    aanwezigeOpties:                 any[] | AanwezigeOptiesClass;
-    perfectViewNummer:               number | null;
-    aantalKramen:                    number | null;
-    aantalMeter:                     number | null;
-    auditMax:                        number;
-    kiesJeKraamMededelingActief:     boolean;
-    kiesJeKraamMededelingTitel:      KiesJeKraamMededelingTitel | null;
-    kiesJeKraamMededelingTekst:      null | string;
-    kiesJeKraamActief:               boolean;
-    kiesJeKraamFase:                 KiesJeKraamFase | null;
-    kiesJeKraamGeblokkeerdePlaatsen: null;
-    kiesJeKraamGeblokkeerdeData:     null | string;
-    kiesJeKraamEmailKramenzetter:    null | string;
-    marktDagenTekst:                 null | string;
-    indelingsTijdstipTekst:          IndelingsTijdstipTekst | null;
-    telefoonNummerContact:           null | string;
-    makkelijkeMarktActief:           boolean;
-    indelingstype:                   Indelingstype;
-    isABlijstIndeling:               boolean;
+    id: number
+    afkorting: string
+    naam: string
+    soort: Soort
+    geoArea?: number | null
+    marktDagen?: MarktDagen[]
+    standaardKraamAfmeting?: number
+    extraMetersMogelijk?: boolean
+    aanwezigeOpties?: any[] | AanwezigeOptiesClass
+    perfectViewNummer?: number | null
+    aantalKramen?: number | null
+    aantalMeter?: number | null
+    auditMax?: number
+    kiesJeKraamMededelingActief?: boolean
+    kiesJeKraamMededelingTitel?: KiesJeKraamMededelingTitel | null
+    kiesJeKraamMededelingTekst?: null | string
+    kiesJeKraamActief: boolean
+    kiesJeKraamFase?: KiesJeKraamFase | null
+    kiesJeKraamGeblokkeerdePlaatsen?: null
+    kiesJeKraamGeblokkeerdeData?: null | string
+    kiesJeKraamEmailKramenzetter?: null | string
+    marktDagenTekst?: null | string
+    indelingsTijdstipTekst?: IndelingsTijdstipTekst | null
+    telefoonNummerContact?: null | string
+    makkelijkeMarktActief?: boolean
+    indelingstype?: Indelingstype
+    isABlijstIndeling?: boolean
 }
 
 export interface AanwezigeOptiesClass {
-    "3mKramen"?:      boolean;
-    "4mKramen"?:      boolean;
-    extraMeters?:     boolean;
-    elektra?:         boolean;
-    afvaleiland?:     boolean;
-    krachtstroom?:    boolean;
-    eenmaligElektra?: boolean;
+    "3mKramen"?: boolean
+    "4mKramen"?: boolean
+    extraMeters?: boolean
+    elektra?: boolean
+    afvaleiland?: boolean
+    krachtstroom?: boolean
+    eenmaligElektra?: boolean
 }
 
 export enum IndelingsTijdstipTekst {

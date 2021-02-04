@@ -32,7 +32,7 @@ export class BrancheService extends Service<Branche[]> {
         } else {
             return new Promise((resolve) => {
                 localStorage.setItem('bwdm_lookup_branches', JSON.stringify([]))
-                resolve([]);
+                resolve([])
             })
         }
     }
@@ -73,7 +73,7 @@ export class DaysClosedService extends Service<string[]> {
         } else {
             return new Promise((resolve) => {
                 localStorage.setItem('bwdm_lookup_daysclosed', JSON.stringify([]))
-                resolve([]);
+                resolve([])
             })
         }
     }
@@ -178,7 +178,7 @@ export class ObstacleTypeService extends Service<string[]> {
         } else {
             return new Promise((resolve) => {
                 localStorage.setItem('bwdm_lookup_obstacletypes', JSON.stringify(this.defaultTypes))
-                resolve(this.defaultTypes);
+                resolve(this.defaultTypes)
             })
         }
     }
@@ -222,7 +222,7 @@ export class LotPropertyService extends Service<string[]> {
         } else {
             return new Promise((resolve) => {
                 localStorage.setItem('bwdm_lookup_properties', JSON.stringify(this.defaultTypes))
-                resolve(this.defaultTypes);
+                resolve(this.defaultTypes)
             })
         }
     }

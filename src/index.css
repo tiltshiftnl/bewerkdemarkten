@@ -461,12 +461,6 @@ td {
   height: 52px !important;
 }
 
-.tag-flex {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-
 .tag {
   border: 1px solid #00f;
   margin: 1em;
