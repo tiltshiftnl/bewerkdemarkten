@@ -85,7 +85,7 @@ export default class MarketPage extends DynamicBase {
         })
         this.getPlan()
         this.transformer.encode(this.id).then(result => {
-            this.branchesRef.current?.updateBranches(result.branches)
+            this.branchesRef.current?.updateStorage(result.branches)
             this.setState({
                 marketEventDetails: result,
                 activeKey: result.pages.length === 0 ? "1" : "0"
@@ -121,7 +121,7 @@ export default class MarketPage extends DynamicBase {
                     marketEventDetails: _newM
                 })
             })
-            this.branchesRef.current?.updateBranches([])
+            this.branchesRef.current?.updateStorage([])
         })
     }
 

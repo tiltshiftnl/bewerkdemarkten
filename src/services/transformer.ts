@@ -130,11 +130,11 @@ export class Transformer {
 
         pages.forEach((page: MarketPage) => {
             page.layout.forEach((layout: MarketLayout) => {
-                layout.lots.forEach((element: Lot | Obstacle) => {
+                layout.lots.forEach((element: Lot | Obstacle, i) => {
                     if (element.type === "obstacle") {
                         obstacles.push({
-                            kraamA: element.kraamA || "",
-                            kraamB: element.kraamB || "",
+                            kraamA: element.kraamA || layout.lots[i - 1].plaatsId || "",
+                            kraamB: element.kraamB || layout.lots[i + 1].plaatsId || "",
                             obstakel: element.obstakel || []
                         })
                     }

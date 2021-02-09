@@ -16,7 +16,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
         this.branchesService = new BranchesService()
     }
 
-    updateBranches = (branches: AssignedBranche[]) => {
+    updateStorage = (branches: AssignedBranche[]) => {
         // Tell the parent component this page has changed.
         const _branches = branches.filter(e => e.brancheId !== "")
         localStorage.setItem(`bwdm_cache_${this.props.id}_branches`, JSON.stringify(_branches))
@@ -58,7 +58,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                     _branches[i].backGroundColor = _selectedBranche.color
                     _branches[i].color = getTextColor(_selectedBranche.color)
                     // Find the color, set the foreground color with the function.
-                    this.updateBranches(_branches)
+                    this.updateStorage(_branches)
                 }
             }}
         >
@@ -113,7 +113,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                             if (this.state.branches) {
                                 const _branches = this.state.branches
                                 _branches[i].verplicht = checked
-                                this.updateBranches(_branches)
+                                this.updateStorage(_branches)
                             }
                         }} /></td>
                         <td>
@@ -122,7 +122,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                                     if (value && this.state.branches) {
                                         const _branches = this.state.branches
                                         _branches[i].maximumPlaatsen = parseInt(value.toString())
-                                        this.updateBranches(_branches)
+                                        this.updateStorage(_branches)
                                     }
                                 }} />
                         </td>
@@ -136,7 +136,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                                     let _branches = this.state.branches
                                     delete _branches[i]
                                     _branches = _branches.filter(() => true)
-                                    this.updateBranches(_branches)
+                                    this.updateStorage(_branches)
                                 }
                             }}
                         /></td>
@@ -153,7 +153,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                         backGroundColor: "#fff",
                         allocated: 0
                     })
-                    this.updateBranches(_branches)
+                    this.updateStorage(_branches)
                 }}
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
