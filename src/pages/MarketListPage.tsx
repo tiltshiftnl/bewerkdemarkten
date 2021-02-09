@@ -32,7 +32,7 @@ export default class MarketListPage extends Component {
     marketsService: MarketsService
     pagesService: PagesService
     mmarktService: MMarktService
-    
+
     constructor(props: any) {
         super(props)
         this.marketsService = new MarketsService()
@@ -160,14 +160,17 @@ export default class MarketListPage extends Component {
                 </Col>
             </Row><Row gutter={[16, 16]}>
                 {Object.keys(this.state.filteredMarkets).sort().map((key: string, i: number) => {
-                    
+
                     const market: Market = this.state.markets[key]
                     const mmarket = this.state.mmarkets.find(e => e.afkorting.toLowerCase() === key.toLowerCase())
-                    if(mmarket && mmarket.kiesJeKraamFase) {
-                        market.phase = mmarket.kiesJeKraamFase
-                    }
-                    if(mmarket && mmarket.naam) {
-                        market.name = mmarket.naam
+                    if (mmarket) {
+                        if (mmarket.kiesJeKraamFase) {
+                            market.phase = mmarket.kiesJeKraamFase
+                        }
+                        if (mmarket && mmarket.naam) {
+                            market.name = mmarket.naam
+                        }
+                        market.municipality = "Amsterdam"
                     }
                     return <Col key={key} style={{ margin: "0.5em" }}>
                         <MarketListItem marketId={key} market={market} />

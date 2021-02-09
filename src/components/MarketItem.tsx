@@ -34,7 +34,7 @@ export default class MarketItem extends Component<{ market: MMarkt }> {
                 pathname: `/market/${market.afkorting}`
             }}>
                 <span style={{fontWeight: "bold", fontSize: "1.2em"}}>{market.afkorting} </span>
-                <span style={{color: "rgba(0, 0, 0, 0.45)"}}> {this.state.market.naam || " "}</span>
+                <span style={{color: "rgba(0, 0, 0, 0.45)"}}> {this.state.market.naam || ""}</span>
                 {/* {this.state.market && <>{Object.keys(this.state.market.events).map((key: string) => {
                     if(this.state.market.events[key].weekday){
                         return <div key={key}>{key}</div>

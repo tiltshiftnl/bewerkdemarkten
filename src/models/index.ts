@@ -25,6 +25,7 @@ export interface Market {
     name: string
     phase?: string
     plan?: Plan
+    municipality?: string
 }
 
 // Kraam

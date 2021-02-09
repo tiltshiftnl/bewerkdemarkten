@@ -204,6 +204,10 @@ textarea {
   padding: 1em;
 }
 
+.market-card > a > * {
+  color: var(--button-default);
+}
+
 .wenperiode,
 .wenweken>button:not(.ant-dropdown-trigger),
 .wenperiode>button:not(.ant-dropdown-trigger) {
@@ -243,7 +247,9 @@ textarea {
   background: #fffbe6 !important;
   border-color: #ffe58f !important;
 }
-
+.activatie > a > h2 {
+  color: #faad14 !important;
+}
 .voorbereiding,
 .voorbereiding>button:not(.ant-dropdown-trigger) {
   color: #f5222d !important;
