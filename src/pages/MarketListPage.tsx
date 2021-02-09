@@ -16,9 +16,10 @@ const { Search } = Input;
 
 export default class MarketListPage extends Component {
     weekdays: DayOfWeek[] = WeekDays
-    readonly state: { mmarkets: MMarkt[], markets: Markets, filteredMarkets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
+    readonly state: { mmarkets: MMarkt[], markets: Markets, filter: "", filteredMarkets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
         mmarkets: [],
         markets: {},
+        filter: "",
         filteredMarkets: {},
         showModal: false,
         newMarketId: "",
@@ -44,6 +45,8 @@ export default class MarketListPage extends Component {
         localStorage.setItem('bwdm_cache_markets', JSON.stringify(markets))
         this.setState({
             markets
+        }, () => {
+            this.applyFilter()
         })
     }
 
@@ -92,12 +95,12 @@ export default class MarketListPage extends Component {
             })
         })
         this.mmarktService.retrieve().then((mmarkets: MMarkt[]) => {
-            const marketKeys: string[]= Object.keys(this.state.markets)
+            const marketKeys: string[] = Object.keys(this.state.markets)
             const _markets: Markets = this.state.markets
 
             mmarkets.forEach((m: MMarkt) => {
-                
-                if(!marketKeys.includes(m.afkorting)) {
+
+                if (!marketKeys.includes(m.afkorting)) {
                     _markets[m.afkorting] = {
                         id: m.id,
                         name: m.naam,
@@ -127,16 +130,16 @@ export default class MarketListPage extends Component {
         console.log(value)
     }
 
-    onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    applyFilter = () => {
         const _filteredMarkets: Markets = {}
-        if (e.target.value === '') {
+        if (this.state.filter === '') {
             this.setState({
                 filteredMarkets: this.state.markets
             })
         } else {
             Object.keys(this.state.markets)
                 .filter(hit => hit.toLocaleLowerCase()
-                    .includes(e.target.value.toLowerCase()))
+                    .includes(this.state.filter.toLowerCase()))
                 .forEach((key: string) => {
                     _filteredMarkets[key] = this.state.markets[key]
                 })
@@ -144,6 +147,14 @@ export default class MarketListPage extends Component {
                 filteredMarkets: _filteredMarkets
             })
         }
+    }
+    onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            filter: e.target.value
+        }, () => {
+            this.applyFilter()
+        })
+        
     }
 
     render() {
@@ -214,7 +225,7 @@ export default class MarketListPage extends Component {
                             })
                         } else {
                             this.setState({
-                                newMarketId: e.target.value.replace("-", "_"),
+                                newMarketId: e.target.value,
                                 newMarketInvalid: ""
                             })
                         }
@@ -227,7 +238,7 @@ export default class MarketListPage extends Component {
 
                 }} />
                 {this.state.newMarketInvalid !== "" && <div className="input-error">{this.state.newMarketInvalid}</div>}
-                {!this.checkAbbreviation() && <>
+                {/* {!this.checkAbbreviation() && <>
                     <i>Maak een dag aan om de betreffende markt te initieren</i>
                     <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         const _d = this.state.day
@@ -236,7 +247,7 @@ export default class MarketListPage extends Component {
                             day: _d
                         })
                     }} /></>
-                }
+                } */}
 
             </Modal>
         </>

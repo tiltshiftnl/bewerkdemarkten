@@ -3,14 +3,16 @@ import Day from "../components/Day"
 import MarketsService from "../services/service_markets"
 import { Transformer } from "../services/transformer"
 import { DynamicBase } from "./DynamicBase"
-import { Breadcrumb, Button, Tabs, Upload, Row, Col } from 'antd'
-import { HomeOutlined, UploadOutlined, FileZipOutlined } from '@ant-design/icons'
+import { Breadcrumb, Tabs, Row, Col, //Button, Upload
+    } from 'antd'
+import { HomeOutlined, //UploadOutlined, FileZipOutlined 
+    } from '@ant-design/icons'
 import { Link } from "react-router-dom"
 import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
 import Configuration from "../services/configuration"
-import { zipMarket } from "../common/generic"
+//import { zipMarket } from "../common/generic"
 
 const { TabPane } = Tabs
 
@@ -144,15 +146,15 @@ export default class MarketPage extends DynamicBase {
             </Breadcrumb>
             <Row align="top" gutter={[16, 16]}>
                 <Col>
-                    {this.state.uploadProps &&
+                    {/* {this.state.uploadProps &&
                         <Upload {...this.state.uploadProps}>
                             <Button icon={<UploadOutlined />}>Kaart uploaden/vervangen</Button>
                         </Upload>
-                    }
+                    } */}
 
                 </Col>
                 <Col>
-                    <Button
+                    {/* <Button
                     title={`Download de JSON bestanden voor ${this.id}`}
                     icon={<FileZipOutlined />}
                     type="link"
@@ -162,7 +164,7 @@ export default class MarketPage extends DynamicBase {
                             }
                         }}
 
-                    >Download {this.id}</Button>
+                    >Download {this.id}</Button> */}
                     {/* <Button
                     title={`Upload de JSON bestanden voor ${this.id} naar de centrale server`}
                     style={{marginLeft: "1em"}}
@@ -181,10 +183,13 @@ export default class MarketPage extends DynamicBase {
                 <Tabs activeKey={this.state.activeKey} onTabClick={(key: string, e: MouseEvent | KeyboardEvent) => {
                     this.setState({ activeKey: key })
                 }}>
-                    <TabPane tab="Details" key="0">
+                    <TabPane tab="Marktindeling" key="0">
                         <Day id={this.id} ref={this.dayRef} lookupBranches={this.state.lookupBranches} />
                     </TabPane>
-                    <TabPane tab="Branchelijst" key="1" forceRender={true}>
+                    <TabPane tab="Branche toewijzing" key="1" forceRender={true}>
+                        {/* {(!this.state.lookupBranches || this.state.lookupBranches.length === 0) &&
+                            <p>Alvorens kan worden begonnen met het indelen van de markt dienen de branches te zijn toegewezen die kunnen worden gebruikt op de markt.</p>
+                        } */}
                         <Branches id={this.id} ref={this.branchesRef} lookupBranches={this.state.lookupBranches} changed={this.updateAssignedBranches} />
                     </TabPane>
                 </Tabs>}
