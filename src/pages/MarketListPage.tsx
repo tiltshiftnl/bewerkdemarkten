@@ -92,9 +92,26 @@ export default class MarketListPage extends Component {
             })
         })
         this.mmarktService.retrieve().then((mmarkets: MMarkt[]) => {
+            const marketKeys: string[]= Object.keys(this.state.markets)
+            const _markets: Markets = this.state.markets
 
+            mmarkets.forEach((m: MMarkt) => {
+                
+                if(!marketKeys.includes(m.afkorting)) {
+                    _markets[m.afkorting] = {
+                        id: m.id,
+                        name: m.naam,
+                    }
+                    if (m.kiesJeKraamFase) {
+                        _markets[m.afkorting].phase = m.kiesJeKraamFase
+                    }
+                    _markets[m.afkorting].municipality = "Amsterdam"
+                }
+            })
             this.setState({
-                mmarkets
+                mmarkets: mmarkets,
+                markets: _markets,
+                filteredMarkets: _markets
             })
         })
     }
