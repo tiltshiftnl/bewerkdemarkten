@@ -55,13 +55,11 @@ export default class MarketListPage extends Component {
         if (this.state.newMarketId !== "") {
             const _markets = this.state.markets
             //const _events: Events = {}
-            if (this.state.day.abbreviation !== "") {
                 // _events[this.state.day.abbreviation] = {
                 //     weekday: 0
                 // }
                 // POST a new empty pagina's set to the backend
-                this.pagesService.update(`${this.state.newMarketId}-${this.state.day.abbreviation}`, [])
-            }
+            this.pagesService.update(`${this.state.newMarketId}`, [])
 
             _markets[this.state.newMarketId] = {
                 id: 0,

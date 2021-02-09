@@ -18,14 +18,15 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
 
     updateBranches = (branches: AssignedBranche[]) => {
         // Tell the parent component this page has changed.
+        const _branches = branches.filter(e => e.brancheId !== "")
+        localStorage.setItem(`bwdm_cache_${this.props.id}_branches`, JSON.stringify(_branches))
         if(this.props.changed){
-            this.props.changed(branches)
+            this.props.changed(_branches)
         }
-        
+
         this.setState({
             branches
         })
-        
     }
 
     getStyle = (branche: AssignedBranche): CSS.Properties => {
