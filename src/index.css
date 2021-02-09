@@ -183,14 +183,6 @@ textarea {
   min-height: 100px
 }
 
-.wenweken>button:not(.ant-dropdown-trigger),
-.wenperiode>button:not(.ant-dropdown-trigger) {
-  color: #fa8c16 !important;
-  background: #fff7e6 !important;
-  border-color: #ffd591 !important;
-  width: 110px;
-}
-
 .block-left {
   padding-top: 6px;
   border-top: 30px solid var(--graycolor);
@@ -205,38 +197,61 @@ textarea {
   width: 100%;
 }
 
-.onbekend {
-  font-style: italic !important;
-  color: var(--graycolor) !important;
+
+.market-card {
+  border: 1px solid #ccc;
+  width: 260px;
+  padding: 1em;
 }
 
+.wenperiode,
+.wenweken>button:not(.ant-dropdown-trigger),
+.wenperiode>button:not(.ant-dropdown-trigger) {
+  color: #fa8c16 !important;
+  background: #fff7e6 !important;
+  border-color: #ffd591 !important;
+}
+
+.wenperiode > a > h2 {
+  color: #fa8c16 !important;
+}
+
+.onbekend, 
 .onbekend>button:not(.ant-dropdown-trigger) {
   font-style: inherit;
   color: inherit;
   background: #fff !important;
   border-color: var(--graycolor) !important;
-  width: 110px;
 }
 
+.onbekend > a > h2 {
+  color: inherit;
+}
+
+.live,
 .live>button:not(.ant-dropdown-trigger) {
   color: #52c41a !important;
   background: #f6ffed !important;
   border-color: #b7eb8f !important;
-  width: 110px;
 }
-
+.live > a > h2 {
+  color: #52c41a !important;
+}
+.activatie,
 .activatie>button:not(.ant-dropdown-trigger) {
   color: #faad14 !important;
   background: #fffbe6 !important;
   border-color: #ffe58f !important;
-  width: 110px;
 }
 
+.voorbereiding,
 .voorbereiding>button:not(.ant-dropdown-trigger) {
   color: #f5222d !important;
   background: #fff1f0 !important;
   border-color: #ffa39e !important;
-  width: 110px;
+}
+.voorbereiding > a > h2 {
+  color: #f5222d !important;
 }
 
 .block-wrapper {

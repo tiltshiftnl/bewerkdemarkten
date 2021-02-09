@@ -1,5 +1,5 @@
 import { HomeOutlined, FileZipOutlined } from '@ant-design/icons'
-import { Col, Row, message, Progress, Button } from "antd"
+import { Col, Row, message, Progress, Button, Descriptions } from "antd"
 import React, { Component } from "react"
 import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
@@ -203,7 +203,7 @@ export default class HomePage extends Component {
             })
     }
 
-    
+
 
     render() {
         let myDate
@@ -222,7 +222,7 @@ export default class HomePage extends Component {
             <Progress percent={this.state.progress} status={this.state.progressStatus} />
             <Row gutter={[16, 16]}>
                 <Col>
-                <p>Importeer een markten zip bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.</p>
+                    <p>Importeer een markten zip bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.</p>
                 </Col>
             </Row>
             {/* <Row gutter={[16, 16]}>
@@ -237,25 +237,31 @@ export default class HomePage extends Component {
                 })}
             </Row> */}
             <Row gutter={[16, 16]}>
-                <Col key="init-app" style={{ margin: "0.5em" }}>
-                    {myDate && <>
-                        <i>Bestand:</i> {this.state.systemState.zipName}<br />
-                        <i>Geladen op:</i> {myDate}<br />
-                        {this.state.systemState.marketCount} <i>markten geladen</i><br />
+                <Col key="init-app">
 
-                        <Button
-                            title="Download het zip bestand met alle markten en configuratie"
-                            icon={<FileZipOutlined />}
-                            type="link"
-                            onClick={() => {
-                                zipAll()
-                            }}
+                    <Descriptions title="Systeem status" bordered>
+                        {myDate && <>
+                            <Descriptions.Item  >{this.state.systemState.zipName}</Descriptions.Item>
+                            <Descriptions.Item label="Geladen op">{myDate}</Descriptions.Item>
+                            <Descriptions.Item label="Markten">{this.state.systemState.marketCount}</Descriptions.Item>
 
-                        >Download zip bestand</Button>
+                            <Descriptions.Item label="Download">
+                                <Button
+                                    title="Download het zip bestand met alle markten en configuratie"
+                                    icon={<FileZipOutlined />}
+                                    type="link"
+                                    onClick={() => {
+                                        zipAll()
+                                    }}
 
-                    </>}
-                    <br />
-                    <input type="file" id="file" name="file" onChange={this.handleFile} />
+                                >Download zip bestand</Button>
+                            </Descriptions.Item></>}
+                        <Descriptions.Item label="Upload">
+                            <input type="file" id="file" name="file" onChange={this.handleFile} />
+                        </Descriptions.Item>
+                    </Descriptions>
+
+
                 </Col>
             </Row>
 

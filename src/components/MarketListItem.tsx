@@ -20,17 +20,23 @@ export default class MarketListItem extends Component<{ market: Market, marketId
 
     render() {
         const { marketId } = this.props
-        return <Link key={marketId} to={{
+        return <div key={marketId} className={`${this.state.market.phase || "onbekend"} market-card`}>
+            <Link to={{
                 pathname: `/market/${marketId}`
             }}>
-                <span style={{fontWeight: "bold", fontSize: "1.2em"}}>{marketId} </span>
-                <span style={{color: "rgba(0, 0, 0, 0.45)"}}> {this.state.market.name || ""}</span>
-                {/* {this.state.market && <>{Object.keys(this.state.market.events).map((key: string) => {
+
+                <h2 style={{ fontWeight: "bold", fontSize: "1.2em" }}>{marketId} </h2>
+            </Link>
+            <p style={{ color: "rgba(0, 0, 0, 0.45)" }}> {this.state.market.name || ""}</p>
+            <p> {this.state.market.phase || "."}</p>
+            {/* {this.state.market && <>{Object.keys(this.state.market.events).map((key: string) => {
                     if(this.state.market.events[key].weekday){
                         return <div key={key}>{key}</div>
                     }
                     return <div key={key}>{key}*</div>
                 })}</>} */}
-        </Link>
+
+
+        </div>
     }
 }

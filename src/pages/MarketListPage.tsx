@@ -9,12 +9,15 @@ import { Link } from 'react-router-dom'
 import { //MinusCircleOutlined, 
     PlusOutlined
 } from '@ant-design/icons'
+import { MMarkt } from '../models/mmarkt'
+import { MMarktService } from '../services/service_mmarkt'
 
 const { Search } = Input;
 
 export default class MarketListPage extends Component {
     weekdays: DayOfWeek[] = WeekDays
-    readonly state: { markets: Markets, filteredMarkets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
+    readonly state: { mmarkets: MMarkt[], markets: Markets, filteredMarkets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
+        mmarkets: [],
         markets: {},
         filteredMarkets: {},
         showModal: false,
@@ -28,10 +31,13 @@ export default class MarketListPage extends Component {
 
     marketsService: MarketsService
     pagesService: PagesService
+    mmarktService: MMarktService
+    
     constructor(props: any) {
         super(props)
         this.marketsService = new MarketsService()
         this.pagesService = new PagesService()
+        this.mmarktService = new MMarktService()
     }
 
     updateMarkets = (markets: Markets) => {
@@ -83,6 +89,12 @@ export default class MarketListPage extends Component {
             this.setState({
                 markets,
                 filteredMarkets: markets
+            })
+        })
+        this.mmarktService.retrieve().then((mmarkets: MMarkt[]) => {
+
+            this.setState({
+                mmarkets
             })
         })
     }
@@ -148,7 +160,15 @@ export default class MarketListPage extends Component {
                 </Col>
             </Row><Row gutter={[16, 16]}>
                 {Object.keys(this.state.filteredMarkets).sort().map((key: string, i: number) => {
+                    
                     const market: Market = this.state.markets[key]
+                    const mmarket = this.state.mmarkets.find(e => e.afkorting.toLowerCase() === key.toLowerCase())
+                    if(mmarket && mmarket.kiesJeKraamFase) {
+                        market.phase = mmarket.kiesJeKraamFase
+                    }
+                    if(mmarket && mmarket.naam) {
+                        market.name = mmarket.naam
+                    }
                     return <Col key={key} style={{ margin: "0.5em" }}>
                         <MarketListItem marketId={key} market={market} />
                     </Col>
