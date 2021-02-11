@@ -1,8 +1,25 @@
 import JSZip from "jszip"
-import { AssignedBranche, Geography, Lot, Markets, Page, Rows } from "../models"
+import { AssignedBranche, Geography, Lot, Page, Rows } from "../models"
 import { BranchesService, GeographyService, LotsService, PagesService, RowsService } from "../services/service_markets"
 import { message } from 'antd'
 
+export const getLocalStorageMarkets = (): string[] => {
+    const _markets: string[] = []
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if (key) {
+            if (key.includes('bwdm_cache_') && key !== 'bwdm_cache_markets') {
+                const marketComponent = key.replace("bwdm_cache_", "").split("_")[0]
+                //console.log(marketComponent)
+
+                if (_markets && !(_markets.indexOf(marketComponent) > -1)) {
+                    _markets.push(marketComponent)
+                }
+            }
+        }
+    }
+    return _markets
+}
 
 export const getDatePart = () => {
     const _date = new Date()
@@ -19,6 +36,61 @@ export const getTextColor = (hexcolor: string): string => {
     var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
     // Return new color if to dark, else return the original
     return (yiq < 40) ? '#2980b9' : "black"
+}
+
+
+export const getDayNumber = (day: string) => {
+    switch (day) {
+        case "MA": {
+            return 1
+        }
+        case "DI": {
+            return 2
+        }
+        case "WO": {
+            return 3
+        }
+        case "DO": {
+            return 4
+        }
+        case "VR": {
+            return 5
+        }
+        case "ZA": {
+            return 6
+        }
+        case "ZO": {
+            return 7
+        }
+        default: {
+            return
+        }
+    }
+}
+
+export const getCacheName = (file: string) => {
+    switch (file) {
+        case "branches.json":
+            return "branches"
+        case "daysClosed.json":
+            return "daysclosed"
+        case "mededelingen.json":
+            return "announcements"
+        case "obstakeltypes.json":
+            return "obstacletypes"
+        case "plaatseigenschappen.json":
+            return "properties"
+        case "geografie.json":
+            return "geography"
+        case "locaties.json":
+            return "lots"
+        case "paginas.json":
+            return "pages"
+        case "markt.json":
+            return "rows"
+        default:
+            return
+    }
 }
 
 export const getFileName = (key: string) => {
@@ -57,21 +129,14 @@ export const zipAll = () => {
     })
 
     // // Grab all the localstorage objects and put them in a single zipfile for download!
-    const _marketCache: string | null = localStorage.getItem("bwdm_cache_markets")
-    if (_marketCache) {
-        const _markets: Markets = JSON.parse(_marketCache)
-        Object.keys(_markets).forEach((_m: string) => {
-            //each day
-            Object.keys(_markets[_m]).forEach((_d: string) => {
-                ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
-                    const data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
-                    if (data) {
-                        zip.file(`config/markt/${_m}/${getFileName(key)}`, data)
-                    }
-                })
-            })
+    getLocalStorageMarkets().forEach((_m: string) => {
+        ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
+            const data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
+            if (data) {
+                zip.file(`config/markt/${_m}/${getFileName(key)}`, data)
+            }
         })
-    }
+    })
 
     zip.generateAsync({ type: "base64" })
         .then(function (content) {

@@ -5,7 +5,7 @@ import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
 import JSZip from 'jszip'
 import { Markets } from '../models'
-import { zipAll } from '../common/generic'
+import { getCacheName, getLocalStorageMarkets, zipAll } from '../common/generic'
 import { MMarktService } from '../services/service_mmarkt'
 import { MMarkt } from '../models/mmarkt'
 
@@ -31,97 +31,33 @@ export default class HomePage extends Component {
     }
 
     componentDidMount() {
-        const _systemState: SystemState = {
-            cachedMarkets: []
-        }
+        let systemState: SystemState = {}
+        const _cachedState = localStorage.getItem('bwdm_state')
 
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            if (key) {
-                if (key.includes('bwdm_cache_')) {
-                    const marketComponent = key.replace("bwdm_cache_", "").split("_")[0]
-                    if (_systemState.cachedMarkets && !(_systemState.cachedMarkets.indexOf(marketComponent) > -1)) {
-                        _systemState.cachedMarkets.push(marketComponent)
-                    }
-                }
+        if(!_cachedState){ 
+            systemState = {
+                cachedMarkets: getLocalStorageMarkets()
             }
-        }
-
-        const systemState = localStorage.getItem('bwdm_state')
-        if (systemState) {
-            const _marketsCache = localStorage.getItem('bwdm_cache_markets')
-            if (_marketsCache) {
-                const _markets = JSON.parse(_marketsCache)
-                this.setState({
-                    markets: _markets
-                })
-            }
-            this.setState({
-                progress: 100,
-                progressStatus: "success",
-                systemState: JSON.parse(systemState)
-            })
         } else {
+            systemState = JSON.parse(_cachedState)
+            systemState.cachedMarkets = getLocalStorageMarkets()
+        }
+
+        const _marketsCache = localStorage.getItem('bwdm_cache_markets')
+        if (_marketsCache) {
+            const _markets = JSON.parse(_marketsCache)
             this.setState({
-                progress: 100,
-                progressStatus: "success",
-                systemState: _systemState
+                markets: _markets
             })
         }
-    }
 
-    getCacheName(file: string) {
-        switch (file) {
-            case "branches.json":
-                return "branches"
-            case "daysClosed.json":
-                return "daysclosed"
-            case "mededelingen.json":
-                return "announcements"
-            case "obstakeltypes.json":
-                return "obstacletypes"
-            case "plaatseigenschappen.json":
-                return "properties"
-            case "geografie.json":
-                return "geography"
-            case "locaties.json":
-                return "lots"
-            case "paginas.json":
-                return "pages"
-            case "markt.json":
-                return "rows"
-            default:
-                return
-        }
-    }
-
-    getDayNumber = (day: string) => {
-        switch (day) {
-            case "MA": {
-                return 1
-            }
-            case "DI": {
-                return 2
-            }
-            case "WO": {
-                return 3
-            }
-            case "DO": {
-                return 4
-            }
-            case "VR": {
-                return 5
-            }
-            case "ZA": {
-                return 6
-            }
-            case "ZO": {
-                return 7
-            }
-            default: {
-                return
-            }
-        }
+        // Update systemState
+        this.setState({
+            progress: 100,
+            progressStatus: "success",
+            systemState: systemState
+        })
+        localStorage.setItem('bwdm_state', JSON.stringify(systemState))
     }
 
     beforeUpload = (file: any) => {
@@ -152,8 +88,6 @@ export default class HomePage extends Component {
 
                         if (zipEntry.dir) {
                             const marketDayDir = zipEntry.name.replace('config/', '').replace('markt/', '').replace('/', '')
-                            //const marketDayMarket = marketDayDir.split("-")[0]
-                            //const marketDayDay = marketDayDir.split("-")[1]
                             //find market in mmarkt collection
                             const isvalid = mmarkets.find((entry: MMarkt) => {
                                 return entry.afkorting === marketDayDir
@@ -180,9 +114,9 @@ export default class HomePage extends Component {
                                 // GENERIC datafiles
                                 // Read the file string and store it in the local storage
                                 zipEntry.async("string").then((content: string) => {
-                                    if (this.getCacheName(filename)) {
+                                    if (getCacheName(filename)) {
                                         localStorage.setItem(
-                                            `bwdm_lookup_${this.getCacheName(filename)}`,
+                                            `bwdm_lookup_${getCacheName(filename)}`,
                                             JSON.stringify(
                                                 JSON.parse(content)
                                             )
@@ -192,8 +126,8 @@ export default class HomePage extends Component {
                             } else if (filename.includes("/") && filename.endsWith(".json")) {
                                 // Market datafiles
                                 zipEntry.async("string").then((content: string) => {
-                                    if (this.getCacheName(filename.split("/")[1])) {
-                                        const cacheName = `bwdm_cache_${filename.split("/")[0]}_${this.getCacheName(filename.split("/")[1])}`
+                                    if (getCacheName(filename.split("/")[1])) {
+                                        const cacheName = `bwdm_cache_${filename.split("/")[0]}_${getCacheName(filename.split("/")[1])}`
                                         localStorage.setItem(
                                             `${cacheName}`,
                                             JSON.stringify(
@@ -208,7 +142,8 @@ export default class HomePage extends Component {
                     const systemState = {
                         zipName: f.name,
                         lastUpdate: Date.now(),
-                        marketCount: Object.keys(_markets).length
+                        marketCount: Object.keys(_markets).length,
+                        
                     }
 
                     localStorage.setItem(`bwdm_cache_markets`, JSON.stringify(_markets))
@@ -225,8 +160,6 @@ export default class HomePage extends Component {
         })
 
     }
-
-
 
     render() {
         let myDate
@@ -254,29 +187,36 @@ export default class HomePage extends Component {
                     <Descriptions title="Systeem status" bordered>
                         {myDate && <>
                             <Descriptions.Item label="Bestand">{this.state.systemState.zipName}</Descriptions.Item>
-                            
+
                             <Descriptions.Item label="Geladen op">{myDate}</Descriptions.Item>
                             <Descriptions.Item label="Markten">{this.state.systemState.marketCount}</Descriptions.Item>
 
-                            <Descriptions.Item label="Download">
-                                <Button
-                                    title="Download het zip bestand met alle markten en configuratie"
-                                    icon={<FileZipOutlined />}
-                                    type="link"
-                                    onClick={() => {
-                                        zipAll()
-                                    }}
-                                >Download zip bestand</Button>
-                            </Descriptions.Item></>}
-                            {this.state.systemState.cachedMarkets &&
-                                <Descriptions.Item label="Markten met wijzigingen"> {this.state.systemState.cachedMarkets.map(
-                                    (m:string) => <span key={m} style={{padding: "1em"}}><Link to={{
+                        </>
+                        }
+                        {this.state.systemState.cachedMarkets && this.state.systemState.cachedMarkets.length > 0 &&
+                            <>
+                                <Descriptions.Item label="Download">
+                                    <Button
+                                        title="Download het zip bestand met alle markten en configuratie"
+                                        icon={<FileZipOutlined />}
+                                        type="link"
+                                        onClick={() => {
+                                            zipAll()
+                                        }}
+                                    >Download zip bestand</Button>
+                                </Descriptions.Item>
+                                
+                                {/* <Descriptions.Item label="Markten met wijzigingen">
+                                    <ul>
+                                        {this.state.systemState.cachedMarkets.map(
+                                    (m: string) => <li key={m}><Link to={{
                                         pathname: `/market/${m}`
                                     }}>
-                                    {m}
-                                    </Link></span>
-                                )}</Descriptions.Item>
-                            }
+                                        {m}
+                                    </Link></li>
+                                )}</ul></Descriptions.Item> */}
+                                </>
+                        }
                         <Descriptions.Item label="Upload">
                             <input type="file" id="file" name="file" onChange={this.handleFile} />
                         </Descriptions.Item>
