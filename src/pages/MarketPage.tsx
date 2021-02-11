@@ -8,7 +8,7 @@ import { Breadcrumb, Tabs, Row, Col, //Button, Upload
 import { HomeOutlined, //UploadOutlined, FileZipOutlined 
     } from '@ant-design/icons'
 import { Link } from "react-router-dom"
-import { AssignedBranche, Branche, MarketEventDetails, Markets, Plan } from "../models"
+import { AssignedBranche, Branche, MarketEventDetails, Plan } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
 import Configuration from "../services/configuration"
@@ -49,17 +49,17 @@ export default class MarketPage extends DynamicBase {
         this.dayRef = createRef()
     }
 
-    getPlan = () => {
-        this.marketsService.retrieve().then((markets: Markets) => {
-            let uploadProps: any = {
-                defaultFileList: []
-            }
+    // getPlan = () => {
+    //     this.marketsService.retrieve().then((markets: Markets) => {
+    //         let uploadProps: any = {
+    //             defaultFileList: []
+    //         }
 
-            this.setState({
-                uploadProps
-            })
-        })
-    }
+    //         this.setState({
+    //             uploadProps
+    //         })
+    //     })
+    // }
 
     updateAssignedBranches = (branches: AssignedBranche[]) => {
         const _m = this.state.marketEventDetails
@@ -77,21 +77,23 @@ export default class MarketPage extends DynamicBase {
     }
 
     refresh() {
+        console.log("refresh")
         this.id = (this.props as any).match.params.id
         this.lookupBrancheService.retrieve().then((lookupBranches: Branche[]) => {
             this.setState({
                 lookupBranches
             })
         })
-        this.getPlan()
+        //this.getPlan()
         this.transformer.encode(this.id).then(result => {
             this.branchesRef.current?.updateStorage(result.branches)
             this.setState({
                 marketEventDetails: result,
                 activeKey: result.pages.length === 0 ? "1" : "0"
-            })
-            this.dayRef.current?.setState({
-                marketEventDetails: result
+            }, () => {
+                this.dayRef.current?.setState({
+                    marketEventDetails: result
+                })
             })
         }).catch((e: Error) => {
             console.error(`Marktdag bestaat nog niet, ${this.id} wordt nieuw aangemaakt.`)
@@ -99,11 +101,11 @@ export default class MarketPage extends DynamicBase {
                 branches: [],
                 pages: [
                     {
-                        title: "Nieuwe pagina",
+                        title: "",
                         layout: [
                             {
-                                title: "Nieuwe rij",
-                                class: "",
+                                title: "",
+                                class: "block-left",
                                 landmarkBottom: "",
                                 landmarkTop: "",
                                 lots: []

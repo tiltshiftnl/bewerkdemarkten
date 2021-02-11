@@ -106,7 +106,10 @@ export default class MarketListPage extends Component {
                     if (m.kiesJeKraamFase) {
                         _markets[m.afkorting].phase = m.kiesJeKraamFase
                     }
-                    _markets[m.afkorting].municipality = "Amsterdam"
+                    if(m.aantalKramen) {
+                        _markets[m.afkorting].stands = m.aantalKramen
+                    }
+                    //_markets[m.afkorting].municipality = "Amsterdam"
                 }
             })
             this.setState({
@@ -196,7 +199,7 @@ export default class MarketListPage extends Component {
                         if (mmarket && mmarket.naam) {
                             market.name = mmarket.naam
                         }
-                        market.municipality = "Amsterdam"
+                        //market.municipality = "Amsterdam"
                     }
                     return <Col key={key} style={{ margin: "0.5em" }}>
                         <MarketListItem marketId={key} market={market} />

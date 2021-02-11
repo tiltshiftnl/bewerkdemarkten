@@ -10,8 +10,7 @@ import { MMarktService } from '../services/service_mmarkt'
 import { MMarkt } from '../models/mmarkt'
 
 export default class HomePage extends Component {
-    readonly state: { mmarkets: MMarkt[], markets: Markets, progress: number, progressStatus: "active" | "success", systemState: any } = {
-        mmarkets: [],
+    readonly state: { markets: Markets, progress: number, progressStatus: "active" | "success", systemState: any } = {
         markets: {},
         progress: 0,
         progressStatus: "active",
@@ -26,12 +25,7 @@ export default class HomePage extends Component {
     }
 
     componentDidMount() {
-        this.mmarktService.retrieve().then((mmarkets: MMarkt[]) => {
-
-            this.setState({
-                mmarkets
-            })
-        })
+        
 
         const systemState = localStorage.getItem('bwdm_state')
         if (systemState) {
@@ -118,7 +112,8 @@ export default class HomePage extends Component {
 
     handleFile = (event: any) => {
         const f = event.target.files[0]
-        JSZip.loadAsync(f)
+        this.mmarktService.retrieve().then((mmarkets: MMarkt[]) => {
+            JSZip.loadAsync(f)
             .then((zip) => {
                 const max = Object.keys(zip.files).length
                 let _markets: Markets = {}
@@ -134,7 +129,7 @@ export default class HomePage extends Component {
                         //const marketDayMarket = marketDayDir.split("-")[0]
                         //const marketDayDay = marketDayDir.split("-")[1]
                         //find market in mmarkt collection
-                        const isvalid = this.state.mmarkets.find((entry: MMarkt) => {
+                        const isvalid = mmarkets.find((entry: MMarkt) => {
                             return entry.afkorting === marketDayDir
                         })
                         if (isvalid) {
@@ -201,6 +196,8 @@ export default class HomePage extends Component {
             }, (e) => {
                 console.log("Error reading " + f.name + ": " + e.message)
             })
+        })
+        
     }
 
 
@@ -225,23 +222,12 @@ export default class HomePage extends Component {
                     <p>Importeer een markten zip bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.</p>
                 </Col>
             </Row>
-            {/* <Row gutter={[16, 16]}>
-                <Col key="init-app" style={{ margin: "0.5em" }}>
-                    <h1>Markten in Amsterdam:</h1>
-                    <p>Onderstaand overzicht toont alle markten in Amsterdam en de status die ze hebben. Indien een zip bestand is ingeladen, dan wordt dit vergeleken met de amsterdamse markten</p>
-                </Col>
-            </Row> */}
-            {/* <Row gutter={[16, 16]}>
-                {this.state.mmarkets && this.state.mmarkets.map((m: MMarkt) => {
-                    return <Col key={m.afkorting}><MarketItem key={m.afkorting} market={m}></MarketItem></Col>
-                })}
-            </Row> */}
             <Row gutter={[16, 16]}>
                 <Col key="init-app">
 
                     <Descriptions title="Systeem status" bordered>
                         {myDate && <>
-                            <Descriptions.Item  >{this.state.systemState.zipName}</Descriptions.Item>
+                            <Descriptions.Item label="Bestand">{this.state.systemState.zipName}</Descriptions.Item>
                             <Descriptions.Item label="Geladen op">{myDate}</Descriptions.Item>
                             <Descriptions.Item label="Markten">{this.state.systemState.marketCount}</Descriptions.Item>
 
@@ -253,18 +239,14 @@ export default class HomePage extends Component {
                                     onClick={() => {
                                         zipAll()
                                     }}
-
                                 >Download zip bestand</Button>
                             </Descriptions.Item></>}
                         <Descriptions.Item label="Upload">
                             <input type="file" id="file" name="file" onChange={this.handleFile} />
                         </Descriptions.Item>
                     </Descriptions>
-
-
                 </Col>
             </Row>
-
         </>
     }
 }

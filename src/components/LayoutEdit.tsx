@@ -36,7 +36,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
             <Col>
                 <Input
                     id={`market_${index}_title`}
-                    placeholder="Vul titel in"
+                    placeholder="Rij titel"
                     value={this.state.layout.title}
                     onChange={(e: any) => {
                         this.updatePage({ ...this.state.layout, title: e.target.value })
@@ -86,7 +86,7 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
                     onClick={() => {
                         if (this.props.changed) {
                             const _newLayout: MarketLayout = {
-                                title: "Nieuwe rij",
+                                title: "",
                                 class: "block-left",
                                 landmarkBottom: "",
                                 landmarkTop: "",

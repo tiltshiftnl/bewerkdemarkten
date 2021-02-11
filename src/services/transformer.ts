@@ -101,19 +101,25 @@ export class Transformer {
             _p.forEach((page: Page) => {
                 const newListGroupArray: any = []
                 page.indelingslijstGroup.forEach((group: Assignment) => {
-                    const firstLotId: string = group.plaatsList[0]
-                    const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
-                    //find the first
-                    const firstLot = rowSets.find(e => (e as Lot).plaatsId === firstLotId)
-                    //find the last
-                    const lastLot = rowSets.find(e => (e as Lot).plaatsId === lastLotId)
-                    if (lastLot && firstLot) {
-                        const firstLotPosition = rowSets.indexOf(firstLot)
-                        const lastLotPosition = rowSets.indexOf(lastLot)
-                        //grab the part of the array that is between (and including) first and last
-                        const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                    if (group.plaatsList.length > 0) {
+                        const firstLotId: string = group.plaatsList[0]
+                        const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
+                        //find the first
+                        const firstLot = rowSets.find(e => (e as Lot).plaatsId === firstLotId)
+                        //find the last
+                        const lastLot = rowSets.find(e => (e as Lot).plaatsId === lastLotId)
+                        if (lastLot && firstLot) {
+                            const firstLotPosition = rowSets.indexOf(firstLot)
+                            const lastLotPosition = rowSets.indexOf(lastLot)
+                            //grab the part of the array that is between (and including) first and last
+                            const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                            delete (group as any).plaatsList
+                            const newListGroup = { ...group, lots: pageLotsAndObstacles }
+                            newListGroupArray.push(newListGroup)
+                        }
+                    } else {
                         delete (group as any).plaatsList
-                        const newListGroup = { ...group, lots: pageLotsAndObstacles }
+                        const newListGroup = { ...group, lots: [] }
                         newListGroupArray.push(newListGroup)
                     }
                 })
@@ -133,8 +139,8 @@ export class Transformer {
                 layout.lots.forEach((element: Lot | Obstacle, i) => {
                     if (element.type === "obstacle") {
                         obstacles.push({
-                            kraamA: element.kraamA || layout.lots[i - 1].plaatsId || "",
-                            kraamB: element.kraamB || layout.lots[i + 1].plaatsId || "",
+                            kraamA: (layout.lots[i - 1] ? layout.lots[i - 1].plaatsId : "") || "",
+                            kraamB: (layout.lots[i + 1] ? layout.lots[i + 1].plaatsId : "") || "",
                             obstakel: element.obstakel || []
                         })
                     }
@@ -184,7 +190,33 @@ export class Transformer {
                     // Loop until the next object would be an obstacle or until blockEnd is true
                     if (element.type === "stand") {
                         _block.push(element.plaatsId || "")
-                        if (element.blockEnd || (layout.lots[i + 1] && layout.lots[i + 1].type === "obstacle")) {
+                        // Does it have a previous element? If not, set blockStart
+                        if (!layout.lots[i - 1]) {
+                            layout.lots[i].blockStart = true
+                        }
+
+                        // Does it have a previous element? If not, set blockStart
+                        if (!layout.lots[i + 1]) {
+                            layout.lots[i].blockEnd = true
+                        }
+
+                        // Is the previous element an obstacle?
+                        if (layout.lots[i - 1]) {
+                            if (layout.lots[i - 1].type === "obstacle") {
+                            layout.lots[i].blockStart = true
+                            } else {
+                                if(layout.lots[i - 1].blockEnd) {
+                                    layout.lots[i].blockStart = true
+                                }
+                            }
+                        }
+
+                        // Is the next element an obstacle?
+                        if (layout.lots[i + 1] && layout.lots[i + 1].type === "obstacle") {
+                            layout.lots[i].blockEnd = true
+                        }
+                        // Causes crash when layout.lots[i +1] or layouts.lots[]Check for layout lots
+                        if (element.blockEnd) {
                             _blocks.push(_block)
                             _block = []
                         }

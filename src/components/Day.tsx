@@ -20,12 +20,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
     readonly state: DayPageState = {
         marketEventDetails: {
             branches: [],
-            pages: [
-                {
-                    title: "Nieuwe pagina",
-                    layout: []
-                }
-            ]
+            pages: []
         },
         activeKey: "0"
     }
@@ -34,7 +29,6 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         super(props)
         this.lotEdit = createRef()
         this.transformer = new Transformer()
-
     }
 
     getClassname = (lot: Lot) => {
@@ -193,6 +187,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
             marketEventDetails: newMarketState
         })
         const { pages } = newMarketState
+        console.log(pages)
         localStorage.setItem(`bwdm_cache_${this.props.id}_lots`, JSON.stringify(this.transformer.layoutToStands(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_rows`, JSON.stringify(this.transformer.layoutToRows(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_geography`, JSON.stringify(this.transformer.layoutToGeography(pages)))
@@ -208,12 +203,11 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         if (typeof e === "string") {
             _marketEventDetails.pages.splice(parseInt(e), 1)
             //Update local storage
-            this.updateStorage(_marketEventDetails)
         } else {
             _marketEventDetails.pages.push({
-                title: "Nieuwe pagina",
+                title: "",
                 layout: [{
-                    title: "Nieuwe rij",
+                    title: "",
                     lots: [],
                     class: "block-left",
                     landmarkBottom: "",
@@ -239,15 +233,16 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                     const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
                     return <TabPane tab={page.title} key={i}>
-                        <><Input type="text" placeholder="Nieuwe pagina" value={page.title || ""}
+                        <><Input type="text" placeholder="Pagina titel" value={page.title || ""}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
                                 _marketEventDetails.pages[i].title = e.target.value
                                 this.updateStorage(_marketEventDetails)
                             }} /></>
                         <div className="block-wrapper">
-                            {page.layout.map((layout: MarketLayout, i: number) => {
+                            {page.layout && page.layout.length > 0 && page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
+                                console.log(layout)
                                 return <div key={i} className={layout.class}>
                                     {layout.class === 'block-left' &&
                                         <LayoutEdit
