@@ -9,8 +9,14 @@ import { zipAll } from '../common/generic'
 import { MMarktService } from '../services/service_mmarkt'
 import { MMarkt } from '../models/mmarkt'
 
+interface SystemState {
+    zipName?: string,
+    lastUpdate?: Date,
+    marketCount?: number,
+    cachedMarkets?: string[]
+}
 export default class HomePage extends Component {
-    readonly state: { markets: Markets, progress: number, progressStatus: "active" | "success", systemState: any } = {
+    readonly state: { markets: Markets, progress: number, progressStatus: "active" | "success", systemState: SystemState } = {
         markets: {},
         progress: 0,
         progressStatus: "active",
@@ -25,7 +31,21 @@ export default class HomePage extends Component {
     }
 
     componentDidMount() {
-        
+        const _systemState: SystemState = {
+            cachedMarkets: []
+        }
+
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            if (key) {
+                if (key.includes('bwdm_cache_')) {
+                    const marketComponent = key.replace("bwdm_cache_", "").split("_")[0]
+                    if (_systemState.cachedMarkets && !(_systemState.cachedMarkets.indexOf(marketComponent) > -1)) {
+                        _systemState.cachedMarkets.push(marketComponent)
+                    }
+                }
+            }
+        }
 
         const systemState = localStorage.getItem('bwdm_state')
         if (systemState) {
@@ -40,6 +60,12 @@ export default class HomePage extends Component {
                 progress: 100,
                 progressStatus: "success",
                 systemState: JSON.parse(systemState)
+            })
+        } else {
+            this.setState({
+                progress: 100,
+                progressStatus: "success",
+                systemState: _systemState
             })
         }
     }
@@ -114,90 +140,90 @@ export default class HomePage extends Component {
         const f = event.target.files[0]
         this.mmarktService.retrieve().then((mmarkets: MMarkt[]) => {
             JSZip.loadAsync(f)
-            .then((zip) => {
-                const max = Object.keys(zip.files).length
-                let _markets: Markets = {}
-                let i = 0
-                zip.forEach((relativePath, zipEntry) => {
-                    i = i + 1
-                    this.setState({
-                        progress: (i / max * 100)
-                    })
-
-                    if (zipEntry.dir) {
-                        const marketDayDir = zipEntry.name.replace('config/', '').replace('markt/', '').replace('/', '')
-                        //const marketDayMarket = marketDayDir.split("-")[0]
-                        //const marketDayDay = marketDayDir.split("-")[1]
-                        //find market in mmarkt collection
-                        const isvalid = mmarkets.find((entry: MMarkt) => {
-                            return entry.afkorting === marketDayDir
+                .then((zip) => {
+                    const max = Object.keys(zip.files).length
+                    let _markets: Markets = {}
+                    let i = 0
+                    zip.forEach((relativePath, zipEntry) => {
+                        i = i + 1
+                        this.setState({
+                            progress: (i / max * 100)
                         })
-                        if (isvalid) {
-                            console.log(marketDayDir + " found")
-                        } else {
-                            console.log(marketDayDir + " not found")
-                        }
-                        if (marketDayDir && marketDayDir !== "") {
-                            if (!_markets[marketDayDir]) {
-                                _markets[marketDayDir] = { id: i, name: "" }
+
+                        if (zipEntry.dir) {
+                            const marketDayDir = zipEntry.name.replace('config/', '').replace('markt/', '').replace('/', '')
+                            //const marketDayMarket = marketDayDir.split("-")[0]
+                            //const marketDayDay = marketDayDir.split("-")[1]
+                            //find market in mmarkt collection
+                            const isvalid = mmarkets.find((entry: MMarkt) => {
+                                return entry.afkorting === marketDayDir
+                            })
+                            if (isvalid) {
+                                console.log(marketDayDir + " found")
                             } else {
-                                _markets[marketDayDir] = {
-                                    id: 1,
-                                    name: ""
+                                console.log(marketDayDir + " not found")
+                            }
+                            if (marketDayDir && marketDayDir !== "") {
+                                if (!_markets[marketDayDir]) {
+                                    _markets[marketDayDir] = { id: i, name: "" }
+                                } else {
+                                    _markets[marketDayDir] = {
+                                        id: 1,
+                                        name: ""
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        const filename = zipEntry.name.replace('config/', '').replace('markt/', '')
+                        } else {
+                            const filename = zipEntry.name.replace('config/', '').replace('markt/', '')
 
-                        if (!filename.includes("/") && filename.endsWith(".json")) {
-                            // GENERIC datafiles
-                            // Read the file string and store it in the local storage
-                            zipEntry.async("string").then((content: string) => {
-                                if (this.getCacheName(filename)) {
-                                    localStorage.setItem(
-                                        `bwdm_lookup_${this.getCacheName(filename)}`,
-                                        JSON.stringify(
-                                            JSON.parse(content)
+                            if (!filename.includes("/") && filename.endsWith(".json")) {
+                                // GENERIC datafiles
+                                // Read the file string and store it in the local storage
+                                zipEntry.async("string").then((content: string) => {
+                                    if (this.getCacheName(filename)) {
+                                        localStorage.setItem(
+                                            `bwdm_lookup_${this.getCacheName(filename)}`,
+                                            JSON.stringify(
+                                                JSON.parse(content)
+                                            )
                                         )
-                                    )
-                                }
-                            })
-                        } else if (filename.includes("/") && filename.endsWith(".json")) {
-                            // Market datafiles
-                            zipEntry.async("string").then((content: string) => {
-                                if (this.getCacheName(filename.split("/")[1])) {
-                                    const cacheName = `bwdm_cache_${filename.split("/")[0]}_${this.getCacheName(filename.split("/")[1])}`
-                                    localStorage.setItem(
-                                        `${cacheName}`,
-                                        JSON.stringify(
-                                            JSON.parse(content)
+                                    }
+                                })
+                            } else if (filename.includes("/") && filename.endsWith(".json")) {
+                                // Market datafiles
+                                zipEntry.async("string").then((content: string) => {
+                                    if (this.getCacheName(filename.split("/")[1])) {
+                                        const cacheName = `bwdm_cache_${filename.split("/")[0]}_${this.getCacheName(filename.split("/")[1])}`
+                                        localStorage.setItem(
+                                            `${cacheName}`,
+                                            JSON.stringify(
+                                                JSON.parse(content)
+                                            )
                                         )
-                                    )
-                                }
-                            })
+                                    }
+                                })
+                            }
                         }
+                    })
+                    const systemState = {
+                        zipName: f.name,
+                        lastUpdate: Date.now(),
+                        marketCount: Object.keys(_markets).length
                     }
-                })
-                const systemState = {
-                    zipName: f.name,
-                    lastUpdate: Date.now(),
-                    marketCount: Object.keys(_markets).length
-                }
 
-                localStorage.setItem(`bwdm_cache_markets`, JSON.stringify(_markets))
-                localStorage.setItem('bwdm_state', JSON.stringify(systemState))
-                this.setState({
-                    markets: _markets,
-                    progress: 100,
-                    progressStatus: "success",
-                    systemState: systemState
+                    localStorage.setItem(`bwdm_cache_markets`, JSON.stringify(_markets))
+                    localStorage.setItem('bwdm_state', JSON.stringify(systemState))
+                    this.setState({
+                        markets: _markets,
+                        progress: 100,
+                        progressStatus: "success",
+                        systemState: systemState
+                    })
+                }, (e) => {
+                    console.log("Error reading " + f.name + ": " + e.message)
                 })
-            }, (e) => {
-                console.log("Error reading " + f.name + ": " + e.message)
-            })
         })
-        
+
     }
 
 
@@ -228,6 +254,7 @@ export default class HomePage extends Component {
                     <Descriptions title="Systeem status" bordered>
                         {myDate && <>
                             <Descriptions.Item label="Bestand">{this.state.systemState.zipName}</Descriptions.Item>
+                            
                             <Descriptions.Item label="Geladen op">{myDate}</Descriptions.Item>
                             <Descriptions.Item label="Markten">{this.state.systemState.marketCount}</Descriptions.Item>
 
@@ -241,6 +268,15 @@ export default class HomePage extends Component {
                                     }}
                                 >Download zip bestand</Button>
                             </Descriptions.Item></>}
+                            {this.state.systemState.cachedMarkets &&
+                                <Descriptions.Item label="Markten met wijzigingen"> {this.state.systemState.cachedMarkets.map(
+                                    (m:string) => <span key={m} style={{padding: "1em"}}><Link to={{
+                                        pathname: `/market/${m}`
+                                    }}>
+                                    {m}
+                                    </Link></span>
+                                )}</Descriptions.Item>
+                            }
                         <Descriptions.Item label="Upload">
                             <input type="file" id="file" name="file" onChange={this.handleFile} />
                         </Descriptions.Item>

@@ -187,7 +187,6 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
             marketEventDetails: newMarketState
         })
         const { pages } = newMarketState
-        console.log(pages)
         localStorage.setItem(`bwdm_cache_${this.props.id}_lots`, JSON.stringify(this.transformer.layoutToStands(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_rows`, JSON.stringify(this.transformer.layoutToRows(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_geography`, JSON.stringify(this.transformer.layoutToGeography(pages)))
@@ -242,7 +241,6 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                         <div className="block-wrapper">
                             {page.layout && page.layout.length > 0 && page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
-                                console.log(layout)
                                 return <div key={i} className={layout.class}>
                                     {layout.class === 'block-left' &&
                                         <LayoutEdit
