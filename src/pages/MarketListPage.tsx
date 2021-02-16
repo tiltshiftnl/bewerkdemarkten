@@ -5,16 +5,17 @@ import { DayOfWeek, Market, Markets, WeekDays } from "../models"
 import MarketsService, { PagesService } from "../services/service_markets"
 import MarketListItem from '../components/MarketListItem'
 import { Breadcrumb } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { //MinusCircleOutlined, 
     PlusOutlined
 } from '@ant-design/icons'
 import { MMarkt } from '../models/mmarkt'
 import { MMarktService } from '../services/service_mmarkt'
+import { withRouter } from 'react-router-dom'
 
 const { Search } = Input;
 
-export default class MarketListPage extends Component {
+class MarketListPage extends Component<RouteComponentProps> {
     weekdays: DayOfWeek[] = WeekDays
     readonly state: { mmarkets: MMarkt[], markets: Markets, filter: "", filteredMarkets: Markets, showModal: boolean, newMarketId: string, day: DayOfWeek, newMarketInvalid?: string } = {
         mmarkets: [],
@@ -59,7 +60,7 @@ export default class MarketListPage extends Component {
                 //     weekday: 0
                 // }
                 // POST a new empty pagina's set to the backend
-            this.pagesService.update(`${this.state.newMarketId}`, [])
+            //this.pagesService.update(`${this.state.newMarketId}`, [])
 
             _markets[this.state.newMarketId] = {
                 id: 0,
@@ -71,6 +72,7 @@ export default class MarketListPage extends Component {
             this.setState({
                 showModal: false
             })
+            this.props.history.push(`/market/${this.state.newMarketId}`)
         }
     };
 
@@ -254,3 +256,5 @@ export default class MarketListPage extends Component {
         </>
     }
 }
+
+export default withRouter(MarketListPage)
