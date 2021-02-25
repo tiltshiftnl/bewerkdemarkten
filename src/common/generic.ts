@@ -124,7 +124,7 @@ export const zipAll = () => {
     ["branches", "daysclosed", "announcements", "obstacletypes", "properties"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_lookup_${key}`)
         if (data) {
-            zip.file(`config/markt/${getFileName(key)}`, data)
+            zip.file(`config/markt/${getFileName(key)}`, JSON.stringify(JSON.parse(data),null,2))
         }
     })
 
@@ -133,7 +133,7 @@ export const zipAll = () => {
         ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
             const data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
             if (data) {
-                zip.file(`config/markt/${_m}/${getFileName(key)}`, data)
+                zip.file(`config/markt/${_m}/${getFileName(key)}`, JSON.stringify(JSON.parse(data),null,2))
             }
         })
     })
@@ -151,7 +151,7 @@ export const zipMarket = (marketDayId: string) => {
     ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_cache_${marketDayId}_${key}`)
         if (data) {
-            zip.file(`config/markt/${marketDayId}/${getFileName(key)}`, data)
+            zip.file(`config/markt/${marketDayId}/${getFileName(key)}`, JSON.stringify(JSON.parse(data),null,2))
         }
     })
 
