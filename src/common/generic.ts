@@ -124,16 +124,32 @@ export const zipAll = () => {
     ["branches", "daysclosed", "announcements", "obstacletypes", "properties"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_lookup_${key}`)
         if (data) {
-            zip.file(`config/markt/${getFileName(key)}`, JSON.stringify(JSON.parse(data),null,2))
+            zip.file(`config/markt/${getFileName(key)}`, JSON.stringify(JSON.parse(data), null, 2))
         }
     })
 
     // // Grab all the localstorage objects and put them in a single zipfile for download!
     getLocalStorageMarkets().forEach((_m: string) => {
         ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
-            const data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
+            let data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
+            if (key === "branches") {
+                // Strip color, allocated and backGroundColor
+                let _nBranches: AssignedBranche[] = []
+                if (data) {
+                    JSON.parse(data).forEach((_nB: AssignedBranche) => {
+                        _nBranches.push({
+                            brancheId: _nB.brancheId,
+                            verplicht: _nB.verplicht || false,
+                            maximumPlaatsen: _nB.maximumPlaatsen || 0
+                        })
+                    })
+
+                }
+                data = JSON.stringify(_nBranches)
+
+            }
             if (data) {
-                zip.file(`config/markt/${_m}/${getFileName(key)}`, JSON.stringify(JSON.parse(data),null,2))
+                zip.file(`config/markt/${_m}/${getFileName(key)}`, JSON.stringify(JSON.parse(data), null, 2))
             }
         })
     })
@@ -151,7 +167,7 @@ export const zipMarket = (marketDayId: string) => {
     ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
         const data = localStorage.getItem(`bwdm_cache_${marketDayId}_${key}`)
         if (data) {
-            zip.file(`config/markt/${marketDayId}/${getFileName(key)}`, JSON.stringify(JSON.parse(data),null,2))
+            zip.file(`config/markt/${marketDayId}/${getFileName(key)}`, JSON.stringify(JSON.parse(data), null, 2))
         }
     })
 
