@@ -15,7 +15,12 @@ interface DayPageState {
     activeKey: string
 }
 
-export default class Day extends Component<{ id: string, lookupBranches: Branche[] }> {
+interface DayPageProps {
+    id: string,
+    lookupBranches: Branche[]
+    changed?: () => void
+}
+export default class Day extends Component<DayPageProps> {
     lotEdit: RefObject<LotEdit>
     transformer: Transformer
     readonly state: DayPageState = {
@@ -26,7 +31,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         activeKey: "0"
     }
 
-    constructor(props: { id: string, lookupBranches: Branche[] }) {
+    constructor(props: DayPageProps) {
         super(props)
         this.lotEdit = createRef()
         this.transformer = new Transformer()
@@ -124,7 +129,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         }
 
         if (copy) {
-            
+
             _newLot = {
                 plaatsId: "0",
                 branches: _current.branches,
@@ -152,7 +157,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         }
         if (_cm.pages[position[0]].layout[position[1]].lots[position[2]]) {
             if (copy) {
-                
+
                 _newLot = {
                     plaatsId: "0",
                     branches: _current.branches,
@@ -211,12 +216,17 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
     updateStorage(newMarketState: MarketEventDetails) {
         this.setState({
             marketEventDetails: newMarketState
+        }, () => {
+            if (this.props.changed) {
+                this.props.changed()
+            }
         })
         const { pages } = newMarketState
         localStorage.setItem(`bwdm_cache_${this.props.id}_lots`, JSON.stringify(this.transformer.layoutToStands(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_rows`, JSON.stringify(this.transformer.layoutToRows(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_geography`, JSON.stringify(this.transformer.layoutToGeography(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_pages`, JSON.stringify(this.transformer.layoutToPages(pages)))
+
     }
 
     onTabChange = (activeKey: string) => {
