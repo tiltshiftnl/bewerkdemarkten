@@ -177,14 +177,16 @@ export default class LotEdit extends Component<LotEditProps> {
     }
 
     render() {
-        const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 4 }
+        const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 2 }
+        const firstColSpanObstacle = { xs: 8, sm: 8, md: 4, lg: 2 }
+        const secondColSpanObstacle = { xs: 8, sm: 8, md: 4, lg: 4 }
         const secondColSpan = { xs: 16, sm: 16, md: 8, lg: 8 }
-        const formGutter: [number, number] = [4, 4]
+        const formGutter: [number, number] = [16, 16]
 
         return <div className="edit-lot">
             {this.state.lot &&
                 <>
-                    <Row align="middle">
+                    <Row align="middle" gutter={formGutter}>
                         <Col>
                             <Radio.Group value={this.state.lot?.type} optionType="button" buttonStyle="solid" onChange={this.onToggle}>
                                 <Radio.Button value="stand">Kraam</Radio.Button>
@@ -196,8 +198,8 @@ export default class LotEdit extends Component<LotEditProps> {
                     {this.state.lot.type === "obstacle" &&
                         <>
                             <Row gutter={formGutter}>
-                                <Col {...firstColSpan}>Type</Col>
-                                <Col {...secondColSpan}>
+                                <Col>Type</Col>
+                                <Col {...secondColSpanObstacle}>
                                     <Select
                                         showSearch
                                         mode="tags"
@@ -223,7 +225,7 @@ export default class LotEdit extends Component<LotEditProps> {
                     }
                     {this.state.lot.type === "stand" &&
                         <>
-                            <Row align="middle">
+                            <Row align="middle" gutter={formGutter}>
                                 <Col>
                                     <Radio.Group value={this.getBlockState()} onChange={this.setBlockState}>
                                         <Radio value="start">Blok start</Radio>
