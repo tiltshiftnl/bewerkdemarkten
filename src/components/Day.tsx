@@ -112,34 +112,57 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         return _cm
     }
 
-    lotAppend = (position: [number, number, number]) => {
-        console.log("lotAppend")
+    lotAppend = (position: [number, number, number], copy?: boolean) => {
         const _cm: MarketEventDetails = this.state.marketEventDetails
-        const _newLot: Lot = {
+        const _current = _cm.pages[position[0]].layout[position[1]].lots[position[2]]
+        let _newLot: Lot = {
             plaatsId: "0",
             branches: [],
             verkoopinrichting: [],
             properties: [],
             type: "stand"
         }
-        // Put one lot in front of...
+
+        if (copy) {
+            
+            _newLot = {
+                plaatsId: "0",
+                branches: _current.branches,
+                verkoopinrichting: _current.verkoopinrichting,
+                properties: _current.properties,
+                type: _current.type
+            }
+        }
+
+        // Put one lot after...
         _cm.pages[position[0]].layout[position[1]].lots.splice(position[2] + 1, 0, _newLot)
-        this.updateStorage(_cm)         
+        this.updateStorage(_cm)
         this.lotToggle(position[0], position[1], position[2] + 1)
     }
 
-    lotPrepend = (position: [number, number, number]) => {
-        console.log("lotPrepend")
+    lotPrepend = (position: [number, number, number], copy?: boolean) => {
         const _cm: MarketEventDetails = this.state.marketEventDetails
+        const _current = _cm.pages[position[0]].layout[position[1]].lots[position[2]]
+        let _newLot: Lot = {
+            plaatsId: "0",
+            branches: [],
+            verkoopinrichting: [],
+            properties: [],
+            type: "stand"
+        }
         if (_cm.pages[position[0]].layout[position[1]].lots[position[2]]) {
-            const _newLot: Lot = {
-                plaatsId: "0",
-                branches: [],
-                verkoopinrichting: [],
-                properties: [],
-                type: "stand"
+            if (copy) {
+                
+                _newLot = {
+                    plaatsId: "0",
+                    branches: _current.branches,
+                    verkoopinrichting: _current.verkoopinrichting,
+                    properties: _current.properties,
+                    type: _current.type
+                }
             }
-            // Put one lot after...
+
+            // Put one lot before...
             _cm.pages[position[0]].layout[position[1]].lots.splice(position[2], 0, _newLot)
             this.updateStorage(_cm)
             this.lotToggle(position[0], position[1], position[2])
@@ -204,7 +227,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
         if (typeof e === "string") {
             this.showConfirm(e)
-            
+
             //Update local storage
         } else {
             _marketEventDetails.pages.push({
@@ -221,7 +244,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
             this.updateStorage(_marketEventDetails)
             this.onTabChange("" + (_marketEventDetails.pages.length - 1))
         }
-        
+
     }
 
     showConfirm = (e: string) => {
