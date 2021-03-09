@@ -178,8 +178,6 @@ export default class LotEdit extends Component<LotEditProps> {
 
     render() {
         const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 2 }
-        const firstColSpanObstacle = { xs: 8, sm: 8, md: 4, lg: 2 }
-        const secondColSpanObstacle = { xs: 8, sm: 8, md: 4, lg: 4 }
         const secondColSpan = { xs: 16, sm: 16, md: 8, lg: 8 }
         const formGutter: [number, number] = [16, 16]
 
@@ -199,7 +197,7 @@ export default class LotEdit extends Component<LotEditProps> {
                         <>
                             <Row gutter={formGutter}>
                                 <Col>Type</Col>
-                                <Col {...secondColSpanObstacle}>
+                                <Col {...secondColSpan}>
                                     <Select
                                         showSearch
                                         mode="tags"

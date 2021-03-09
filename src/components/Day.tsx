@@ -113,6 +113,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
     }
 
     lotAppend = (position: [number, number, number]) => {
+        console.log("lotAppend")
         const _cm: MarketEventDetails = this.state.marketEventDetails
         const _newLot: Lot = {
             plaatsId: "0",
@@ -124,10 +125,11 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         // Put one lot in front of...
         _cm.pages[position[0]].layout[position[1]].lots.splice(position[2] + 1, 0, _newLot)
         this.updateStorage(_cm)         
-        this.lotToggle(position[0], position[1], position[2])
+        this.lotToggle(position[0], position[1], position[2] + 1)
     }
 
     lotPrepend = (position: [number, number, number]) => {
+        console.log("lotPrepend")
         const _cm: MarketEventDetails = this.state.marketEventDetails
         if (_cm.pages[position[0]].layout[position[1]].lots[position[2]]) {
             const _newLot: Lot = {
@@ -140,7 +142,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
             // Put one lot after...
             _cm.pages[position[0]].layout[position[1]].lots.splice(position[2], 0, _newLot)
             this.updateStorage(_cm)
-            this.lotToggle(position[0], position[1], position[2] + 1)
+            this.lotToggle(position[0], position[1], position[2])
         }
     }
 
