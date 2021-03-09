@@ -1,13 +1,14 @@
-import { Button, Input, Tabs } from "antd"
+import { Modal, Button, Input, Tabs } from "antd"
 import React, { RefObject, Component, createRef, MouseEvent, KeyboardEvent, ChangeEvent } from "react"
 import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
-import { PlusOutlined } from '@ant-design/icons'
 import { Transformer } from "../services/transformer"
-const { TabPane } = Tabs
+import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
+const { TabPane } = Tabs
+const { confirm } = Modal
 interface DayPageState {
     marketEventDetails: MarketEventDetails,
     currentPosition?: [number, number, number],
@@ -200,7 +201,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
     onTabEdit = (e: string | MouseEvent<Element, globalThis.MouseEvent> | KeyboardEvent<Element>) => {
         let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
         if (typeof e === "string") {
-            _marketEventDetails.pages.splice(parseInt(e), 1)
+            this.showConfirm(e)
+            
             //Update local storage
         } else {
             _marketEventDetails.pages.push({
@@ -213,10 +215,30 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                     landmarkTop: ""
                 }]
             })
+            //Update local storage
+            this.updateStorage(_marketEventDetails)
+            this.onTabChange("" + (_marketEventDetails.pages.length - 1))
         }
-        //Update local storage
-        this.updateStorage(_marketEventDetails)
-        this.onTabChange("" + (_marketEventDetails.pages.length - 1))
+        
+    }
+
+    showConfirm = (e: string) => {
+        let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+        const title = _marketEventDetails.pages[parseInt(e)].title
+        confirm({
+            title: `Pagina "${title}" verwijderen?`,
+            icon: <ExclamationCircleOutlined />,
+            content: 'Let op, het verwijderen van een pagina kan niet ongedaan worden gemaakt.',
+            okText: 'Verwijderen',
+            okType: 'danger',
+            cancelText: "Annuleren",
+            onOk: () => {
+                _marketEventDetails.pages.splice(parseInt(e), 1)
+                //Update local storage
+                this.updateStorage(_marketEventDetails)
+                this.onTabChange("" + (_marketEventDetails.pages.length - 1))
+            }
+        })
     }
 
     render() {

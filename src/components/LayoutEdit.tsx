@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { Button, Col, Input, Row, Select } from "antd"
-import { MarketLayout } from "../models";
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { Modal, Button, Col, Input, Row, Select } from "antd"
+import { MarketLayout } from "../models"
+import { DeleteOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+
+const { confirm } = Modal
+
 export default class LayoutEdit extends Component<{ index: number, layout: MarketLayout, changed?: (layout: MarketLayout | undefined, position: [number, number], add?: boolean) => void, position: [number, number] }> {
     readonly state: { layout: MarketLayout } = {
         layout: {
@@ -27,7 +30,23 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
     }
 
     componentDidMount() {
-        this.setState({layout: this.props.layout})
+        this.setState({ layout: this.props.layout })
+    }
+
+    showConfirm = () => {
+        confirm({
+            title: 'Rij verwijderen?',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Let op, het verwijderen van een rij kan niet ongedaan worden gemaakt.',
+            okText: 'Verwijderen',
+            okType: 'danger',
+            cancelText: "Annuleren",
+            onOk: () => {
+                if (this.props.changed) {
+                    this.props.changed(undefined, this.props.position)
+                }
+            }
+        })
     }
 
     render() {
@@ -72,13 +91,10 @@ export default class LayoutEdit extends Component<{ index: number, layout: Marke
             <Col>
                 <Button
                     danger
+                    title="Verwijder rij"
                     type="primary"
                     icon={<DeleteOutlined />}
-                    onClick={() => {
-                        if (this.props.changed) {
-                            this.props.changed(undefined, this.props.position)
-                        }
-                    }}
+                    onClick={this.showConfirm}
                 />
                 <Button
                     type="primary"
