@@ -132,6 +132,7 @@ export const zipAll = () => {
     getLocalStorageMarkets().forEach((_m: string) => {
         ["branches", "geography", "lots", "pages", "rows"].forEach((key: string) => {
             let data = localStorage.getItem(`bwdm_cache_${_m}_${key}`)
+
             if (key === "branches") {
                 // Strip color, allocated and backGroundColor
                 let _nBranches: AssignedBranche[] = []
@@ -146,7 +147,6 @@ export const zipAll = () => {
 
                 }
                 data = JSON.stringify(_nBranches)
-
             }
             if (data) {
                 zip.file(`config/markt/${_m}/${getFileName(key)}`, JSON.stringify(JSON.parse(data), null, 2))

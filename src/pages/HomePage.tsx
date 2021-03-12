@@ -34,7 +34,7 @@ export default class HomePage extends Component {
         let systemState: SystemState = {}
         const _cachedState = localStorage.getItem('bwdm_state')
 
-        if(!_cachedState){ 
+        if (!_cachedState) {
             systemState = {
                 cachedMarkets: getLocalStorageMarkets()
             }
@@ -48,15 +48,17 @@ export default class HomePage extends Component {
             const _markets = JSON.parse(_marketsCache)
             this.setState({
                 markets: _markets
+            }, () => {
+                // Update systemState
+                this.setState({
+                    progress: 100,
+                    progressStatus: "success",
+                    systemState: systemState
+                })
             })
         }
 
-        // Update systemState
-        this.setState({
-            progress: 100,
-            progressStatus: "success",
-            systemState: systemState
-        })
+
         localStorage.setItem('bwdm_state', JSON.stringify(systemState))
     }
 
@@ -143,7 +145,7 @@ export default class HomePage extends Component {
                         zipName: f.name,
                         lastUpdate: Date.now(),
                         marketCount: Object.keys(_markets).length,
-                        
+
                     }
 
                     localStorage.setItem(`bwdm_cache_markets`, JSON.stringify(_markets))
@@ -178,13 +180,23 @@ export default class HomePage extends Component {
             <Progress percent={this.state.progress} status={this.state.progressStatus} />
             <Row gutter={[16, 16]}>
                 <Col>
-                    <p>Importeer een markten zip bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.</p>
+                    {myDate &&
+                        <p><b>Er is een bestand actief.</b> Importeer eventueel opnieuw een <i>markten zip</i> bestand om te bewerken. 
+                            Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam 
+                            applicatie voor actieve marktindelingen.
+                        </p>
+                    }
+                    {!myDate &&
+                        <p>Importeer een <i>markten zip</i> bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip 
+                            bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.
+                        </p>
+                    }
                 </Col>
             </Row>
             <Row gutter={[16, 16]}>
                 <Col key="init-app">
 
-                    <Descriptions title="Systeem status" bordered>
+                    <Descriptions title={myDate ? "Systeem status" : "Upload een markten zip bestand"} bordered>
                         {myDate && <>
                             <Descriptions.Item label="Bestand">{this.state.systemState.zipName}</Descriptions.Item>
 
@@ -205,7 +217,7 @@ export default class HomePage extends Component {
                                         }}
                                     >Download zip bestand</Button>
                                 </Descriptions.Item>
-                                
+
                                 {/* <Descriptions.Item label="Markten met wijzigingen">
                                     <ul>
                                         {this.state.systemState.cachedMarkets.map(
@@ -215,7 +227,7 @@ export default class HomePage extends Component {
                                         {m}
                                     </Link></li>
                                 )}</ul></Descriptions.Item> */}
-                                </>
+                            </>
                         }
                         <Descriptions.Item label="Upload">
                             <input type="file" id="file" name="file" onChange={this.handleFile} />

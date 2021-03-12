@@ -6,6 +6,7 @@ import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
 import { Transformer } from "../services/transformer"
 import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { validateLots } from "../common/validator"
 
 const { TabPane } = Tabs
 const { confirm } = Modal
@@ -37,6 +38,12 @@ export default class Day extends Component<DayPageProps> {
         this.transformer = new Transformer()
     }
 
+    getPageTitle = (page: MarketPage) => {
+        if (page.invalid) {
+            return <span style={{color: "#f00"}}>{page.title}</span>
+        }
+        return <>{page.title}</>
+    }
     getClassname = (lot: Lot) => {
         let baseClass = []
         if (lot.blockStart) {
@@ -48,6 +55,11 @@ export default class Day extends Component<DayPageProps> {
         if (lot.selected) {
             baseClass.push("selected")
         }
+        if (lot.invalid) {
+            baseClass.push("invalid")
+        }
+
+        //check to see if plaatsId is valid!
         baseClass.push(lot.type)
         return baseClass.join(" ")
     }
@@ -214,6 +226,7 @@ export default class Day extends Component<DayPageProps> {
     }
 
     updateStorage(newMarketState: MarketEventDetails) {
+        validateLots(newMarketState)
         this.setState({
             marketEventDetails: newMarketState
         }, () => {
@@ -288,7 +301,7 @@ export default class Day extends Component<DayPageProps> {
                 {this.state.marketEventDetails.pages.map((page: MarketPage, i: number) => {
                     const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    return <TabPane tab={page.title} key={i}>
+                    return <TabPane tab={this.getPageTitle(page)} key={i}>
                         <><Input type="text" placeholder="Pagina titel" value={page.title || ""}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
