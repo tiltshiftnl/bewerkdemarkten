@@ -48,6 +48,7 @@ pipeline {
             "--no-cache " +
             "--build-arg COMMIT_HASH=${env.COMMIT_HASH} " +
             "--build-arg BRANCH_NAME=${env.BRANCH_NAME} " +
+            "--build-arg PUBLIC_URL=${env.PUBLIC_URL} " +
             "--shm-size 1G " +
             " .")
           image.push()

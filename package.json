@@ -37,7 +37,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "/",
+  "homepage": "/bewerkdemarkten",
   "browserslist": {
     "production": [
       ">0.2%",
