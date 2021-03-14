@@ -1,6 +1,6 @@
 # build environment
 FROM node:13.12.0-alpine as build
-ARG PUBLIC_URL=/
+ARG PUBLIC_URL=/bewerkdemarkten/
 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
