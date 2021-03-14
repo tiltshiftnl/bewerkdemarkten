@@ -8,8 +8,8 @@ stages:
   envFrom:
     - sourceName:	bewerkdemarkten-frontend-subdir
       sourceKey: PUBLIC_URL
-    env:
-      PLUGIN_BUILD_ARGS_FROM_ENV: PUBLIC_URL
+  env:
+    PLUGIN_BUILD_ARGS_FROM_ENV: PUBLIC_URL=$PUBLIC_URL
 
 - name: Deploy
   steps:
