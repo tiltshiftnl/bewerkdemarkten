@@ -44,6 +44,15 @@ export default class Day extends Component<DayPageProps> {
         }
         return <>{page.title}</>
     }
+    getRowClass = (row: MarketLayout) => {
+        if(row.invalid){
+            return row.class + " invalid"
+        }
+
+        return row.class
+    }
+
+
     getClassname = (lot: Lot) => {
         let baseClass = []
         if (lot.blockStart) {
@@ -311,7 +320,7 @@ export default class Day extends Component<DayPageProps> {
                         <div className="block-wrapper">
                             {page.layout && page.layout.length > 0 && page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
-                                return <div key={i} className={layout.class}>
+                                return <div key={i} className={this.getRowClass(layout)}>
                                     {layout.class === 'block-left' &&
                                         <LayoutEdit
                                             index={i}

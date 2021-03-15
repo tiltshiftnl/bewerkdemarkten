@@ -27,6 +27,7 @@ export interface Market {
     plan?: Plan
     municipality?: string
     stands?: number
+    invalid?: boolean
 }
 
 // Kraam

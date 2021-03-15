@@ -457,6 +457,13 @@ td {
   box-shadow: inset -4px 2px 6px 3px #ccc;
   
 }
+.block-left.invalid {
+  border: 1px solid #f00;
+}
+
+.block-right.invalid {
+  border: 1px solid #f00;
+}
 
 .stand.invalid {
   background-color: #f00;
