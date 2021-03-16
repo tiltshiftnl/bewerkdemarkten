@@ -3,15 +3,15 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
-import { LeftOutlined, RightOutlined, DeleteOutlined } from '@ant-design/icons'
+import { CopyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
     branches: AssignedBranche[],
     changed?: (lot: Lot | undefined) => void,
     delete?: (position: [number, number, number]) => void,
-    append?: (position: [number, number, number]) => void,
-    prepend?: (position: [number, number, number]) => void
+    append?: (position: [number, number, number], copy?: boolean) => void,
+    prepend?: (position: [number, number, number], copy?: boolean) => void
 }
 
 export default class LotEdit extends Component<LotEditProps> {
@@ -177,14 +177,14 @@ export default class LotEdit extends Component<LotEditProps> {
     }
 
     render() {
-        const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 4 }
+        const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 2 }
         const secondColSpan = { xs: 16, sm: 16, md: 8, lg: 8 }
-        const formGutter: [number, number] = [4, 4]
+        const formGutter: [number, number] = [16, 16]
 
         return <div className="edit-lot">
             {this.state.lot &&
                 <>
-                    <Row align="middle">
+                    <Row align="middle" gutter={formGutter}>
                         <Col>
                             <Radio.Group value={this.state.lot?.type} optionType="button" buttonStyle="solid" onChange={this.onToggle}>
                                 <Radio.Button value="stand">Kraam</Radio.Button>
@@ -196,7 +196,7 @@ export default class LotEdit extends Component<LotEditProps> {
                     {this.state.lot.type === "obstacle" &&
                         <>
                             <Row gutter={formGutter}>
-                                <Col {...firstColSpan}>Type</Col>
+                                <Col>Type</Col>
                                 <Col {...secondColSpan}>
                                     <Select
                                         showSearch
@@ -207,7 +207,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                             this.state.lot.obstakel ? this.state.lot.obstakel.length === -1 ? [] : this.state.lot.obstakel : []}
                                         onChange={(e: string[]) => {
                                             let _b = e
-                                            
+
                                             this.setState({
                                                 lot: { ...this.state.lot, obstakel: _b }
                                             })
@@ -223,7 +223,7 @@ export default class LotEdit extends Component<LotEditProps> {
                     }
                     {this.state.lot.type === "stand" &&
                         <>
-                            <Row align="middle">
+                            <Row align="middle" gutter={formGutter}>
                                 <Col>
                                     <Radio.Group value={this.getBlockState()} onChange={this.setBlockState}>
                                         <Radio value="start">Blok start</Radio>
@@ -299,10 +299,24 @@ export default class LotEdit extends Component<LotEditProps> {
                         </>}
                     <Row gutter={formGutter}>
                         <Col>
+                            {this.state.lot.type === "stand" &&
+                                <Button
+                                    title="Naar links kopieren"
+                                    type="dashed"
+                                    size="large"
+                                    icon={<CopyOutlined />}
+                                    onClick={() => {
+                                        // Tell parent component to remove this lot.
+                                        if (this.props.prepend && this.state.currentPosition) {
+                                            this.props.prepend(this.state.currentPosition, true)
+                                        }
+                                    }}
+                                />}
                             <Button
-                                title="Nieuwe voor geselecteerd item invoegen"
-                                type="primary"
-                                icon={<LeftOutlined />}
+                                title="Nieuwe links plaatsen"
+                                type="dashed"
+                                size="large"
+                                icon={<PlusOutlined />}
                                 onClick={() => {
                                     // Tell parent component to remove this lot.
                                     if (this.props.prepend && this.state.currentPosition) {
@@ -314,6 +328,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                 title="Verwijderen"
                                 danger
                                 type="primary"
+                                size="large"
                                 icon={<DeleteOutlined />}
                                 onClick={() => {
                                     // Tell parent component to remove this lot.
@@ -323,9 +338,10 @@ export default class LotEdit extends Component<LotEditProps> {
                                 }}
                             />
                             <Button
-                                title="Nieuwe achter geselecteerd item invoegen"
-                                type="primary"
-                                icon={<RightOutlined />}
+                                title="Nieuwe rechts plaatsen"
+                                type="dashed"
+                                size="large"
+                                icon={<PlusOutlined />}
                                 onClick={() => {
                                     // Tell parent component to remove this lot.
                                     if (this.props.append && this.state.currentPosition) {
@@ -333,6 +349,19 @@ export default class LotEdit extends Component<LotEditProps> {
                                     }
                                 }}
                             />
+                            {this.state.lot.type === "stand" &&
+                                <Button
+                                    title="Naar rechts kopieren"
+                                    type="dashed"
+                                    size="large"
+                                    icon={<CopyOutlined />}
+                                    onClick={() => {
+                                        // Tell parent component to remove this lot.
+                                        if (this.props.append && this.state.currentPosition) {
+                                            this.props.append(this.state.currentPosition, true)
+                                        }
+                                    }}
+                                />}
                         </Col>
                     </Row>
                 </>}

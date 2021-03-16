@@ -1,20 +1,27 @@
-import { Button, Input, Tabs } from "antd"
+import { Modal, Button, Input, Tabs } from "antd"
 import React, { RefObject, Component, createRef, MouseEvent, KeyboardEvent, ChangeEvent } from "react"
 import { AssignedBranche, Branche, Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
 import LayoutEdit from "./LayoutEdit"
 import LotEdit from "./LotEdit"
 import LotBlock from "./LotBlock"
-import { PlusOutlined } from '@ant-design/icons'
 import { Transformer } from "../services/transformer"
-const { TabPane } = Tabs
+import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { validateLots } from "../common/validator"
 
+const { TabPane } = Tabs
+const { confirm } = Modal
 interface DayPageState {
     marketEventDetails: MarketEventDetails,
     currentPosition?: [number, number, number],
     activeKey: string
 }
 
-export default class Day extends Component<{ id: string, lookupBranches: Branche[] }> {
+interface DayPageProps {
+    id: string,
+    lookupBranches: Branche[]
+    changed?: () => void
+}
+export default class Day extends Component<DayPageProps> {
     lotEdit: RefObject<LotEdit>
     transformer: Transformer
     readonly state: DayPageState = {
@@ -25,11 +32,26 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         activeKey: "0"
     }
 
-    constructor(props: { id: string, lookupBranches: Branche[] }) {
+    constructor(props: DayPageProps) {
         super(props)
         this.lotEdit = createRef()
         this.transformer = new Transformer()
     }
+
+    getPageTitle = (page: MarketPage) => {
+        if (page.invalid) {
+            return <span style={{color: "#f00"}}>{page.title}</span>
+        }
+        return <>{page.title}</>
+    }
+    getRowClass = (row: MarketLayout) => {
+        if(row.invalid){
+            return row.class + " invalid"
+        }
+
+        return row.class
+    }
+
 
     getClassname = (lot: Lot) => {
         let baseClass = []
@@ -42,6 +64,11 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         if (lot.selected) {
             baseClass.push("selected")
         }
+        if (lot.invalid) {
+            baseClass.push("invalid")
+        }
+
+        //check to see if plaatsId is valid!
         baseClass.push(lot.type)
         return baseClass.join(" ")
     }
@@ -111,35 +138,60 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
         return _cm
     }
 
-    lotAppend = (position: [number, number, number]) => {
+    lotAppend = (position: [number, number, number], copy?: boolean) => {
         const _cm: MarketEventDetails = this.state.marketEventDetails
-        const _newLot: Lot = {
+        const _current = _cm.pages[position[0]].layout[position[1]].lots[position[2]]
+        let _newLot: Lot = {
             plaatsId: "0",
             branches: [],
             verkoopinrichting: [],
             properties: [],
             type: "stand"
         }
-        // Put one lot in front of...
+
+        if (copy) {
+
+            _newLot = {
+                plaatsId: "0",
+                branches: _current.branches,
+                verkoopinrichting: _current.verkoopinrichting,
+                properties: _current.properties,
+                type: _current.type
+            }
+        }
+
+        // Put one lot after...
         _cm.pages[position[0]].layout[position[1]].lots.splice(position[2] + 1, 0, _newLot)
-        this.updateStorage(_cm)         
-        this.lotToggle(position[0], position[1], position[2])
+        this.updateStorage(_cm)
+        this.lotToggle(position[0], position[1], position[2] + 1)
     }
 
-    lotPrepend = (position: [number, number, number]) => {
+    lotPrepend = (position: [number, number, number], copy?: boolean) => {
         const _cm: MarketEventDetails = this.state.marketEventDetails
+        const _current = _cm.pages[position[0]].layout[position[1]].lots[position[2]]
+        let _newLot: Lot = {
+            plaatsId: "0",
+            branches: [],
+            verkoopinrichting: [],
+            properties: [],
+            type: "stand"
+        }
         if (_cm.pages[position[0]].layout[position[1]].lots[position[2]]) {
-            const _newLot: Lot = {
-                plaatsId: "0",
-                branches: [],
-                verkoopinrichting: [],
-                properties: [],
-                type: "stand"
+            if (copy) {
+
+                _newLot = {
+                    plaatsId: "0",
+                    branches: _current.branches,
+                    verkoopinrichting: _current.verkoopinrichting,
+                    properties: _current.properties,
+                    type: _current.type
+                }
             }
-            // Put one lot after...
+
+            // Put one lot before...
             _cm.pages[position[0]].layout[position[1]].lots.splice(position[2], 0, _newLot)
             this.updateStorage(_cm)
-            this.lotToggle(position[0], position[1], position[2] + 1)
+            this.lotToggle(position[0], position[1], position[2])
         }
     }
 
@@ -183,14 +235,20 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
     }
 
     updateStorage(newMarketState: MarketEventDetails) {
+        validateLots(newMarketState)
         this.setState({
             marketEventDetails: newMarketState
+        }, () => {
+            if (this.props.changed) {
+                this.props.changed()
+            }
         })
         const { pages } = newMarketState
         localStorage.setItem(`bwdm_cache_${this.props.id}_lots`, JSON.stringify(this.transformer.layoutToStands(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_rows`, JSON.stringify(this.transformer.layoutToRows(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_geography`, JSON.stringify(this.transformer.layoutToGeography(pages)))
         localStorage.setItem(`bwdm_cache_${this.props.id}_pages`, JSON.stringify(this.transformer.layoutToPages(pages)))
+
     }
 
     onTabChange = (activeKey: string) => {
@@ -200,7 +258,8 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
     onTabEdit = (e: string | MouseEvent<Element, globalThis.MouseEvent> | KeyboardEvent<Element>) => {
         let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
         if (typeof e === "string") {
-            _marketEventDetails.pages.splice(parseInt(e), 1)
+            this.showConfirm(e)
+
             //Update local storage
         } else {
             _marketEventDetails.pages.push({
@@ -213,10 +272,30 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                     landmarkTop: ""
                 }]
             })
+            //Update local storage
+            this.updateStorage(_marketEventDetails)
+            this.onTabChange("" + (_marketEventDetails.pages.length - 1))
         }
-        //Update local storage
-        this.updateStorage(_marketEventDetails)
-        this.onTabChange("" + (_marketEventDetails.pages.length - 1))
+
+    }
+
+    showConfirm = (e: string) => {
+        let _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
+        const title = _marketEventDetails.pages[parseInt(e)].title
+        confirm({
+            title: `Pagina "${title}" verwijderen?`,
+            icon: <ExclamationCircleOutlined />,
+            content: 'Let op, het verwijderen van een pagina kan niet ongedaan worden gemaakt.',
+            okText: 'Verwijderen',
+            okType: 'danger',
+            cancelText: "Annuleren",
+            onOk: () => {
+                _marketEventDetails.pages.splice(parseInt(e), 1)
+                //Update local storage
+                this.updateStorage(_marketEventDetails)
+                this.onTabChange("" + (_marketEventDetails.pages.length - 1))
+            }
+        })
     }
 
     render() {
@@ -231,7 +310,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                 {this.state.marketEventDetails.pages.map((page: MarketPage, i: number) => {
                     const pageindex = i
                     // Need a way to group panel content by title for the upper and lower blocks.
-                    return <TabPane tab={page.title} key={i}>
+                    return <TabPane tab={this.getPageTitle(page)} key={i}>
                         <><Input type="text" placeholder="Pagina titel" value={page.title || ""}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 const _marketEventDetails: MarketEventDetails = this.state.marketEventDetails
@@ -241,7 +320,7 @@ export default class Day extends Component<{ id: string, lookupBranches: Branche
                         <div className="block-wrapper">
                             {page.layout && page.layout.length > 0 && page.layout.map((layout: MarketLayout, i: number) => {
                                 const layoutindex = i
-                                return <div key={i} className={layout.class}>
+                                return <div key={i} className={this.getRowClass(layout)}>
                                     {layout.class === 'block-left' &&
                                         <LayoutEdit
                                             index={i}

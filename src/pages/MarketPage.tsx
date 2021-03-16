@@ -12,6 +12,7 @@ import { AssignedBranche, Branche, MarketEventDetails, Plan } from "../models"
 import { BrancheService } from "../services/service_lookup"
 import Branches from "../components/Branches"
 import Configuration from "../services/configuration"
+import { validateLots } from "../common/validator"
 //import { zipMarket } from "../common/generic"
 
 const { TabPane } = Tabs
@@ -49,26 +50,22 @@ export default class MarketPage extends DynamicBase {
         this.dayRef = createRef()
     }
 
-    // getPlan = () => {
-    //     this.marketsService.retrieve().then((markets: Markets) => {
-    //         let uploadProps: any = {
-    //             defaultFileList: []
-    //         }
-
-    //         this.setState({
-    //             uploadProps
-    //         })
-    //     })
-    // }
+    dayChanged = () => {
+        this.transformer.encode(this.id).then(result => {
+            validateLots(result)
+            this.branchesRef.current?.updateStorage(result.branches)
+        })
+    }
 
     updateAssignedBranches = (branches: AssignedBranche[]) => {
+        console.log("updateAssignedBranches")
         const _m = this.state.marketEventDetails
         if (_m) {
-            console.log(_m)
             _m.branches = branches
             this.setState({
                 marketEventDetails: _m
             }, () => {
+
                 this.dayRef.current?.setState({
                     marketEventDetails: _m
                 })
@@ -77,7 +74,6 @@ export default class MarketPage extends DynamicBase {
     }
 
     refresh() {
-        console.log("refresh")
         this.id = (this.props as any).match.params.id
         this.lookupBrancheService.retrieve().then((lookupBranches: Branche[]) => {
             this.setState({
@@ -86,6 +82,7 @@ export default class MarketPage extends DynamicBase {
         })
         //this.getPlan()
         this.transformer.encode(this.id).then(result => {
+            validateLots(result)
             this.branchesRef.current?.updateStorage(result.branches)
             this.setState({
                 marketEventDetails: result,
@@ -156,43 +153,15 @@ export default class MarketPage extends DynamicBase {
                     } */}
 
                 </Col>
-                <Col>
-                    {/* <Button
-                    title={`Download de JSON bestanden voor ${this.id}`}
-                    icon={<FileZipOutlined />}
-                    type="link"
-                        onClick={() => {
-                            if (this.id) {
-                                zipMarket(this.id)
-                            }
-                        }}
-
-                    >Download {this.id}</Button> */}
-                    {/* <Button
-                    title={`Upload de JSON bestanden voor ${this.id} naar de centrale server`}
-                    style={{marginLeft: "1em"}}
-                    icon={<UploadOutlined />}
-                    type="primary"
-                        onClick={() => {
-                            if (this.id) {
-                                uploadMarket(this.id)
-                            }
-                        }}
-
-                    >{this.id} opslaan</Button> */}
-                </Col>
-            </Row>
+             </Row>
             {this.state.lookupBranches &&
                 <Tabs activeKey={this.state.activeKey} onTabClick={(key: string, e: MouseEvent | KeyboardEvent) => {
                     this.setState({ activeKey: key })
                 }}>
                     <TabPane tab="Marktindeling" key="0">
-                        <Day id={this.id} ref={this.dayRef} lookupBranches={this.state.lookupBranches} />
+                        <Day id={this.id} ref={this.dayRef} lookupBranches={this.state.lookupBranches} changed={this.dayChanged} />
                     </TabPane>
                     <TabPane tab="Branche toewijzing" key="1" forceRender={true}>
-                        {/* {(!this.state.lookupBranches || this.state.lookupBranches.length === 0) &&
-                            <p>Alvorens kan worden begonnen met het indelen van de markt dienen de branches te zijn toegewezen die kunnen worden gebruikt op de markt.</p>
-                        } */}
                         <Branches id={this.id} ref={this.branchesRef} lookupBranches={this.state.lookupBranches} changed={this.updateAssignedBranches} />
                     </TabPane>
                 </Tabs>}

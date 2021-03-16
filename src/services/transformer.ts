@@ -42,8 +42,8 @@ export class Transformer {
             _b.forEach((a: AssignedBranche, i: number) => {
                 const _bbLookupValue = _bb.filter(e => e.brancheId === _b[i].brancheId)
                 if (_bbLookupValue.length === 1 && _bbLookupValue[0].color !== "") {
-                    _b[i].backGroundColor = _bbLookupValue[0].color
-                    _b[i].color = getTextColor(_bbLookupValue[0].color)
+                    _b[i].backGroundColor = _bbLookupValue[0].color.replace("##", "#")
+                    _b[i].color = getTextColor(_bbLookupValue[0].color.replace("##", "#"))
                 }
                 _b[i].allocated = 0
             })

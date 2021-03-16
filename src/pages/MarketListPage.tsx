@@ -56,10 +56,10 @@ class MarketListPage extends Component<RouteComponentProps> {
         if (this.state.newMarketId !== "") {
             const _markets = this.state.markets
             //const _events: Events = {}
-                // _events[this.state.day.abbreviation] = {
-                //     weekday: 0
-                // }
-                // POST a new empty pagina's set to the backend
+            // _events[this.state.day.abbreviation] = {
+            //     weekday: 0
+            // }
+            // POST a new empty pagina's set to the backend
             //this.pagesService.update(`${this.state.newMarketId}`, [])
 
             _markets[this.state.newMarketId] = {
@@ -108,7 +108,7 @@ class MarketListPage extends Component<RouteComponentProps> {
                     if (m.kiesJeKraamFase) {
                         _markets[m.afkorting].phase = m.kiesJeKraamFase
                     }
-                    if(m.aantalKramen) {
+                    if (m.aantalKramen) {
                         _markets[m.afkorting].stands = m.aantalKramen
                     }
                     //_markets[m.afkorting].municipality = "Amsterdam"
@@ -140,12 +140,17 @@ class MarketListPage extends Component<RouteComponentProps> {
                 filteredMarkets: this.state.markets
             })
         } else {
-            Object.keys(this.state.markets)
-                .filter(hit => hit.toLocaleLowerCase()
-                    .includes(this.state.filter.toLowerCase()))
-                .forEach((key: string) => {
+            //const namematches = this.state.markets.filter((m: Market) => m.name === this.state.filter.toLowerCase() )
+            Object.keys(this.state.markets).forEach((key: string) => {
+                // Match by name
+                if (this.state.markets[key].name.toLowerCase().includes(this.state.filter.toLowerCase())) {
                     _filteredMarkets[key] = this.state.markets[key]
-                })
+                }
+                if (key.toLowerCase().includes(this.state.filter.toLowerCase())) {
+                    _filteredMarkets[key] = this.state.markets[key]
+                }
+            })
+
             this.setState({
                 filteredMarkets: _filteredMarkets
             })
@@ -157,7 +162,7 @@ class MarketListPage extends Component<RouteComponentProps> {
         }, () => {
             this.applyFilter()
         })
-        
+
     }
 
     render() {

@@ -27,6 +27,7 @@ export interface Market {
     plan?: Plan
     municipality?: string
     stands?: number
+    invalid?: boolean
 }
 
 // Kraam
@@ -60,6 +61,7 @@ export interface Lot {
     blockPosition?: [number, number]
     blockStart?: boolean
     blockEnd?: boolean
+    invalid?: boolean
 }
 
 export interface Geography {
@@ -106,11 +108,13 @@ export interface MarketLayout {
     landmarkBottom: string
     title: string
     lots: Lot[]
+    invalid?: boolean
 }
 
 export interface MarketPage {
     layout: MarketLayout[]
     title: string
+    invalid?: boolean
 }
 
 export interface MarketEventDetails {
