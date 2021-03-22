@@ -5,9 +5,10 @@ import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
 import JSZip from 'jszip'
 import { Markets } from '../models'
-import { getCacheName, getLocalStorageMarkets, zipAll } from '../common/generic'
+import { getCacheName, zipAll } from '../common/generic'
 import { MMarktService } from '../services/service_mmarkt'
 import { MMarkt } from '../models/mmarkt'
+import { validateMarkets } from '../common/validator'
 
 interface SystemState {
     zipName?: string,
@@ -33,15 +34,16 @@ export default class HomePage extends Component {
     componentDidMount() {
         let systemState: SystemState = {}
         const _cachedState = localStorage.getItem('bwdm_state')
-
+        const _markets = validateMarkets()
         if (!_cachedState) {
             systemState = {
-                cachedMarkets: getLocalStorageMarkets()
+                cachedMarkets: _markets
             }
         } else {
             systemState = JSON.parse(_cachedState)
-            systemState.cachedMarkets = getLocalStorageMarkets()
+            systemState.cachedMarkets = _markets
         }
+        console.log(systemState)
 
         const _marketsCache = localStorage.getItem('bwdm_cache_markets')
         if (_marketsCache) {

@@ -10,8 +10,6 @@ export const getLocalStorageMarkets = (): string[] => {
         if (key) {
             if (key.includes('bwdm_cache_') && key !== 'bwdm_cache_markets') {
                 const marketComponent = key.replace("bwdm_cache_", "").split("_")[0]
-                //console.log(marketComponent)
-
                 if (_markets && !(_markets.indexOf(marketComponent) > -1)) {
                     _markets.push(marketComponent)
                 }
