@@ -246,17 +246,6 @@ class MarketListPage extends Component<RouteComponentProps> {
 
                 }} />
                 {this.state.newMarketInvalid !== "" && <div className="input-error">{this.state.newMarketInvalid}</div>}
-                {/* {!this.checkAbbreviation() && <>
-                    <i>Maak een dag aan om de betreffende markt te initieren</i>
-                    <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        const _d = this.state.day
-                        _d.abbreviation = e.target.value.toUpperCase() || ""
-                        this.setState({
-                            day: _d
-                        })
-                    }} /></>
-                } */}
-
             </Modal>
         </>
     }

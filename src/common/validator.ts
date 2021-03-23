@@ -1,23 +1,4 @@
 import { Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
-import { Transformer } from "../services/transformer"
-import { getLocalStorageMarkets } from "./generic"
-
-
-export const validateMarkets = (): string[] => {
-    const transformer = new Transformer()
-    // Read all markets
-    // check to see if any of the markets is invalid.
-    const _ids = getLocalStorageMarkets()
-    _ids.forEach((m: string) => {
-        transformer.encode(m).then((result: MarketEventDetails) => {
-            if(validateLots(result)) {
-                console.log(m + " contains errors")
-            }
-        })
-    })
-    return _ids
-}
-
 
 export const validateLots = (market: MarketEventDetails): boolean => {
     let invalid: boolean = false

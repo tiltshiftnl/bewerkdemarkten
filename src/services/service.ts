@@ -47,10 +47,10 @@ export class Service<T> {
         // Retrieve from Cache
         const cached = localStorage.getItem(`bwdm_cache_${route}_${dataset}`)
         if (cached) {
-            console.debug(`${dataset} for ${route} are cached`)
+            //console.debug(`${dataset} for ${route} are cached`)
             return JSON.parse(cached)
         }
-        console.debug(`${dataset} for ${route} not cached`)
+        //console.debug(`${dataset} for ${route} not cached`)
 
         // Fetch
         if (this.config.ONLINE) {
