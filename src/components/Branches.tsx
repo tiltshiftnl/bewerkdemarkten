@@ -106,8 +106,14 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
             </thead>
             <tbody>
                 {this.state.branches.map((branche, i) => {
+                    console.log(branche)
                     return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
-                        <td>{branche.brancheId.split('-')[0]}</td>
+                        {branche.brancheId &&
+                            <td>{branche.brancheId.split('-')[0]}</td>
+                        }
+                        {!branche.brancheId &&
+                            <td style={{color: 'red'}}>Geen brancheId</td>
+                        }
                         <td>{this.getBrancheId(branche, i)}</td>
                         <td><Switch checked={branche.verplicht} onChange={(checked: boolean) => {
                             if (this.state.branches) {

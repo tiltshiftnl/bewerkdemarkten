@@ -101,7 +101,7 @@ export class Transformer {
             _p.forEach((page: Page) => {
                 const newListGroupArray: any = []
                 page.indelingslijstGroup.forEach((group: Assignment) => {
-                    if (group.plaatsList.length > 0) {
+                    if (group.plaatsList && group.plaatsList.length > 0) {
                         const firstLotId: string = group.plaatsList[0]
                         const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
                         //find the first
@@ -240,7 +240,9 @@ export class Transformer {
                         plaatsList.push(element.plaatsId || "?")
                     }
                 })
-
+                if (layout.class !== 'block-right' && layout.class !== 'block-left') {
+                    layout.class = 'block-right'
+                }
                 return {
                     class: layout.class,
                     title: layout.title,

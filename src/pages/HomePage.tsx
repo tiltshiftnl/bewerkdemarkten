@@ -238,7 +238,7 @@ export default class HomePage extends Component {
                         {this.state.systemState.cachedMarkets && this.state.systemState.cachedMarkets.length > 0 &&
 
                             <Descriptions.Item label="Download">
-                                {this.state.systemState.errors.length > 0 &&
+                                {this.state.systemState.errors && this.state.systemState.errors.length > 0 &&
                                     <>
                                     <Alert message="Er zijn markten met fouten. Corrigeer de fouten om download te activeren" type="error"/>
                                         {this.state.systemState.errors.map((marketId: string) => {
@@ -250,7 +250,7 @@ export default class HomePage extends Component {
                                         })}
                                     </>
                                 }
-                                {this.state.systemState.errors.length === 0 &&
+                                {this.state.systemState.errors && this.state.systemState.errors.length === 0 &&
                                     <Button
                                         title="Download het zip bestand met alle markten en configuratie"
                                         icon={<FileZipOutlined />}

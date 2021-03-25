@@ -94,10 +94,15 @@ export default class Stand extends Component<{
     }
 
     getTextColor = () => {
-        const { branche } = this.props
+        const { branche, stand } = this.props
+        if (stand && stand.invalid) {
+            return '#f00'
+        }
+        
         if (branche && branche.color) {
             return branche.color
         }
+        
         return "#000000"
     }
 
