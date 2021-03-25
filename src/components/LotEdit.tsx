@@ -3,7 +3,8 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox"
 import React, { Component } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
-import { CopyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { //CopyOutlined, 
+    DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
@@ -299,7 +300,7 @@ export default class LotEdit extends Component<LotEditProps> {
                         </>}
                     <Row gutter={formGutter}>
                         <Col>
-                            {this.state.lot.type === "stand" &&
+                            {/* {this.state.lot.type === "stand" &&
                                 <Button
                                     title="Naar links kopieren"
                                     type="dashed"
@@ -311,7 +312,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                             this.props.prepend(this.state.currentPosition, true)
                                         }
                                     }}
-                                />}
+                                />} */}
                             <Button
                                 title="Nieuwe links plaatsen"
                                 type="dashed"
@@ -349,7 +350,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                     }
                                 }}
                             />
-                            {this.state.lot.type === "stand" &&
+                            {/* {this.state.lot.type === "stand" &&
                                 <Button
                                     title="Naar rechts kopieren"
                                     type="dashed"
@@ -361,7 +362,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                             this.props.append(this.state.currentPosition, true)
                                         }
                                     }}
-                                />}
+                                />} */}
                         </Col>
                     </Row>
                 </>}
