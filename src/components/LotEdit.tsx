@@ -1,6 +1,6 @@
 import { Col, Input, Row, Select, Checkbox, Radio, Button } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
-import React, { Component } from "react"
+import React, { Component, createRef, RefObject } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
 import { //CopyOutlined, 
@@ -16,6 +16,7 @@ interface LotEditProps {
 }
 
 export default class LotEdit extends Component<LotEditProps> {
+    NameRef: RefObject<Input>
     readonly state: { lot?: Lot, properties: string[], obstacleTypes: string[], currentPosition?: [number, number, number] } = { properties: [], obstacleTypes: [] }
     propertyService: LotPropertyService
     obstacleTypeService: ObstacleTypeService
@@ -24,6 +25,7 @@ export default class LotEdit extends Component<LotEditProps> {
         super(props)
         this.propertyService = new LotPropertyService()
         this.obstacleTypeService = new ObstacleTypeService()
+        this.NameRef = createRef()
     }
 
 
@@ -78,6 +80,7 @@ export default class LotEdit extends Component<LotEditProps> {
     componentDidUpdate(prevProps: LotEditProps, prevState: { lot?: Lot }) {
         if (this.state.lot && this.props.changed && this.state !== prevState) {
             this.props.changed(this.state.lot)
+            this.NameRef.current?.focus()
         }
     }
 
@@ -238,6 +241,8 @@ export default class LotEdit extends Component<LotEditProps> {
                                 <Col {...firstColSpan}>Kraam</Col>
                                 <Col {...secondColSpan}>
                                     <Input
+                                        autoFocus
+                                        ref={this.NameRef}
                                         placeholder="Vul naam of nummer van de kraam in"
                                         value={this.state.lot?.plaatsId}
                                         onChange={(e: any) => {
