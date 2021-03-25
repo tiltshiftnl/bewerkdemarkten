@@ -33,30 +33,16 @@ export default class HomePage extends Component {
     constructor(props: any) {
         super(props)
         this.mmarktService = new MMarktService()
-        
+
     }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevState.object.someString !== this.state.object.someString) {
+    //         console.log(true);
+    //     }
+    // }
 
 
-    validateMarkets = () => {
-        const transformer = new Transformer()
-        const state = this.state.systemState
-        // Read all markets
-        // check to see if any of the markets is invalid.
-        const _ids = getLocalStorageMarkets()
-        _ids.forEach((m: string) => {
-            transformer.encode(m).then((result: MarketEventDetails) => {
-                if (validateLots(result)) {
-                    console.log(m + " contains errors")
-                    state.errors.push(m)
-                    localStorage.setItem('bwdm_state', JSON.stringify(state))
-                }
-            })
-        })
-    }
-    componentDidUpdate() {
-        this.validateMarkets()
-    }
-    componentDidMount() {
+    validateMarkets = async () => {
         let systemState: SystemState = {
             errors: []
         }
@@ -71,14 +57,23 @@ export default class HomePage extends Component {
             systemState = JSON.parse(_cachedState)
             systemState.cachedMarkets = _markets
         }
+        // Empty the error object and reconstruct it
+        systemState.errors = []
 
         const _marketsCache = localStorage.getItem('bwdm_cache_markets')
         if (_marketsCache) {
-
             const _markets = JSON.parse(_marketsCache)
             this.setState({
                 markets: _markets
-            }, () => {
+            }, async () => {
+                const transformer = new Transformer()
+                const _ids = getLocalStorageMarkets()
+                const _errs: Promise<string | undefined>[] = _ids.map(async (m: string) => {
+                    const result: MarketEventDetails = await transformer.encode(m)
+                    return validateLots(result) ? m : undefined
+                })
+                let errs: (string | undefined)[] = await Promise.all(_errs)
+                systemState.errors = (errs as string[]).filter(e => e !== undefined)
                 // Update systemState
                 this.setState({
                     progress: 100,
@@ -87,9 +82,10 @@ export default class HomePage extends Component {
                 })
             })
         }
+    }
 
-
-        localStorage.setItem('bwdm_state', JSON.stringify(systemState))
+    componentDidMount() {
+        this.validateMarkets()
     }
 
     beforeUpload = (file: any) => {
@@ -240,12 +236,12 @@ export default class HomePage extends Component {
                             <Descriptions.Item label="Download">
                                 {this.state.systemState.errors && this.state.systemState.errors.length > 0 &&
                                     <>
-                                    <Alert message="Er zijn markten met fouten. Corrigeer de fouten om download te activeren" type="error"/>
+                                        <Alert message="Er zijn markten met fouten. Corrigeer de fouten om download te activeren" type="error" />
                                         {this.state.systemState.errors.map((marketId: string) => {
-                                            return <Link to={{
+                                            return <Link key={marketId} to={{
                                                 pathname: `/market/${marketId}`
                                             }}>
-                                                <span style={{padding: "10px"}}>{marketId}</span>
+                                                <span style={{ padding: "10px" }}>{marketId}</span>
                                             </Link>
                                         })}
                                     </>
