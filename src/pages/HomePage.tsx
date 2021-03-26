@@ -117,9 +117,9 @@ export default class HomePage extends Component {
                         if (zipEntry.dir) {
                             const marketDayDir = zipEntry.name.replace('config/', '').replace('markt/', '').replace('/', '')
                             //find market in mmarkt collection
-                            const isvalid = mmarkets.find((entry: MMarkt) => {
-                                return entry.afkorting === marketDayDir
-                            })
+                            // const isvalid = mmarkets.find((entry: MMarkt) => {
+                            //     return entry.afkorting === marketDayDir
+                            // })
 
                             if (marketDayDir && marketDayDir !== "") {
                                 if (!_markets[marketDayDir]) {
@@ -255,6 +255,10 @@ export default class HomePage extends Component {
                             </Descriptions.Item>
 
                         }
+                        <Descriptions.Item label="Geheugen"><Button type="link" title="Leegmaken" onClick={() => {
+                            localStorage.clear()
+                            window.location.reload()
+                        }}>Reset</Button></Descriptions.Item>
                         <Descriptions.Item label="Upload">
                             <input type="file" id="file" name="file" onChange={this.handleFile} />
                         </Descriptions.Item>
