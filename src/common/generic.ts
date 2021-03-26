@@ -18,11 +18,12 @@ export const getLocalStorageMarkets = (): string[] => {
     }
     return _markets
 }
+const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')
 
 export const getDatePart = () => {
     const _date = new Date()
-    const month = _date.getUTCMonth() + 1
-    const day = _date.getUTCDate()
+    const month = zeroPad(_date.getUTCMonth() + 1, 2)
+    const day = zeroPad(_date.getUTCDate(), 2)
     const year = _date.getUTCFullYear()
     return year + "" + month + "" + day
 }
@@ -136,11 +137,14 @@ export const zipAll = () => {
                 let _nBranches: AssignedBranche[] = []
                 if (data) {
                     JSON.parse(data).forEach((_nB: AssignedBranche) => {
-                        _nBranches.push({
+                        const _tmp: any = {
                             brancheId: _nB.brancheId,
-                            verplicht: _nB.verplicht || false,
-                            maximumPlaatsen: _nB.maximumPlaatsen || 0
-                        })
+                            verplicht: _nB.verplicht || false
+                        }
+                        if (_nB.maximumPlaatsen && _nB.maximumPlaatsen > 0) {
+                            _tmp.maximumPlaatsen = _nB.maximumPlaatsen
+                        }
+                        _nBranches.push(_tmp)
                     })
 
                 }
@@ -179,7 +183,7 @@ export const zipMarket = (marketDayId: string) => {
 export const uploadMarket = async (marketDayId: string) => {
     let success: string[] = []
     let errors: string[] = []
-
+    // TODO: clear localStorage
     const _branchesFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_branches`)
     const _geographyFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_geography`)
     const _lotsFromStorage: string | null = localStorage.getItem(`bwdm_cache_${marketDayId}_lots`)
