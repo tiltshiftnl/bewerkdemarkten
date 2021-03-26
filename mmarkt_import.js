@@ -16,8 +16,8 @@ var body = '';
 
 var req = https.request(options, function (res) {
  
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    //console.log('STATUS: ' + res.statusCode);
+    //console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
         body += chunk;
@@ -25,7 +25,7 @@ var req = https.request(options, function (res) {
     res.on('end', function() {
         fs.writeFile('./public/data/mmarkt.json', body, 'utf-8', function (err) {
             if (err) return console.log(err);
-            console.log('./public/data/mmarkt.json');
+            //console.log('./public/data/mmarkt.json');
           });
     })    
 });

@@ -106,7 +106,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
             </thead>
             <tbody>
                 {this.state.branches.map((branche, i) => {
-                    console.log(branche)
+                    //console.log(branche)
                     return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
                         {branche.brancheId &&
                             <td>{branche.brancheId.split('-')[0]}</td>

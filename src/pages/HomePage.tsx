@@ -120,11 +120,7 @@ export default class HomePage extends Component {
                             const isvalid = mmarkets.find((entry: MMarkt) => {
                                 return entry.afkorting === marketDayDir
                             })
-                            if (isvalid) {
-                                console.log(marketDayDir + " found")
-                            } else {
-                                console.log(marketDayDir + " not found")
-                            }
+
                             if (marketDayDir && marketDayDir !== "") {
                                 if (!_markets[marketDayDir]) {
                                     _markets[marketDayDir] = { id: i, name: "" }
@@ -183,7 +179,7 @@ export default class HomePage extends Component {
                         systemState: systemState
                     })
                 }, (e) => {
-                    console.log("Error reading " + f.name + ": " + e.message)
+                    console.error("Error reading " + f.name + ": " + e.message)
                 })
         })
 
