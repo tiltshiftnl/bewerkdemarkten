@@ -123,15 +123,9 @@ export class Transformer {
                                     }
                                     return false
                                 }
-                                //group.plaatsList.indexOf(e.)})
                             })
-                            console.log(t)
-                            console.log(group.plaatsList)
                             delete (group as any).plaatsList
                             const newListGroup = { ...group, lots: pageLotsAndObstacles }
-                            
-                            
-                            //console.log(newListGroup)
                             newListGroupArray.push(newListGroup)
                         }
                     } else {

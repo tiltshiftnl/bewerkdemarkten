@@ -35,12 +35,6 @@ export default class HomePage extends Component {
         this.mmarktService = new MMarktService()
 
     }
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevState.object.someString !== this.state.object.someString) {
-    //         console.log(true);
-    //     }
-    // }
-
 
     validateMarkets = async () => {
         let systemState: SystemState = {

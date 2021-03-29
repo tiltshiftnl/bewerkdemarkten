@@ -13,7 +13,6 @@ export const validateLots = (market: MarketEventDetails): boolean => {
                         market.pages[pi].layout[mi].invalid = true
                         market.pages[pi].invalid = true
                         invalid = true
-                        //console.log(l.plaatsId + " is not unique")
                     }
                 }
             })
