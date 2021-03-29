@@ -112,9 +112,26 @@ export class Transformer {
                             const firstLotPosition = rowSets.indexOf(firstLot)
                             const lastLotPosition = rowSets.indexOf(lastLot)
                             //grab the part of the array that is between (and including) first and last
-                            const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                            const t = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                            // remove faults in lots!!
+                            const pageLotsAndObstacles = t.filter((e) => {
+                                if (e.type === "obstacle") {
+                                    return true
+                                } else {
+                                    if (group.plaatsList.indexOf((e as Lot).plaatsId || "") > -1) {
+                                        return true
+                                    }
+                                    return false
+                                }
+                                //group.plaatsList.indexOf(e.)})
+                            })
+                            console.log(t)
+                            console.log(group.plaatsList)
                             delete (group as any).plaatsList
                             const newListGroup = { ...group, lots: pageLotsAndObstacles }
+                            
+                            
+                            //console.log(newListGroup)
                             newListGroupArray.push(newListGroup)
                         }
                     } else {
@@ -190,12 +207,12 @@ export class Transformer {
                     // Loop until the next object would be an obstacle or until blockEnd is true
                     if (element.type === "stand") {
                         _block.push(element.plaatsId || "")
-                        // Does it have a previous element? If not, set blockStart
+                        // First element in row?
                         if (!layout.lots[i - 1]) {
                             layout.lots[i].blockStart = true
                         }
 
-                        // Does it have a previous element? If not, set blockStart
+                        // Last element in row?
                         if (!layout.lots[i + 1]) {
                             layout.lots[i].blockEnd = true
                         }
@@ -203,12 +220,13 @@ export class Transformer {
                         // Is the previous element an obstacle?
                         if (layout.lots[i - 1]) {
                             if (layout.lots[i - 1].type === "obstacle") {
-                            layout.lots[i].blockStart = true
-                            } else {
-                                if(layout.lots[i - 1].blockEnd) {
-                                    layout.lots[i].blockStart = true
-                                }
+                                layout.lots[i].blockStart = true
                             }
+                            // } else {
+                            //     if(layout.lots[i - 1].blockEnd) {
+                            //         layout.lots[i].blockStart = true
+                            //     }
+                            // }
                         }
 
                         // Is the next element an obstacle?
