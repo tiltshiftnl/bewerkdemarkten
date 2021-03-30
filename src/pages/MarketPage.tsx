@@ -58,6 +58,7 @@ export default class MarketPage extends DynamicBase {
     }
 
     updateAssignedBranches = (branches: AssignedBranche[]) => {
+        console.log(branches)
         const _m = this.state.marketEventDetails
         if (_m) {
             _m.branches = branches
