@@ -1,26 +1,31 @@
 import { HomeOutlined, FileZipOutlined } from '@ant-design/icons'
-import { Col, Row, message, Progress, Button, Descriptions } from "antd"
+import { Alert, Col, Row, message, Progress, Button, Descriptions } from "antd"
 import React, { Component } from "react"
 import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
 import JSZip from 'jszip'
-import { Markets } from '../models'
+import { MarketEventDetails, Markets } from '../models'
 import { getCacheName, getLocalStorageMarkets, zipAll } from '../common/generic'
 import { MMarktService } from '../services/service_mmarkt'
 import { MMarkt } from '../models/mmarkt'
+import { validateLots } from '../common/validator'
+import { Transformer } from '../services/transformer'
 
 interface SystemState {
     zipName?: string,
     lastUpdate?: Date,
     marketCount?: number,
-    cachedMarkets?: string[]
+    cachedMarkets?: string[],
+    errors: string[]
 }
 export default class HomePage extends Component {
     readonly state: { markets: Markets, progress: number, progressStatus: "active" | "success", systemState: SystemState } = {
         markets: {},
         progress: 0,
         progressStatus: "active",
-        systemState: {}
+        systemState: {
+            errors: []
+        }
     }
 
     mmarktService: MMarktService
@@ -28,27 +33,41 @@ export default class HomePage extends Component {
     constructor(props: any) {
         super(props)
         this.mmarktService = new MMarktService()
+
     }
 
-    componentDidMount() {
-        let systemState: SystemState = {}
+    validateMarkets = async () => {
+        let systemState: SystemState = {
+            errors: []
+        }
         const _cachedState = localStorage.getItem('bwdm_state')
-
+        const _markets = getLocalStorageMarkets()
         if (!_cachedState) {
             systemState = {
-                cachedMarkets: getLocalStorageMarkets()
+                cachedMarkets: _markets,
+                errors: []
             }
         } else {
             systemState = JSON.parse(_cachedState)
-            systemState.cachedMarkets = getLocalStorageMarkets()
+            systemState.cachedMarkets = _markets
         }
+        // Empty the error object and reconstruct it
+        systemState.errors = []
 
         const _marketsCache = localStorage.getItem('bwdm_cache_markets')
         if (_marketsCache) {
             const _markets = JSON.parse(_marketsCache)
             this.setState({
                 markets: _markets
-            }, () => {
+            }, async () => {
+                const transformer = new Transformer()
+                const _ids = getLocalStorageMarkets()
+                const _errs: Promise<string | undefined>[] = _ids.map(async (m: string) => {
+                    const result: MarketEventDetails = await transformer.encode(m)
+                    return validateLots(result) ? m : undefined
+                })
+                let errs: (string | undefined)[] = await Promise.all(_errs)
+                systemState.errors = (errs as string[]).filter(e => e !== undefined)
                 // Update systemState
                 this.setState({
                     progress: 100,
@@ -57,9 +76,10 @@ export default class HomePage extends Component {
                 })
             })
         }
+    }
 
-
-        localStorage.setItem('bwdm_state', JSON.stringify(systemState))
+    componentDidMount() {
+        this.validateMarkets()
     }
 
     beforeUpload = (file: any) => {
@@ -91,14 +111,10 @@ export default class HomePage extends Component {
                         if (zipEntry.dir) {
                             const marketDayDir = zipEntry.name.replace('config/', '').replace('markt/', '').replace('/', '')
                             //find market in mmarkt collection
-                            const isvalid = mmarkets.find((entry: MMarkt) => {
-                                return entry.afkorting === marketDayDir
-                            })
-                            if (isvalid) {
-                                console.log(marketDayDir + " found")
-                            } else {
-                                console.log(marketDayDir + " not found")
-                            }
+                            // const isvalid = mmarkets.find((entry: MMarkt) => {
+                            //     return entry.afkorting === marketDayDir
+                            // })
+
                             if (marketDayDir && marketDayDir !== "") {
                                 if (!_markets[marketDayDir]) {
                                     _markets[marketDayDir] = { id: i, name: "" }
@@ -157,7 +173,7 @@ export default class HomePage extends Component {
                         systemState: systemState
                     })
                 }, (e) => {
-                    console.log("Error reading " + f.name + ": " + e.message)
+                    console.error("Error reading " + f.name + ": " + e.message)
                 })
         })
 
@@ -181,13 +197,13 @@ export default class HomePage extends Component {
             <Row gutter={[16, 16]}>
                 <Col>
                     {myDate &&
-                        <p><b>Er is een bestand actief.</b> Importeer eventueel opnieuw een <i>markten zip</i> bestand om te bewerken. 
-                            Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam 
+                        <p><b>Er is een bestand actief.</b> Importeer eventueel opnieuw een <i>markten zip</i> bestand om te bewerken.
+                            Wanneer de bewerkingen zijn gedaan, dan kun je het zip bestand hier downloaden en aanbieden aan de kiesjekraam
                             applicatie voor actieve marktindelingen.
                         </p>
                     }
                     {!myDate &&
-                        <p>Importeer een <i>markten zip</i> bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip 
+                        <p>Importeer een <i>markten zip</i> bestand om te bewerken. Wanneer de bewerkingen zijn gedaan, dan kun je het zip
                             bestand hier downloaden en aanbieden aan de kiesjekraam applicatie voor actieve marktindelingen.
                         </p>
                     }
@@ -206,8 +222,21 @@ export default class HomePage extends Component {
                         </>
                         }
                         {this.state.systemState.cachedMarkets && this.state.systemState.cachedMarkets.length > 0 &&
-                            <>
-                                <Descriptions.Item label="Download">
+
+                            <Descriptions.Item label="Download">
+                                {this.state.systemState.errors && this.state.systemState.errors.length > 0 &&
+                                    <>
+                                        <Alert message="Er zijn markten met fouten. Corrigeer de fouten om download te activeren" type="error" />
+                                        {this.state.systemState.errors.map((marketId: string) => {
+                                            return <Link key={marketId} to={{
+                                                pathname: `/market/${marketId}`
+                                            }}>
+                                                <span style={{ padding: "10px" }}>{marketId}</span>
+                                            </Link>
+                                        })}
+                                    </>
+                                }
+                                {this.state.systemState.errors && this.state.systemState.errors.length === 0 &&
                                     <Button
                                         title="Download het zip bestand met alle markten en configuratie"
                                         icon={<FileZipOutlined />}
@@ -216,19 +245,14 @@ export default class HomePage extends Component {
                                             zipAll()
                                         }}
                                     >Download zip bestand</Button>
-                                </Descriptions.Item>
+                                }
+                            </Descriptions.Item>
 
-                                {/* <Descriptions.Item label="Markten met wijzigingen">
-                                    <ul>
-                                        {this.state.systemState.cachedMarkets.map(
-                                    (m: string) => <li key={m}><Link to={{
-                                        pathname: `/market/${m}`
-                                    }}>
-                                        {m}
-                                    </Link></li>
-                                )}</ul></Descriptions.Item> */}
-                            </>
                         }
+                        <Descriptions.Item label="Geheugen"><Button type="link" title="Leegmaken" onClick={() => {
+                            localStorage.clear()
+                            window.location.reload()
+                        }}>Reset</Button></Descriptions.Item>
                         <Descriptions.Item label="Upload">
                             <input type="file" id="file" name="file" onChange={this.handleFile} />
                         </Descriptions.Item>

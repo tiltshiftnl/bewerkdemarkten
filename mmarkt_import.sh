@@ -1,1 +1,1 @@
-curl -X GET "https://makkelijkemarkt-api.amsterdam.nl/api/1.1.0/markt/" -H  "accept: application/json" -H  "MmAppKey: $MMAP_API_KEY" -o /usr/share/nginx/html/data/mmarkt.json
+curl -X GET "$MMAP_API_URL" -H  "accept: application/json" -H  "MmAppKey: $MMAP_API_KEY" -o /usr/share/nginx/html/data/mmarkt.json

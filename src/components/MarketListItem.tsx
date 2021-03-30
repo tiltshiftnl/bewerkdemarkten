@@ -24,7 +24,7 @@ export default class MarketListItem extends Component<{ market: Market, marketId
             <Link to={{
                 pathname: `/market/${marketId}`
             }}>
-                <h4>{this.state.market.id} - {marketId}</h4>
+                <h4>{marketId}</h4>
             </Link>
             <p style={{ color: "rgba(0, 0, 0, 0.45)" }}> {this.state.market.name || ""}</p>
             {this.state.market.phase &&

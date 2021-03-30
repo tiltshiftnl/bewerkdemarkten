@@ -1,9 +1,10 @@
 import { Col, Input, Row, Select, Checkbox, Radio, Button } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
-import React, { Component } from "react"
+import React, { Component, createRef, RefObject } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
-import { CopyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { //CopyOutlined, 
+    DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
@@ -15,6 +16,7 @@ interface LotEditProps {
 }
 
 export default class LotEdit extends Component<LotEditProps> {
+    NameRef: RefObject<Input>
     readonly state: { lot?: Lot, properties: string[], obstacleTypes: string[], currentPosition?: [number, number, number] } = { properties: [], obstacleTypes: [] }
     propertyService: LotPropertyService
     obstacleTypeService: ObstacleTypeService
@@ -23,6 +25,7 @@ export default class LotEdit extends Component<LotEditProps> {
         super(props)
         this.propertyService = new LotPropertyService()
         this.obstacleTypeService = new ObstacleTypeService()
+        this.NameRef = createRef()
     }
 
 
@@ -77,6 +80,7 @@ export default class LotEdit extends Component<LotEditProps> {
     componentDidUpdate(prevProps: LotEditProps, prevState: { lot?: Lot }) {
         if (this.state.lot && this.props.changed && this.state !== prevState) {
             this.props.changed(this.state.lot)
+            this.NameRef.current?.focus()
         }
     }
 
@@ -237,6 +241,8 @@ export default class LotEdit extends Component<LotEditProps> {
                                 <Col {...firstColSpan}>Kraam</Col>
                                 <Col {...secondColSpan}>
                                     <Input
+                                        autoFocus
+                                        ref={this.NameRef}
                                         placeholder="Vul naam of nummer van de kraam in"
                                         value={this.state.lot?.plaatsId}
                                         onChange={(e: any) => {
@@ -299,7 +305,7 @@ export default class LotEdit extends Component<LotEditProps> {
                         </>}
                     <Row gutter={formGutter}>
                         <Col>
-                            {this.state.lot.type === "stand" &&
+                            {/* {this.state.lot.type === "stand" &&
                                 <Button
                                     title="Naar links kopieren"
                                     type="dashed"
@@ -311,7 +317,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                             this.props.prepend(this.state.currentPosition, true)
                                         }
                                     }}
-                                />}
+                                />} */}
                             <Button
                                 title="Nieuwe links plaatsen"
                                 type="dashed"
@@ -349,7 +355,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                     }
                                 }}
                             />
-                            {this.state.lot.type === "stand" &&
+                            {/* {this.state.lot.type === "stand" &&
                                 <Button
                                     title="Naar rechts kopieren"
                                     type="dashed"
@@ -361,7 +367,7 @@ export default class LotEdit extends Component<LotEditProps> {
                                             this.props.append(this.state.currentPosition, true)
                                         }
                                     }}
-                                />}
+                                />} */}
                         </Col>
                     </Row>
                 </>}

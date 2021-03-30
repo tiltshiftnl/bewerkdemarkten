@@ -4,6 +4,7 @@ import SvgBench from "./SvgBench";
 import SvgElectra from "./SvgElectra";
 import SvgLight from "./SvgLight";
 import SvgLoopje from "./SvgLoopje";
+import SvgTree from "./SvgTree";
 import SvgWalkthrough from "./SvgWalkthrough";
 import SvgWalkWithClose from "./SvgWalkWithClose";
 import SvgWater from "./SvgWater";
@@ -42,6 +43,9 @@ export default class Obstacle extends Component<{
         }
         if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("lantaarnpaal") > -1) {
             obstacleProperties.push(<SvgLight key="lantaarnpaal" position={{x:31,y:0}}/>)
+        }
+        if (this.props.obstacle.obstakel && this.props.obstacle.obstakel.indexOf("boom") > -1) {
+            obstacleProperties.push(<SvgTree key="boom" position={{x:31,y:0}}/>)
         }
 
         return <>

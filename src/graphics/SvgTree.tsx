@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class SvgTree extends Component<{ color: string, invert?: boolean, position: { x: number, y: number } }> {
+export default class SvgTree extends Component<{ color?: string, invert?: boolean, position: { x: number, y: number } }> {
     render() {
         return <svg
             x={this.props.position.x}
@@ -16,8 +16,8 @@ export default class SvgTree extends Component<{ color: string, invert?: boolean
             <g id="tree-group">
                 <path
                     style={{
-                        fill: this.props.color,
-                        stroke: this.props.color,
+                        fill: this.props.color || '#73ab4f',
+                        stroke: this.props.color || '#73ab4f',
                         strokeWidth: 0.4,
                         strokeLinecap: "round",
                         strokeLinejoin: "round",

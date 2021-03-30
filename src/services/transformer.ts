@@ -101,7 +101,7 @@ export class Transformer {
             _p.forEach((page: Page) => {
                 const newListGroupArray: any = []
                 page.indelingslijstGroup.forEach((group: Assignment) => {
-                    if (group.plaatsList.length > 0) {
+                    if (group.plaatsList && group.plaatsList.length > 0) {
                         const firstLotId: string = group.plaatsList[0]
                         const lastLotId: string = group.plaatsList[group.plaatsList.length - 1]
                         //find the first
@@ -112,7 +112,18 @@ export class Transformer {
                             const firstLotPosition = rowSets.indexOf(firstLot)
                             const lastLotPosition = rowSets.indexOf(lastLot)
                             //grab the part of the array that is between (and including) first and last
-                            const pageLotsAndObstacles = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                            const t = rowSets.slice(firstLotPosition, lastLotPosition + 1)
+                            // remove faults in lots!!
+                            const pageLotsAndObstacles = t.filter((e) => {
+                                if (e.type === "obstacle") {
+                                    return true
+                                } else {
+                                    if (group.plaatsList.indexOf((e as Lot).plaatsId || "") > -1) {
+                                        return true
+                                    }
+                                    return false
+                                }
+                            })
                             delete (group as any).plaatsList
                             const newListGroup = { ...group, lots: pageLotsAndObstacles }
                             newListGroupArray.push(newListGroup)
@@ -190,12 +201,12 @@ export class Transformer {
                     // Loop until the next object would be an obstacle or until blockEnd is true
                     if (element.type === "stand") {
                         _block.push(element.plaatsId || "")
-                        // Does it have a previous element? If not, set blockStart
+                        // First element in row?
                         if (!layout.lots[i - 1]) {
                             layout.lots[i].blockStart = true
                         }
 
-                        // Does it have a previous element? If not, set blockStart
+                        // Last element in row?
                         if (!layout.lots[i + 1]) {
                             layout.lots[i].blockEnd = true
                         }
@@ -203,12 +214,13 @@ export class Transformer {
                         // Is the previous element an obstacle?
                         if (layout.lots[i - 1]) {
                             if (layout.lots[i - 1].type === "obstacle") {
-                            layout.lots[i].blockStart = true
-                            } else {
-                                if(layout.lots[i - 1].blockEnd) {
-                                    layout.lots[i].blockStart = true
-                                }
+                                layout.lots[i].blockStart = true
                             }
+                            // } else {
+                            //     if(layout.lots[i - 1].blockEnd) {
+                            //         layout.lots[i].blockStart = true
+                            //     }
+                            // }
                         }
 
                         // Is the next element an obstacle?
@@ -240,7 +252,9 @@ export class Transformer {
                         plaatsList.push(element.plaatsId || "?")
                     }
                 })
-
+                if (layout.class !== 'block-right' && layout.class !== 'block-left') {
+                    layout.class = 'block-right'
+                }
                 return {
                     class: layout.class,
                     title: layout.title,

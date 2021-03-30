@@ -146,6 +146,7 @@ export class ObstacleTypeService extends Service<string[]> {
         "doorloop",
         "lantaarnpaal",
         "loopje",
+        "boom",
         "loopjediedichtmag"
     ]
     async retrieve(): Promise<string[]> {
@@ -187,10 +188,10 @@ export class ObstacleTypeService extends Service<string[]> {
 export class LotPropertyService extends Service<string[]> {
     defaultTypes: string[] = [
         "bankje",
-  "boom",
-  "electra",
-  "lantaarnpaal",
-  "water"
+        "boom",
+        "electra",
+        "lantaarnpaal",
+        "water"
     ]
     async retrieve(): Promise<string[]> {
         // Retrieve from Cache

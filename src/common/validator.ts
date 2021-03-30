@@ -1,6 +1,7 @@
 import { Lot, MarketEventDetails, MarketLayout, MarketPage } from "../models"
 
-export const validateLots = (market: MarketEventDetails) => {
+export const validateLots = (market: MarketEventDetails): boolean => {
+    let invalid: boolean = false
     // create a collection for all lots plaatsId's
     market.pages.forEach((p: MarketPage, pi: number) => {
         p.invalid = false
@@ -11,12 +12,13 @@ export const validateLots = (market: MarketEventDetails) => {
                     if (!lotUnique(l, market)) {
                         market.pages[pi].layout[mi].invalid = true
                         market.pages[pi].invalid = true
-                        console.log(l.plaatsId + " is not unique")
+                        invalid = true
                     }
                 }
             })
         })
     })
+    return invalid
 }
 
 export const lotUnique = (lot: Lot, market: MarketEventDetails) => {
@@ -32,7 +34,6 @@ export const lotUnique = (lot: Lot, market: MarketEventDetails) => {
     })
     if (hits.length > 1) {
         lot.invalid = true
-        console.log("Uh, oh, we have a double!")
         return false
     } else {
         lot.invalid = false

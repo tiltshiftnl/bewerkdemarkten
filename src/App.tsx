@@ -22,10 +22,6 @@ export default class App extends Component {
         <div className="App">
           <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Header tall={false} title="Bewerk de markten" fullWidth={false} homeLink="/"/>
-            {/* <div className="refresh-button"><SyncOutlined title="Gegevens herladen" onClick={() => {
-              localStorage.clear()
-              window.location.reload()
-            }}/></div> */}
             <ul className="menu-item-ul">
               <li className="menu-item-li"><NavLink exact className="menu-item" activeClassName="active" to="/">Home</NavLink></li>
               <li className="menu-item-li"><NavLink className="menu-item" activeClassName="active" to="/markets">Markten</NavLink></li>

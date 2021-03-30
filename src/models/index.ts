@@ -2,6 +2,11 @@ export interface Plan {
     name: string
     pages: number
 }
+export interface MarketState {
+    id: number
+    name: string
+    valid?: boolean
+}
 
 export interface Assignment {
     class: string

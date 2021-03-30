@@ -184,17 +184,15 @@ textarea {
 }
 
 .block-left {
-  padding-top: 6px;
+  padding: 6px;
   border-top: 30px solid var(--graycolor);
   width: max-content;
-  width: 100%;
 }
 
 .block-right {
-  padding-top: 6px;
+  padding: 6px;
   border-bottom: 30px solid var(--graycolor);
   width: max-content;
-  width: 100%;
 }
 
 
@@ -465,16 +463,8 @@ td {
   border: 1px solid #f00;
 }
 
-.stand.invalid {
-  background-color: #f00;
-}
-
-.block-right .invalid {
-  box-shadow: inset -4px 2px 6px 3px rgb(240, 170, 170);
-}
-
-.block-left .invalid {
-  box-shadow: inset -4px 2px 6px 3px rgb(240, 170, 170);
+.stand.invalid svg {
+  border: 1px solid #f00;
 }
 
 .refresh-button {

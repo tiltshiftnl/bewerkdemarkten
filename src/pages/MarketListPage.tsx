@@ -129,10 +129,6 @@ class MarketListPage extends Component<RouteComponentProps> {
         return true
     }
 
-    onSearch = (value: string, e: any) => {
-        console.log(value)
-    }
-
     applyFilter = () => {
         const _filteredMarkets: Markets = {}
         if (this.state.filter === '') {
@@ -181,7 +177,7 @@ class MarketListPage extends Component<RouteComponentProps> {
             </Breadcrumb>
             <Row gutter={[16, 16]}>
                 <Col>
-                    <Search placeholder="Filter markten" onChange={this.onChange} onSearch={this.onSearch} style={{ width: 200 }} />
+                    <Search placeholder="Filter markten" onChange={this.onChange} style={{ width: 200 }} />
                 </Col>
                 <Col key="add-market">
                     <Button
@@ -246,17 +242,6 @@ class MarketListPage extends Component<RouteComponentProps> {
 
                 }} />
                 {this.state.newMarketInvalid !== "" && <div className="input-error">{this.state.newMarketInvalid}</div>}
-                {/* {!this.checkAbbreviation() && <>
-                    <i>Maak een dag aan om de betreffende markt te initieren</i>
-                    <Input value={this.state.day.abbreviation} placeholder="Dag afkorting, bijv: 'MA' of 'ANT'" onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        const _d = this.state.day
-                        _d.abbreviation = e.target.value.toUpperCase() || ""
-                        this.setState({
-                            day: _d
-                        })
-                    }} /></>
-                } */}
-
             </Modal>
         </>
     }
