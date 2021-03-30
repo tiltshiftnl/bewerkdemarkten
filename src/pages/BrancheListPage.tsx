@@ -4,7 +4,8 @@ import { Link } from "react-router-dom"
 import { HomeOutlined } from '@ant-design/icons'
 import { Branche } from "../models"
 import { BrancheService } from "../services/service_lookup"
-import { DeleteOutlined, PlusOutlined, BgColorsOutlined,
+import {
+    DeleteOutlined, PlusOutlined, BgColorsOutlined,
     // UploadOutlined 
 } from '@ant-design/icons'
 import { getTextColor } from '../common/generic'
@@ -42,12 +43,12 @@ export default class BrancheListPage extends Component {
             // then necessary to the backend.
             if (dirty) {
                 const _branches = this.state.branches.filter((b: Branche) => b !== null)
-                this.brancheService.update(_branches).catch((e: any)=> {
+                this.brancheService.update(_branches).catch((e: any) => {
                     message.error('Er is iets fout gegaan')
                 })
-                this.setState({dirtybits: false})
+                this.setState({ dirtybits: false })
             } else {
-                this.setState({dirtybits: true})
+                this.setState({ dirtybits: true })
             }
             this.setState({
                 branches
@@ -84,7 +85,24 @@ export default class BrancheListPage extends Component {
                 </thead>
                 <tbody>
                     {this.state.branches.map((branche, i) => {
-                        return <tr key={i} style={this.getStyle(branche)}>
+                        return <tr key={i}>
+                            <td style={this.getStyle(branche)}>
+
+                                <Popover content={<ChromePicker color={branche.color} disableAlpha={true} onChange={(color: any, event: any) => {
+                                    if (this.state.branches) {
+                                        const _branches = this.state.branches
+                                        _branches[i].color = color.hex
+                                        this.updateBranches(_branches)
+                                    }
+
+
+                                }} />} trigger="click">
+                                    <Button
+                                        title="Kleur veranderen"
+                                        icon={<BgColorsOutlined />}
+                                    />
+                                </Popover>
+                            </td>
                             <td>{branche.number ? branche.number : ""}</td>
                             <td>
                                 <Input value={branche.brancheId} placeholder={"ID-Naam"}
@@ -110,23 +128,7 @@ export default class BrancheListPage extends Component {
                                     }}
                                 />
                             </td>
-                            <td>
 
-                                <Popover content={<ChromePicker color={branche.color} disableAlpha={true} onChange={(color: any, event: any) => {
-                                    if (this.state.branches) {
-                                        const _branches = this.state.branches
-                                        _branches[i].color = color.hex
-                                        this.updateBranches(_branches)
-                                    }
-
-
-                                }} />} trigger="click">
-                                    <Button
-                                        title="Kleur veranderen"
-                                        icon={<BgColorsOutlined />}
-                                    />
-                                </Popover>
-                            </td>
                             <td><Button
                                 danger
                                 title="Branche verwijderen"

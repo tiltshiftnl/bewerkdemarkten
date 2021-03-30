@@ -102,11 +102,24 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
     render() {
         return <>{this.state.branches && <><table>
             <thead>
-                <tr><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th></th></tr>
+                <tr><th></th><th>Code</th><th>Omschrijving</th><th>Verplicht</th><th>Maximum</th><th>Toegewezen</th><th></th></tr>
             </thead>
             <tbody>
                 {this.state.branches.map((branche, i) => {
-                    return <tr key={i} style={this.getStyle(branche)} className={this.getClass(branche)}>
+                    return <tr key={i} className={this.getClass(branche)}>
+                        <td style={this.getStyle(branche)}><Button
+                            danger
+                            type="primary"
+                            icon={<DeleteOutlined/>}
+                            onClick={() => {
+                                if (this.state.branches) {
+                                    let _branches = this.state.branches
+                                    delete _branches[i]
+                                    _branches = _branches.filter(() => true)
+                                    this.updateStorage(_branches)
+                                }
+                            }}
+                        /></td>
                         {branche.brancheId &&
                             <td>{branche.brancheId.split('-')[0]}</td>
                         }
@@ -132,19 +145,7 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                                 }} />
                         </td>
                         <td>{branche.allocated && <>{branche.allocated}</>}</td>
-                        <td><Button
-                            danger
-                            type="primary"
-                            icon={<DeleteOutlined/>}
-                            onClick={() => {
-                                if (this.state.branches) {
-                                    let _branches = this.state.branches
-                                    delete _branches[i]
-                                    _branches = _branches.filter(() => true)
-                                    this.updateStorage(_branches)
-                                }
-                            }}
-                        /></td>
+                        
                     </tr>
 
                 })}</tbody></table>
@@ -163,26 +164,6 @@ export default class Branches extends Component<{ id: string, lookupBranches: Br
                 style={{ marginTop: '20px' }}
                 icon={<PlusOutlined />}
             >Toevoegen</Button>
-            {/* <Button type="primary"
-                onClick={() => {
-                    const _export = this.state.branches?.map((e: AssignedBranche)=> {
-                        let _e: AssignedBranche = {
-                            brancheId: e.brancheId,
-                            verplicht: e.verplicht
-                        }
-                        if(e.maximumPlaatsen) {
-                            _e.maximumPlaatsen = e.maximumPlaatsen
-                        }
-                        return _e
-                    })
-                    if(_export) {
-                        this.branchesService.update(`${this.props.id}`, _export)
-                    }
-                    // TODO: Transport the branches to the marketDetail
-                    
-                }}
-                style={{ margin: '20px' }}
-            >Opslaan</Button> */}
             </>}</>
     }
 }

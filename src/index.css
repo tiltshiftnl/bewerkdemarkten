@@ -345,7 +345,7 @@ td {
 }
 
 .assigned {
-  color: #0f0 !important;
+  color: rgb(6, 158, 6) !important;
   font-style: bold;
 }
 
