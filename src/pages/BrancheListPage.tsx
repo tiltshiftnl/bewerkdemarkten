@@ -74,7 +74,7 @@ export default class BrancheListPage extends Component {
                 </Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-                <Link to="/branchess">
+                <Link to="/branches">
                     <span>Branches</span>
                 </Link>
             </Breadcrumb.Item>
