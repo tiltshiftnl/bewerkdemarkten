@@ -1,6 +1,6 @@
 {
   "name": "bewerkdemarkten",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@amsterdam/asc-assets": "^0.25.2",

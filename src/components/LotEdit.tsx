@@ -1,10 +1,11 @@
 import { Col, Input, Row, Select, Checkbox, Radio, Button } from "antd"
 import { CheckboxChangeEvent } from "antd/lib/checkbox"
-import React, { Component, createRef, RefObject } from "react"
+import React, { Component, createRef, CSSProperties, RefObject } from "react"
 import { AssignedBranche, Lot } from "../models"
 import { LotPropertyService, ObstacleTypeService } from "../services/service_lookup"
 import { //CopyOutlined, 
-    DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+    DeleteOutlined, PlusOutlined
+} from '@ant-design/icons'
 import { RadioChangeEvent } from "antd/lib/radio"
 
 interface LotEditProps {
@@ -184,16 +185,55 @@ export default class LotEdit extends Component<LotEditProps> {
         const firstColSpan = { xs: 8, sm: 8, md: 4, lg: 2 }
         const secondColSpan = { xs: 16, sm: 16, md: 8, lg: 8 }
         const formGutter: [number, number] = [16, 16]
-
+        const colStyle: CSSProperties = { textAlign: "center"}
         return <div className="edit-lot">
             {this.state.lot &&
-                <>
+                <div style={{border: '1px solid #ccc', padding: "1em"}}>
                     <Row align="middle" gutter={formGutter}>
                         <Col>
                             <Radio.Group value={this.state.lot?.type} optionType="button" buttonStyle="solid" onChange={this.onToggle}>
                                 <Radio.Button value="stand">Kraam</Radio.Button>
                                 <Radio.Button value="obstacle">Obstakel</Radio.Button>
                             </Radio.Group>
+                        </Col>
+                        <Col>
+                            <Button
+                                title="Nieuwe links plaatsen"
+                                type="dashed"
+                                size="large"
+                                icon={<PlusOutlined />}
+                                onClick={() => {
+                                    // Tell parent component to remove this lot.
+                                    if (this.props.prepend && this.state.currentPosition) {
+                                        this.props.prepend(this.state.currentPosition)
+                                    }
+                                }}
+                            />
+                            <Button
+                                title="Verwijderen"
+                                danger
+                                type="primary"
+                                size="large"
+                                icon={<DeleteOutlined />}
+                                onClick={() => {
+                                    // Tell parent component to remove this lot.
+                                    if (this.props.delete && this.state.currentPosition) {
+                                        this.props.delete(this.state.currentPosition)
+                                    }
+                                }}
+                            />
+                            <Button
+                                title="Nieuwe rechts plaatsen"
+                                type="dashed"
+                                size="large"
+                                icon={<PlusOutlined />}
+                                onClick={() => {
+                                    // Tell parent component to remove this lot.
+                                    if (this.props.append && this.state.currentPosition) {
+                                        this.props.append(this.state.currentPosition)
+                                    }
+                                }}
+                            />
                         </Col>
                     </Row>
 
@@ -289,88 +329,28 @@ export default class LotEdit extends Component<LotEditProps> {
                                 </Col>
                             </Row>
                             <Row gutter={formGutter}>
-                                <Col {...firstColSpan}>Eigen materieel</Col>
-                                <Col {...secondColSpan}><Checkbox id="eigen-materieel" checked={this.getVerkoopinrichting("eigen-materieel")} onChange={this.setVerkoopinrichting} /></Col>
-                            </Row>
-                            {this.state.properties && this.state.properties.map((prop: string, i: number) => {
-                                return <Row key={i} gutter={formGutter}>
-                                    <Col {...firstColSpan}>{prop.charAt(0).toUpperCase() + prop.slice(1)}</Col>
-                                    <Col {...secondColSpan}><Checkbox id={prop} checked={this.getProperty(prop)} onChange={this.setProperty} /></Col>
-                                </Row>
-                            })}
-                            <Row gutter={formGutter}>
-                                <Col {...firstColSpan}>Bak</Col>
-                                <Col {...secondColSpan}><Checkbox checked={this.getBak()} onChange={this.setBak} /></Col>
+                                <Col style={colStyle}>
+                                    <Checkbox id="eigen-materieel" checked={this.getVerkoopinrichting("eigen-materieel")} onChange={this.setVerkoopinrichting} />
+                                    <br />
+                                Eigen<br/>materieel
+                                </Col>
+                                <Col style={colStyle}><Checkbox checked={this.getBak()} onChange={this.setBak} /><br />Bak</Col>
+
+                                {this.state.properties && this.state.properties.map((prop: string, i: number) => {
+                                    return <Col key={i} style={colStyle}>
+                                        <Checkbox id={prop} checked={this.getProperty(prop)} onChange={this.setProperty} />
+                                        <br />
+                                        {prop.charAt(0).toUpperCase() + prop.slice(1)}
+                                    </Col>
+                                })}
+
+                                
                             </Row>
                         </>}
                     <Row gutter={formGutter}>
-                        <Col>
-                            {/* {this.state.lot.type === "stand" &&
-                                <Button
-                                    title="Naar links kopieren"
-                                    type="dashed"
-                                    size="large"
-                                    icon={<CopyOutlined />}
-                                    onClick={() => {
-                                        // Tell parent component to remove this lot.
-                                        if (this.props.prepend && this.state.currentPosition) {
-                                            this.props.prepend(this.state.currentPosition, true)
-                                        }
-                                    }}
-                                />} */}
-                            <Button
-                                title="Nieuwe links plaatsen"
-                                type="dashed"
-                                size="large"
-                                icon={<PlusOutlined />}
-                                onClick={() => {
-                                    // Tell parent component to remove this lot.
-                                    if (this.props.prepend && this.state.currentPosition) {
-                                        this.props.prepend(this.state.currentPosition)
-                                    }
-                                }}
-                            />
-                            <Button
-                                title="Verwijderen"
-                                danger
-                                type="primary"
-                                size="large"
-                                icon={<DeleteOutlined />}
-                                onClick={() => {
-                                    // Tell parent component to remove this lot.
-                                    if (this.props.delete && this.state.currentPosition) {
-                                        this.props.delete(this.state.currentPosition)
-                                    }
-                                }}
-                            />
-                            <Button
-                                title="Nieuwe rechts plaatsen"
-                                type="dashed"
-                                size="large"
-                                icon={<PlusOutlined />}
-                                onClick={() => {
-                                    // Tell parent component to remove this lot.
-                                    if (this.props.append && this.state.currentPosition) {
-                                        this.props.append(this.state.currentPosition)
-                                    }
-                                }}
-                            />
-                            {/* {this.state.lot.type === "stand" &&
-                                <Button
-                                    title="Naar rechts kopieren"
-                                    type="dashed"
-                                    size="large"
-                                    icon={<CopyOutlined />}
-                                    onClick={() => {
-                                        // Tell parent component to remove this lot.
-                                        if (this.props.append && this.state.currentPosition) {
-                                            this.props.append(this.state.currentPosition, true)
-                                        }
-                                    }}
-                                />} */}
-                        </Col>
+                        
                     </Row>
-                </>}
+                </div>}
         </div>
     }
 }
